@@ -1,11 +1,12 @@
 package pcd.assignment03.tasks
 
-import pcd.assignment03.concurrency.WordsBagFilling
+import akka.actor.typed.ActorRef
+import pcd.assignment03.concurrency.WordsBagFilling.Command
 
 import java.util.concurrent.Callable
 import scala.collection.mutable
 
-class PickTask(val taskType: String, var nWords: Int, var wordsBag: WordsBagFilling) extends Callable[Option[(Integer, List[(String, Integer)])]]{
+class PickTask(val taskType: String, var nWords: Int, var wordsBag: ActorRef[Command]) extends Callable[Option[(Integer, List[(String, Integer)])]]{
 
   override def call(): Option[(Integer, List[(String, Integer)])] = {
     log("Started");
@@ -14,7 +15,14 @@ class PickTask(val taskType: String, var nWords: Int, var wordsBag: WordsBagFill
 
     log("Acquiring the bag...")
 
-    val map: mutable.HashMap[String, Int] = wordsBag.getBag
+    /*val f: Future[mutable.HashMap[String, Int]] = wordsBag ? (replyTo => Greet("Bob", replyTo))
+    implicit val ec = ctx.executionContext
+    f.onComplete {
+      case Success(Greeted(who,from)) => println(s"${who} has been greeted by ${from.path}!")
+      case _ => println("No greet")
+    }*/
+
+    val map: mutable.HashMap[String, Int] = new mutable.HashMap[String, Int]()//wordsBag.getBag
 
     log("Bag copy acquired");
 

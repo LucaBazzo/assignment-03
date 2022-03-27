@@ -4,6 +4,7 @@ import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import pcd.assignment03.concurrency.WordsBagFilling
+import pcd.assignment03.concurrency.WordsBagFilling.Update
 import pcd.assignment03.view.View
 
 object Main {
@@ -25,7 +26,12 @@ object Main {
 
     val view: View = new View(weight, height, DEFAULT_PDF_PATH,
       DEFAULT_IGNORED_PATH, DEFAULT_N_WORDS)
-    val wordsBag: WordsBagFilling = new WordsBagFilling()
+    //val wordsBag: WordsBagFilling = new WordsBagFilling()
+    val wordsBag = context.spawn(WordsBagFilling(), "WordsBag")
+
+    /*wordsBag ! Update("ciao")
+    wordsBag ! Update("piacere")
+    wordsBag ! Update("ciao")*/
 
     val controller: Controller = new Controller(view, wordsBag)
     view.addListener(controller)

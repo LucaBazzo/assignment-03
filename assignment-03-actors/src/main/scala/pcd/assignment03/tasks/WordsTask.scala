@@ -1,11 +1,13 @@
 package pcd.assignment03.tasks
 
-import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
+import akka.actor.typed.ActorRef
+import pcd.assignment03.concurrency.StopMonitor
+import pcd.assignment03.concurrency.WordsBagFilling.{Command, Update}
 
 import java.util.concurrent.Callable
 
 class WordsTask(val taskType: String, var stringList: List[String], var startingIndex: Int, var arrivingIndex: Int,
-                var bag: WordsBagFilling, var stopMonitor: StopMonitor) extends Callable[Boolean] {
+                var bag: ActorRef[Command], var stopMonitor: StopMonitor) extends Callable[Boolean] {
 
   override def call(): Boolean = {
     log("Started");
@@ -15,7 +17,7 @@ class WordsTask(val taskType: String, var stringList: List[String], var starting
     log("N° Words: " + partialList.length)
 
     while(partialList.nonEmpty && !stopMonitor.isStopped) {
-      bag.addElement(partialList.head)
+      bag ! Update(partialList.head)
       partialList = partialList.tail
     }
 

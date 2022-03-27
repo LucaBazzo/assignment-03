@@ -1,6 +1,8 @@
 package pcd.assignment03.main
 
-import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
+import akka.actor.typed.ActorRef
+import pcd.assignment03.concurrency.StopMonitor
+import pcd.assignment03.concurrency.WordsBagFilling.Command
 import pcd.assignment03.tasks.ServiceTask
 import pcd.assignment03.view.View
 
@@ -13,7 +15,7 @@ trait Process {
   def stopProcess(): Unit
 }
 
-class Controller(var view: View, var wordsBag: WordsBagFilling) extends Process {
+class Controller(var view: View, var wordsBag: ActorRef[Command]) extends Process {
 
   private val stopMonitor = new StopMonitor()
 

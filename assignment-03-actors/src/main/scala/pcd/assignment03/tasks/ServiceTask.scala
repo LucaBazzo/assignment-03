@@ -1,6 +1,8 @@
 package pcd.assignment03.tasks
 
 
+import akka.actor.typed.ActorRef
+import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command}
 import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
 import pcd.assignment03.tasks.ImplicitConversions._
 import pcd.assignment03.view.{Pair, View}
@@ -13,7 +15,7 @@ import scala.util.control.Breaks.{break, breakable}
 
 
 class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, val forbidden: File,
-                  var wordsBag: WordsBagFilling, val stopMonitor: StopMonitor, var numTasks: Int,
+                  var wordsBag: ActorRef[Command], val stopMonitor: StopMonitor, var numTasks: Int,
                   val nWords: Int) extends Runnable {
 
   private val WAITING_TIME = 10
@@ -73,8 +75,6 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       }
     }
 
-    var finish: Boolean = false
-
     try {
       extractResults.forEach(future => breakable {
         while(!this.stopMonitor.isStopped || future.isDone)
@@ -87,27 +87,27 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       })
 
       if(!this.stopMonitor.isStopped) {
-        log("Process PDF completed");
-        log("Completion arrived");
+        log("Process PDF completed")
+        log("Completion arrived")
       }
 
     } catch {
       case e: Exception => {
-        this.stopMonitor.stop();
-        log("Interrupted");
-        view.changeState("Interrupted");
+        this.stopMonitor.stop()
+        log("Interrupted")
+        view.changeState("Interrupted")
       }
     }
   }
 
   private def mostFrequentWords(): Unit = {
-    log("Computing most frequent words...");
-    view.changeState("Computing most frequent words...");
+    log("Computing most frequent words...")
+    view.changeState("Computing most frequent words...")
 
-    this.wordsBag.clearBag();
+    this.wordsBag ! Clear()
 
     // - 1 present for the pick task the map of strings
-    numTasks = numTasks - 1;
+    numTasks = numTasks - 1
 
     val numOfWords: Int = stringList.length
     var startingIndex: Int = 0
