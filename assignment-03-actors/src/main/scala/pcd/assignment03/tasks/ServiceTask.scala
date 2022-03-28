@@ -6,7 +6,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
-import pcd.assignment03.view.View
+import pcd.assignment03.main.View.{ChangeState, ViewMessage}
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -15,7 +15,7 @@ import java.util.concurrent.{Executors, Future}
 import scala.util.control.Breaks.{break, breakable}
 
 
-class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, val forbidden: File,
+class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdfDirectory: File, val forbidden: File,
                   var wordsBag: ActorRef[Command], val stopMonitor: StopMonitor, var numTasks: Int,
                   val nWords: Int, var picker: ActorRef[Command], var context: ActorContext[NotUsed])
   extends Runnable {
@@ -48,7 +48,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
         var data: String = reader.nextLine()
         forbiddenList = data :: forbiddenList
       }
-      reader.close();
+      reader.close()
     } catch {
       case e: FileNotFoundException => {
         log("An error occurred.")
@@ -56,7 +56,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       }
     }
 
-    view.changeState("Getting PDF...")
+    view ! ChangeState("Getting PDF...")
 
     log("Wait completion")
 
@@ -65,7 +65,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       taskList.add(task)
     })
 
-    view.changeState("PDF Processing...");
+    view ! ChangeState("PDF Processing...");
 
     try {
       extractResults = executor.invokeAll(taskList)
@@ -73,7 +73,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       case e: Exception => {
         stopMonitor.stop()
         log("Interrupted")
-        view.changeState("Interrupted")
+        view ! ChangeState("Interrupted")
       }
     }
 
@@ -97,14 +97,14 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       case e: Exception => {
         this.stopMonitor.stop()
         log("Interrupted")
-        view.changeState("Interrupted")
+        view ! ChangeState("Interrupted")
       }
     }
   }
 
   private def mostFrequentWords(): Unit = {
     log("Computing most frequent words...")
-    view.changeState("Computing most frequent words...")
+    view ! ChangeState("Computing most frequent words...")
 
     this.wordsBag ! Clear()
 
@@ -170,12 +170,12 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
       }
       else {
         log("Interrupted");
-        view.changeState("Interrupted");
+        view ! ChangeState("Interrupted");
       }
     }
     else {
       log("Interrupted");
-      view.changeState("Interrupted");
+      view ! ChangeState("Interrupted");
     }
   }
 

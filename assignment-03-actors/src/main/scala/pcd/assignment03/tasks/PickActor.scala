@@ -46,7 +46,7 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
     }
   }
 
-
+  //TODO cambia il nome
   def call(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
     var maxList: List[(String, Integer)] = List.empty
 
@@ -73,7 +73,7 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
       map.filter(entry => entry._2 == max)
         .take(nWords - maxList.length)
         .foreach(entry => {
-          maxList = maxList.appended((entry._1, entry._2))  //TODO ricontrolla appended
+          maxList = maxList.appended((entry._1, entry._2))
         })
 
       maxList.foreach(pair => map.remove(pair._1))

@@ -22,7 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import pcd.assignment03.main.Process;
+import pcd.assignment03.main.ViewEvent;
 
 /**
  *
@@ -34,9 +34,10 @@ public class ViewGUI extends JFrame implements ActionListener {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private final ViewEvent viewEvent;
+
     private final JButton startButton;
     private final JButton stopButton;
-
 
     private final JFileChooser pdfPathFieldChooser;
     private final JFileChooser ignoredPathChooser;
@@ -48,8 +49,6 @@ public class ViewGUI extends JFrame implements ActionListener {
     private final JTextArea textArea;
     private final JTextField state;
 
-    private final ArrayList<Process> listeners;
-
     /**
      * Constructor
      *
@@ -59,12 +58,13 @@ public class ViewGUI extends JFrame implements ActionListener {
      * @param ignoredPath the path where the ignored.txt is contained
      * @param nWords the number of most frequent words to obtain
      */
-    public ViewGUI(int width, int height, String pdfPath, String ignoredPath, int nWords){
+    public ViewGUI(int width, int height, String pdfPath, String ignoredPath,
+                   int nWords, ViewEvent viewEvent){
         super("Most Frequent Words Viewer");
 
         setSize(width, height);
 
-        listeners = new ArrayList<Process>();
+        this.viewEvent = viewEvent;
 
         pdfPathFieldChooser = new JFileChooser(new File(pdfPath));
         pdfPathFieldChooser.setCurrentDirectory(new File(pdfPath));
@@ -183,14 +183,6 @@ public class ViewGUI extends JFrame implements ActionListener {
     }
 
     /**
-     * Add a listener
-     * @param listener the view's listener
-     */
-    public void addListener(Process listener){
-        listeners.add(listener);
-    }
-
-    /**
      * Checks witch event has been executed
      * @param ev the event
      */
@@ -295,18 +287,15 @@ public class ViewGUI extends JFrame implements ActionListener {
         String pdfPath = pdfPathName.getText();
         String ignoredPath = ignoredPathField.getText();
         int nWords = Integer.parseInt(nWordsField.getText());
-        for (Process l: listeners){
-            l.startProcess(pdfPath, ignoredPath, nWords);
-        }
+
+        this.viewEvent.notifyStart(pdfPath, ignoredPath, nWords);
     }
 
     private void notifyStopped(){
         stopButton.setEnabled(false);
         startButton.setEnabled(true);
 
-        for (Process l: listeners){
-            l.stopProcess();
-        }
+        this.viewEvent.notifyStop();
 
     }
 }

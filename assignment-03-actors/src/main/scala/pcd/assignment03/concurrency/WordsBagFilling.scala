@@ -25,7 +25,6 @@ object WordsBagFilling {
           count = this.map(word) + 1
         }
         this.map.put(word, count)
-        //context.log.info("Update {}!", (word, count))
       case GetBag(from) => from ! Return(map.clone())
       case Clear() => this.map.clear()
     }
