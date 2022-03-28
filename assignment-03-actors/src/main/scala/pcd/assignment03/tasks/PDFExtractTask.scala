@@ -16,7 +16,7 @@ class PDFExtractTask(val forbiddenList: List[String], val pdfDoc: File, var stop
     if(!this.stopMonitor.isStopped) {
 
       try {
-        log("Document " + pdfDoc.getName + " loaded")
+        this.log("Document " + pdfDoc.getName + " loaded")
         val document: PDDocument = PDDocument.load(pdfDoc)
         val ap: AccessPermission = document.getCurrentAccessPermission
         if (!ap.canExtractContent) {

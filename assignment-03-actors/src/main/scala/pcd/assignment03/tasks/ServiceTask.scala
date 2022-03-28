@@ -62,7 +62,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
     })
 
     view.changeState("PDF Processing...");
-
+  //TODO attore EXTRACT con lista PDF, per ogni PDF Spawn anonymous con behavious extractWords
     try {
       extractResults = executor.invokeAll(taskList)
     } catch {
