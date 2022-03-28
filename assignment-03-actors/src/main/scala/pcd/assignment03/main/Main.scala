@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import pcd.assignment03.concurrency.WordsBagFilling
-import pcd.assignment03.concurrency.WordsBagFilling.Update
+import pcd.assignment03.tasks.PickActor
 import pcd.assignment03.view.View
 
 object Main {
@@ -28,12 +28,17 @@ object Main {
       DEFAULT_IGNORED_PATH, DEFAULT_N_WORDS)
     //val wordsBag: WordsBagFilling = new WordsBagFilling()
     val wordsBag = context.spawn(WordsBagFilling(), "WordsBag")
+    val picker = context.spawn(PickActor("Pick Actor", 5, wordsBag), "Picker") //TODO spostare nel service quando sarà un actor
 
     /*wordsBag ! Update("ciao")
     wordsBag ! Update("piacere")
-    wordsBag ! Update("ciao")*/
+    wordsBag ! Update("ciao")
 
-    val controller: Controller = new Controller(view, wordsBag)
+    picker ! Pick()*/
+
+
+
+    val controller: Controller = new Controller(view, wordsBag, picker, context)
     view.addListener(controller)
     view.display()
 

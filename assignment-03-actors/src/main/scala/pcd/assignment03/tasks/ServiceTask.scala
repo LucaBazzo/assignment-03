@@ -1,11 +1,12 @@
 package pcd.assignment03.tasks
 
 
+import akka.NotUsed
 import akka.actor.typed.ActorRef
-import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command}
-import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
-import pcd.assignment03.tasks.ImplicitConversions._
-import pcd.assignment03.view.{Pair, View}
+import akka.actor.typed.scaladsl.ActorContext
+import pcd.assignment03.concurrency.StopMonitor
+import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
+import pcd.assignment03.view.View
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -16,7 +17,8 @@ import scala.util.control.Breaks.{break, breakable}
 
 class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, val forbidden: File,
                   var wordsBag: ActorRef[Command], val stopMonitor: StopMonitor, var numTasks: Int,
-                  val nWords: Int) extends Runnable {
+                  val nWords: Int, var picker: ActorRef[Command], var context: ActorContext[NotUsed])
+  extends Runnable {
 
   private val WAITING_TIME = 10
 
@@ -179,10 +181,12 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
 
   private def pickWordsFrequency(): Unit = {
     log("Starting Pick Task")
-    val pickResult: Future[Option[(Integer, List[(String, Integer)])]] =
-      executor.submit(new PickTask("Pick Task", nWords, wordsBag))
+    /*val pickResult: Future[Option[(Integer, List[(String, Integer)])]] =
+      executor.submit(new PickTask("Pick Task", nWords, wordsBag))*/
 
-    var result: Option[(Integer, List[(String, Integer)])] = Option.empty
+    picker ! Pick()
+
+    /*var result: Option[(Integer, List[(String, Integer)])] = Option.empty
     try {
       result = pickResult.get()
       log("Pick result ready")
@@ -217,7 +221,7 @@ class ServiceTask(val taskType: String, val view: View, val pdfDirectory: File, 
     }
     else {
       log("Empty bag");
-    }
+    }*/
   }
 
   @throws[InterruptedException]

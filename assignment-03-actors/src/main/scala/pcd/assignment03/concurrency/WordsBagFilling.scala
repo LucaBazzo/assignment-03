@@ -10,7 +10,10 @@ object WordsBagFilling {
   sealed trait Command
   final case class Clear() extends Command
   final case class Update(word: String) extends Command
-  final case class Get(from: ActorRef[Update]) extends Command
+  final case class GetBag(from: ActorRef[Command]) extends Command
+  final case class Return(map: mutable.HashMap[String, Int]) extends Command
+
+  final case class Pick() extends Command
 
   private val map: mutable.HashMap[String, Int] = new mutable.HashMap[String, Int]()
 
@@ -22,16 +25,12 @@ object WordsBagFilling {
           count = this.map(word) + 1
         }
         this.map.put(word, count)
-        context.log.info("Update {}!", (word, count))
-      case Get(from) => ???
+        //context.log.info("Update {}!", (word, count))
+      case GetBag(from) => from ! Return(map.clone())
       case Clear() => this.map.clear()
     }
 
     Behaviors.same
-  }
-
-  def getBag: mutable.HashMap[String, Int] = synchronized {
-    this.map.clone()
   }
 }
 

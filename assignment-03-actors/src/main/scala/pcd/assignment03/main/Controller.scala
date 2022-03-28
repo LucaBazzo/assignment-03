@@ -1,6 +1,8 @@
 package pcd.assignment03.main
 
+import akka.NotUsed
 import akka.actor.typed.ActorRef
+import akka.actor.typed.scaladsl.ActorContext
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.Command
 import pcd.assignment03.tasks.ServiceTask
@@ -15,7 +17,8 @@ trait Process {
   def stopProcess(): Unit
 }
 
-class Controller(var view: View, var wordsBag: ActorRef[Command]) extends Process {
+class Controller(var view: View, var wordsBag: ActorRef[Command], var picker: ActorRef[Command],
+                 var context: ActorContext[NotUsed]) extends Process {
 
   private val stopMonitor = new StopMonitor()
 
@@ -25,9 +28,9 @@ class Controller(var view: View, var wordsBag: ActorRef[Command]) extends Proces
 
     val numTasks: Int = Runtime.getRuntime().availableProcessors() + 1
 
-    val executor: ExecutorService = Executors.newSingleThreadExecutor();
+    val executor: ExecutorService = Executors.newSingleThreadExecutor()
     executor.execute(new ServiceTask("Master", view, directory, forbidden, wordsBag,
-      stopMonitor, numTasks, nWords));
+      stopMonitor, numTasks, nWords, picker, context))
   }
 
   override def stopProcess(): Unit = stopMonitor.stop()
