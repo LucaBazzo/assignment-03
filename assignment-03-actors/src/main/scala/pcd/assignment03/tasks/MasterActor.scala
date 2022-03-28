@@ -1,24 +1,43 @@
 package pcd.assignment03.tasks
 
 
-import akka.NotUsed
-import akka.actor.typed.ActorRef
-import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+import akka.actor.typed.{ActorRef, Behavior, Scheduler}
+import akka.util.Timeout
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
-import pcd.assignment03.main.View.{ChangeState, ViewMessage}
+import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
+import pcd.assignment03.tasks.MasterActor.{MasterMessage, MaxWordsResult, Start}
 
 import java.io.{File, FileNotFoundException}
 import java.util
 import java.util.Scanner
 import java.util.concurrent.{Executors, Future}
+import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.duration.DurationInt
+import scala.util.Success
 import scala.util.control.Breaks.{break, breakable}
 
+object MasterActor {
 
-class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdfDirectory: File, val forbidden: File,
+  sealed trait MasterMessage
+  case class Start() extends MasterMessage
+  case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
+
+  def apply(taskType: String, view: ActorRef[ViewMessage], pdfDirectory: File, forbidden: File,
+            wordsBag: ActorRef[Command], stopMonitor: StopMonitor, numTasks: Int,
+            nWords: Int): Behavior[MasterMessage] =
+    Behaviors.setup { context =>
+      new MasterActor(taskType, view, pdfDirectory, forbidden, wordsBag, stopMonitor, numTasks,
+        nWords, context).start
+    }
+}
+
+
+class MasterActor(val taskType: String, val view: ActorRef[ViewMessage], val pdfDirectory: File, val forbidden: File,
                   var wordsBag: ActorRef[Command], val stopMonitor: StopMonitor, var numTasks: Int,
-                  val nWords: Int, var picker: ActorRef[Command], var context: ActorContext[NotUsed])
-  extends Runnable {
+                  val nWords: Int, var context: ActorContext[MasterMessage]) {
 
   private val WAITING_TIME = 10
 
@@ -33,7 +52,13 @@ class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdf
   private var workCompleted = false
   private var startTime = 0L
 
-  override def run(): Unit = {
+  private val start: Behavior[MasterMessage] = Behaviors.receiveMessagePartial {
+    case Start() =>
+      run()
+      Behaviors.same
+  }
+
+  def run(): Unit = {
     this.processPDF()
     if (!stopMonitor.isStopped)
       this.mostFrequentWords()
@@ -103,6 +128,8 @@ class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdf
   }
 
   private def mostFrequentWords(): Unit = {
+    val picker = context.spawn(PickActor("Pick Actor", nWords, wordsBag), "Picker")
+
     log("Computing most frequent words...")
     view ! ChangeState("Computing most frequent words...")
 
@@ -145,7 +172,7 @@ class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdf
       log("Wait words tasks completion");
       try {
         while(!wordsResults.forall(res => res.isDone)) {
-          this.pickWordsFrequency()
+          this.pickWordsFrequency(picker)
           waitFor(WAITING_TIME)
         }
       } catch {
@@ -165,7 +192,7 @@ class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdf
           result
         })
 
-        this.pickWordsFrequency()
+        this.pickWordsFrequency(picker)
         log("Done")
       }
       else {
@@ -179,50 +206,52 @@ class ServiceTask(val taskType: String, val view: ActorRef[ViewMessage], val pdf
     }
   }
 
-  private def pickWordsFrequency(): Unit = {
-    log("Starting Pick Task")
-    /*val pickResult: Future[Option[(Integer, List[(String, Integer)])]] =
-      executor.submit(new PickTask("Pick Task", nWords, wordsBag))*/
+  private def pickWordsFrequency(picker: ActorRef[Command]): Unit = {
+    log("Picking start")
 
-    picker ! Pick()
+    implicit val timeout: Timeout = 2.seconds
+    implicit val scheduler: Scheduler = context.system.scheduler
+    //remember if ? doesn't work, it's because of an import that has been forgotten
+    val f: scala.concurrent.Future[MasterMessage] = picker ? (replyTo => Pick(replyTo))
+    implicit val ec: ExecutionContextExecutor = context.executionContext
+    //remember you can't call context on future callback
+    f.onComplete({
+      case Success(value) if value.isInstanceOf[MaxWordsResult] => {
+        var result: Option[(Integer, List[(String, Integer)])] = Option.empty
+        try {
+          result = value.asInstanceOf[MaxWordsResult].result
+          log("Pick result ready")
+        } catch {
+          case e: Exception =>
+            e.printStackTrace()
+            stopMonitor.stop()
+            log("Interrupted")
+            view ! ChangeState("Interrupted")
+        }
 
-    /*var result: Option[(Integer, List[(String, Integer)])] = Option.empty
-    try {
-      result = pickResult.get()
-      log("Pick result ready")
-    } catch {
-      case e: Exception =>
-        e.printStackTrace()
-        stopMonitor.stop()
-        log("Interrupted")
-        view.changeState("Interrupted")
-    }
+        if(!result.isEmpty) {
+          val wordsProcessed: Int = result.get._1
+          val wordsFreq: List[(String, Integer)] = result.get._2
 
-    val x: Pair[String, String] = ("ciao", "Ciao")
+          log("Words processed: " + wordsProcessed, wordsFreq.toString());
 
-    if(!result.isEmpty) {
-      val wordsProcessed: Int = result.get._1
-      val wordsFreq: List[(String, Integer)] = result.get._2
+          view ! UpdateResult(wordsProcessed, wordsFreq, this.workCompleted)
+          if(this.workCompleted) {
+            log("Most Frequent Words completed");
 
-      //conversion of Scala List to Java list for the View
-      val w: util.List[Pair[String, Integer]] = new util.ArrayList[Pair[String, Integer]]()
-      wordsFreq.foreach(tuple => w.add(tuple))
-
-      log("Words processed: " + wordsProcessed, wordsFreq.toString());
-
-      view.updateResult(wordsProcessed, w, this.workCompleted)
-      if(this.workCompleted) {
-        log("Most Frequent Words completed");
-
-        val timeElapsed: Long = System.currentTimeMillis() - startTime
-        log("Completed - time elapsed: " + timeElapsed)
-        view.changeState("Completed - time elapsed: "+ timeElapsed)
+            val timeElapsed: Long = System.currentTimeMillis() - startTime
+            log("Completed - time elapsed: " + timeElapsed)
+            view ! ChangeState("Completed - time elapsed: "+ timeElapsed)
+          }
+        }
+        else {
+          log("Empty bag");
+        }
       }
-    }
-    else {
-      log("Empty bag");
-    }*/
+      case _ => log("ERROR")
+    })
   }
+
 
   @throws[InterruptedException]
   private def waitFor(ms: Long): Unit = {

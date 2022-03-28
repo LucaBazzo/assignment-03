@@ -26,17 +26,14 @@ object Main {
 
     //val wordsBag: WordsBagFilling = new WordsBagFilling()
     val wordsBag = context.spawn(WordsBagFilling(), "WordsBag")
-    val picker = context.spawn(PickActor("Pick Actor", 5, wordsBag), "Picker") //TODO spostare nel service quando sarà un actor
 
     /*wordsBag ! Update("ciao")
     wordsBag ! Update("piacere")
-    wordsBag ! Update("ciao")
-
-    picker ! Pick()*/
+    wordsBag ! Update("ciao")*/
 
 
 
-    val controller = context.spawn(Controller(wordsBag, picker, context), "Controller")
+    val controller = context.spawn(Controller(wordsBag), "Controller")
     val view = context.spawn(View(weight, height, DEFAULT_PDF_PATH,
       DEFAULT_IGNORED_PATH, DEFAULT_N_WORDS, controller), "View")
 

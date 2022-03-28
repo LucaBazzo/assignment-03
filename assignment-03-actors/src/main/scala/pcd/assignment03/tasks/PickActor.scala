@@ -5,6 +5,7 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
 import pcd.assignment03.concurrency.WordsBagFilling.{Command, GetBag, Pick, Return}
+import pcd.assignment03.tasks.MasterActor.MaxWordsResult
 
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
@@ -22,7 +23,7 @@ object PickActor {
 class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords: Int, var wordsBag: ActorRef[Command]){
 
   private val pick: Behavior[Command] = Behaviors.receiveMessagePartial {
-    case Pick() =>
+    case Pick(from) =>
       log("Acquiring the bag...")
       implicit val timeout: Timeout = 2.seconds
       implicit val scheduler: Scheduler = ctx.system.scheduler
@@ -32,7 +33,8 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
       f.onComplete({
         case Success(value) if value.isInstanceOf[Return] => {
           log("Bag copy acquired")
-          this.call(value.asInstanceOf[Return].map)
+          val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map)
+          from ! MaxWordsResult(maxWords)
         }
         case _ => log("ERROR")
       })
@@ -46,8 +48,7 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
     }
   }
 
-  //TODO cambia il nome
-  def call(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
+  def countingMaxWords(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
     var maxList: List[(String, Integer)] = List.empty
 
     if(map.nonEmpty) {

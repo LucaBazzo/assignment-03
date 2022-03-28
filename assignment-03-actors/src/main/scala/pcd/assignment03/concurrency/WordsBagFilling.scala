@@ -2,6 +2,7 @@ package pcd.assignment03.concurrency
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
+import pcd.assignment03.tasks.MasterActor.MasterMessage
 
 import scala.collection.mutable
 
@@ -13,7 +14,7 @@ object WordsBagFilling {
   final case class GetBag(from: ActorRef[Command]) extends Command
   final case class Return(map: mutable.HashMap[String, Int]) extends Command
 
-  final case class Pick() extends Command
+  final case class Pick(from: ActorRef[MasterMessage]) extends Command
 
   private val map: mutable.HashMap[String, Int] = new mutable.HashMap[String, Int]()
 

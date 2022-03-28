@@ -1,15 +1,14 @@
 package pcd.assignment03.main
 
-import akka.NotUsed
+import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.Command
 import pcd.assignment03.main.View.ViewMessage
-import pcd.assignment03.tasks.ServiceTask
+import pcd.assignment03.tasks.MasterActor
+import pcd.assignment03.tasks.MasterActor.Start
 
 import java.io.File
-import java.util.concurrent.{ExecutorService, Executors}
 
 sealed trait ControllerMessage
 case class StartProcess(pdfPath: String, ignoredPath: String, nWords: Int, viewRef: ActorRef[ViewMessage]) extends ControllerMessage
@@ -19,8 +18,7 @@ object Controller {
 
   private val stopMonitor = new StopMonitor()
 
-  def apply(wordsBag: ActorRef[Command], picker: ActorRef[Command],
-            context: ActorContext[NotUsed]): Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
+  def apply(wordsBag: ActorRef[Command]): Behavior[ControllerMessage] = Behaviors.receive { (ctx, message) =>
     message match {
       case StartProcess(pdfPath, ignoredPath, nWords, viewRef) =>
         val directory: File = new File(pdfPath)
@@ -28,9 +26,10 @@ object Controller {
 
         val numTasks: Int = Runtime.getRuntime.availableProcessors() + 1
 
-        val executor: ExecutorService = Executors.newSingleThreadExecutor()
-        executor.execute(new ServiceTask("Master", viewRef, directory, forbidden, wordsBag,
-          stopMonitor, numTasks, nWords, picker, context))
+        val master = ctx.spawn(MasterActor("Master", viewRef, directory, forbidden, wordsBag,
+          stopMonitor, numTasks, nWords), "Master")
+        master ! Start()
+
       case StopProcess() => stopMonitor.stop()
     }
 
