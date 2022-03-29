@@ -9,6 +9,7 @@ import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
 import pcd.assignment03.tasks.MasterActor.{MasterMessage, MaxWordsResult, Start}
+import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, RetrieveWords, StartProcessing, WordsList}
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -37,6 +38,7 @@ object MasterActor {
 
   private var workCompleted = false
   private var startTime = 0L
+  private var workd: Boolean = false
 
   private var taskType: String = ""
 
@@ -46,8 +48,39 @@ object MasterActor {
     Behaviors.receive { (ctx, message) =>
       message match {
         case Start() => this.taskType = taskType
-          log(pdfDirectory.listFiles().length.toString)
-          this.processPDF(forbidden, view, pdfDirectory.listFiles(), stopMonitor)
+          this.startTime = System.currentTimeMillis()
+          val pdfProcessor = ctx.spawn(ProcessPDFActor("Process PDF Actor", forbidden, view,
+                                       pdfDirectory.listFiles(), stopMonitor), "ProcessPDF")
+          pdfProcessor ! StartProcessing()
+          waitFor(5000)
+          implicit val timeout: Timeout = 2.seconds
+          implicit val scheduler: Scheduler = ctx.system.scheduler
+          //remember if ? doesn't work, it's because of an import that has been forgotten
+          val f: scala.concurrent.Future[ProcessPDFMessage] = pdfProcessor ? (replyTo => RetrieveWords(replyTo))
+          implicit val ec: ExecutionContextExecutor = ctx.executionContext
+          //remember you can't call context on future callback
+          f.onComplete({
+            case Success(value) if value.isInstanceOf[WordsList] =>
+              var result: Option[List[String]] = Option.empty
+              try {
+                result = value.asInstanceOf[WordsList].result
+                if (result.isDefined) {
+                  stringList = result.get
+                  workd = true
+                }
+                log("Process PDF completed")
+                log("Completion arrived")
+              } catch {
+                case e: Exception =>
+                  e.printStackTrace()
+                  stopMonitor.stop()
+                  log("Interrupted")
+                  view ! ChangeState("Interrupted")
+              }
+
+            case _ => log("ERROR")
+          })
+          waitFor(5000)
           if (!stopMonitor.isStopped)
             this.mostFrequentWords(ctx, nWords, wordsBag, view, numTasks, stopMonitor)
 
@@ -118,7 +151,7 @@ object MasterActor {
         stopMonitor.stop()
         log("Interrupted")
         view ! ChangeState("Interrupted")
-      
+
     }
   }
 
