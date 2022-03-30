@@ -24,6 +24,9 @@ object MasterActor {
 
   sealed trait MasterMessage
   case class Start() extends MasterMessage
+  case class Error() extends MasterMessage
+  case class ProcessingReady() extends MasterMessage
+  case class ProcessPDFCompleted() extends MasterMessage
   case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
 
   private val WAITING_TIME = 10
@@ -40,6 +43,8 @@ object MasterActor {
   private var startTime = 0L
   private var workd: Boolean = false
 
+  private var pdfProcessor: ActorRef[ProcessPDFMessage] = null
+
   private var taskType: String = ""
 
   def apply(taskType: String, view: ActorRef[ViewMessage], pdfDirectory: File, forbidden: File,
@@ -49,10 +54,12 @@ object MasterActor {
       message match {
         case Start() => this.taskType = taskType
           this.startTime = System.currentTimeMillis()
-          val pdfProcessor = ctx.spawn(ProcessPDFActor("Process PDF Actor", forbidden, view,
+          pdfProcessor = ctx.spawn(ProcessPDFActor("Process PDF Actor", forbidden, view,
                                        pdfDirectory.listFiles(), stopMonitor), "ProcessPDF")
-          pdfProcessor ! StartProcessing()
-          waitFor(5000)
+          pdfProcessor ! StartProcessing(ctx.self)
+
+        case ProcessingReady() =>
+          val self = ctx.self
           implicit val timeout: Timeout = 2.seconds
           implicit val scheduler: Scheduler = ctx.system.scheduler
           //remember if ? doesn't work, it's because of an import that has been forgotten
@@ -66,28 +73,30 @@ object MasterActor {
                 result = value.asInstanceOf[WordsList].result
                 if (result.isDefined) {
                   stringList = result.get
-                  workd = true
                 }
                 log("Process PDF completed")
                 log("Completion arrived")
+                self ! ProcessPDFCompleted()
               } catch {
                 case e: Exception =>
                   e.printStackTrace()
                   stopMonitor.stop()
                   log("Interrupted")
                   view ! ChangeState("Interrupted")
+                  self ! Error()
               }
 
             case _ => log("ERROR")
           })
-          waitFor(5000)
+
+        case ProcessPDFCompleted() =>
           if (!stopMonitor.isStopped)
             this.mostFrequentWords(ctx, nWords, wordsBag, view, numTasks, stopMonitor)
 
-        case _ =>
+        case _ => log("ERRORONE")
       }
 
-      Behaviors.empty
+      Behaviors.same
 
     }
 

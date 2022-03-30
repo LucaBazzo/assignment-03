@@ -7,7 +7,7 @@ import akka.util.Timeout
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
-import pcd.assignment03.tasks.MasterActor.{executor, extractResults, forbiddenList, log, stringList, taskList}
+import pcd.assignment03.tasks.MasterActor.{MasterMessage, ProcessingReady, executor, extractResults, forbiddenList, log, stringList, taskList}
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -21,12 +21,12 @@ import scala.util.control.Breaks.{break, breakable}
 object ProcessPDFActor {
 
   sealed trait ProcessPDFMessage
-  case class StartProcessing() extends ProcessPDFMessage
+  case class StartProcessing(from: ActorRef[MasterMessage]) extends ProcessPDFMessage
   case class RetrieveWords(from: ActorRef[ProcessPDFMessage]) extends ProcessPDFMessage
   case class WordsList(result: Option[List[String]]) extends ProcessPDFMessage
 
   private var forbiddenList: List[String] = List.empty
-  private var taskList: util.Collection[PDFExtractTask] = new util.ArrayList[PDFExtractTask]() //TODO ricontrolla
+  private val taskList: util.Collection[PDFExtractTask] = new util.ArrayList[PDFExtractTask]() //TODO ricontrolla
   private val executor = Executors.newCachedThreadPool()
   private var extractResults: util.List[Future[List[String]]] = new util.LinkedList[Future[List[String]]]()
   private var stringList: List[String] = List.empty
@@ -36,7 +36,7 @@ object ProcessPDFActor {
             stopMonitor: StopMonitor): Behavior[ProcessPDFMessage] = Behaviors.receive { (ctx, message) =>
     this.taskType = taskType
     message match {
-      case StartProcessing() =>
+      case StartProcessing(from) =>
         try {
           val reader: Scanner = new Scanner(forbidden)
           while (reader.hasNextLine) {
@@ -68,6 +68,7 @@ object ProcessPDFActor {
             log("Interrupted")
             view ! ChangeState("Interrupted")
         }
+        from ! ProcessingReady()
 
       case RetrieveWords(from) => try {
         extractResults.forEach(future => breakable {
