@@ -9,7 +9,7 @@ import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
 import pcd.assignment03.tasks.MasterActor.{MasterMessage, MaxWordsResult, Start}
-import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, RetrieveWords, StartProcessing, WordsList}
+import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, RetrieveWords, StartProcessing}
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -27,6 +27,7 @@ object MasterActor {
   case class Error() extends MasterMessage
   case class ProcessingReady() extends MasterMessage
   case class ProcessPDFCompleted() extends MasterMessage
+  case class WordsLists(result: Option[List[String]]) extends MasterMessage
   case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
 
   private val WAITING_TIME = 10
@@ -41,7 +42,6 @@ object MasterActor {
 
   private var workCompleted = false
   private var startTime = 0L
-  private var workd: Boolean = false
 
   private var pdfProcessor: ActorRef[ProcessPDFMessage] = null
 
@@ -58,38 +58,8 @@ object MasterActor {
                                        pdfDirectory.listFiles(), stopMonitor), "ProcessPDF")
           pdfProcessor ! StartProcessing(ctx.self)
 
-        case ProcessingReady() =>
-          val self = ctx.self
-          implicit val timeout: Timeout = 2.seconds
-          implicit val scheduler: Scheduler = ctx.system.scheduler
-          //remember if ? doesn't work, it's because of an import that has been forgotten
-          val f: scala.concurrent.Future[ProcessPDFMessage] = pdfProcessor ? (replyTo => RetrieveWords(replyTo))
-          implicit val ec: ExecutionContextExecutor = ctx.executionContext
-          //remember you can't call context on future callback
-          f.onComplete({
-            case Success(value) if value.isInstanceOf[WordsList] =>
-              var result: Option[List[String]] = Option.empty
-              try {
-                result = value.asInstanceOf[WordsList].result
-                if (result.isDefined) {
-                  stringList = result.get
-                }
-                log("Process PDF completed")
-                log("Completion arrived")
-                self ! ProcessPDFCompleted()
-              } catch {
-                case e: Exception =>
-                  e.printStackTrace()
-                  stopMonitor.stop()
-                  log("Interrupted")
-                  view ! ChangeState("Interrupted")
-                  self ! Error()
-              }
-
-            case _ => log("ERROR")
-          })
-
-        case ProcessPDFCompleted() =>
+        case WordsLists(strings) =>
+          stringList = strings.get
           if (!stopMonitor.isStopped)
             this.mostFrequentWords(ctx, nWords, wordsBag, view, numTasks, stopMonitor)
 
