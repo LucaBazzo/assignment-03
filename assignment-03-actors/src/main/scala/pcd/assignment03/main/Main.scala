@@ -5,7 +5,6 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import pcd.assignment03.concurrency.WordsBagFilling
 import pcd.assignment03.main.View.Display
-import pcd.assignment03.tasks.PickActor
 
 object Main {
 
@@ -32,7 +31,6 @@ object Main {
     wordsBag ! Update("ciao")*/
 
 
-
     val controller = context.spawn(Controller(wordsBag), "Controller")
     val view = context.spawn(View(weight, height, DEFAULT_PDF_PATH,
       DEFAULT_IGNORED_PATH, DEFAULT_N_WORDS, controller), "View")
@@ -41,7 +39,6 @@ object Main {
 
     Behaviors.empty
   }
-
 
 
 

@@ -8,8 +8,8 @@ import akka.util.Timeout
 import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
-import pcd.assignment03.tasks.MasterActor.{MasterMessage, MaxWordsResult, Start}
-import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, RetrieveWords, StartProcessing}
+import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, StartProcessing}
+import pcd.assignment03.tasks.ProcessWords.ProcessList
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -30,7 +30,7 @@ object MasterActor {
   case class WordsLists(result: Option[List[String]]) extends MasterMessage
   case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
 
-  private val WAITING_TIME = 10
+  private val WAITING_TIME = 1000
 
   private var forbiddenList: List[String] = List.empty
   private var taskList: util.Collection[PDFExtractTask] = new util.ArrayList[PDFExtractTask]() //TODO ricontrolla
@@ -144,14 +144,34 @@ object MasterActor {
 
     wordsBag ! Clear()
 
-    // - 1 present for the pick task the map of strings
+    log("List of words size: " + stringList.length, "Num of tasks: " + numTasks)
+
+    val processWords = context.spawn(ProcessWords(wordsBag), "WordsProcessor")
+    processWords ! ProcessList(stringList, numTasks)
+
+    //TODO temporaneo, da mettere a posto
+    if(!stopMonitor.isStopped) {
+      log("Wait words tasks completion")
+      try {
+        while (true) {
+          this.pickWordsFrequency(context, picker, stopMonitor, view)
+          waitFor(WAITING_TIME)
+        }
+      } catch {
+        case e: Exception =>
+          e.printStackTrace()
+          stopMonitor.stop()
+      }
+    }
+
+    //this.pickWordsFrequency(context, picker, stopMonitor, view)
+
+    /*// - 1 present for the pick task the map of strings
     val numTask: Int = numTasks - 1
 
     val numOfWords: Int = stringList.length
     var startingIndex: Int = 0
     val dx: Int = numOfWords / numTask
-
-    log("List of words size: " + numOfWords, "Num of tasks: " + numTask)
 
     var wordsResults: List[Future[Boolean]] = List.empty
     for(i <- 0 until numTask) {
@@ -175,9 +195,9 @@ object MasterActor {
       case e: Exception =>
         e.printStackTrace()
         stopMonitor.stop()
-    }
+    }*/
 
-    if(!stopMonitor.isStopped) {
+    /*if(!stopMonitor.isStopped) {
       log("Wait words tasks completion")
       try {
         while(!wordsResults.forall(res => res.isDone)) {
@@ -212,7 +232,7 @@ object MasterActor {
     else {
       log("Interrupted")
       view ! ChangeState("Interrupted")
-    }
+    }*/
   }
 
   private def pickWordsFrequency(context: ActorContext[MasterMessage], picker: ActorRef[Command],
