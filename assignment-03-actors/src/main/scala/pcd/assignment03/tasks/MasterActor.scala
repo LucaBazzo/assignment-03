@@ -30,6 +30,8 @@ object MasterActor {
   case class WordsLists(result: Option[List[String]]) extends MasterMessage
   case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
 
+  case class WorkEnded() extends MasterMessage
+
   private val WAITING_TIME = 1000
 
   private var forbiddenList: List[String] = List.empty
@@ -47,6 +49,8 @@ object MasterActor {
 
   private var taskType: String = ""
 
+  private var picker: ActorRef[Command] = _
+
   def apply(taskType: String, view: ActorRef[ViewMessage], pdfDirectory: File, forbidden: File,
             wordsBag: ActorRef[Command], stopMonitor: StopMonitor, numTasks: Int,
             nWords: Int): Behavior[MasterMessage] =
@@ -62,6 +66,10 @@ object MasterActor {
           stringList = strings.get
           if (!stopMonitor.isStopped)
             this.mostFrequentWords(ctx, nWords, wordsBag, view, numTasks, stopMonitor)
+
+        case WorkEnded() =>
+          log("Completed")
+          this.pickWordsFrequency(ctx, picker, stopMonitor, view)
 
         case _ => log("ERRORONE")
       }
@@ -137,7 +145,7 @@ object MasterActor {
   private def mostFrequentWords(context: ActorContext[MasterMessage], nWords: Int,
                                 wordsBag: ActorRef[Command], view: ActorRef[ViewMessage],
                                 numTasks: Int, stopMonitor: StopMonitor): Unit = {
-    val picker = context.spawn(PickActor("Pick Actor", nWords, wordsBag), "Picker")
+    this.picker = context.spawn(PickActor("Pick Actor", nWords, wordsBag), "Picker")
 
     log("Computing most frequent words...")
     view ! ChangeState("Computing most frequent words...")
@@ -146,10 +154,12 @@ object MasterActor {
 
     log("List of words size: " + stringList.length, "Num of tasks: " + numTasks)
 
-    val processWords = context.spawn(ProcessWords(wordsBag), "WordsProcessor")
+    val processWords = context.spawn(ProcessWords(wordsBag, context.self), "WordsProcessor")
     processWords ! ProcessList(stringList, numTasks)
 
-    //TODO temporaneo, da mettere a posto
+    this.pickWordsFrequency(context, picker, stopMonitor, view)
+
+    /*//TODO temporaneo, da mettere a posto
     if(!stopMonitor.isStopped) {
       log("Wait words tasks completion")
       try {
@@ -162,7 +172,7 @@ object MasterActor {
           e.printStackTrace()
           stopMonitor.stop()
       }
-    }
+    }*/
 
     //this.pickWordsFrequency(context, picker, stopMonitor, view)
 

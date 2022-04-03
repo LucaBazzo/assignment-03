@@ -14,13 +14,15 @@ import scala.util.Success
 
 object PickActor {
 
-  def apply(taskType: String, nWords: Int, wordsBag: ActorRef[Command]): Behavior[Command] =
+  def apply(nWords: Int, wordsBag: ActorRef[Command]): Behavior[Command] =
     Behaviors.setup { ctx =>
-      new PickActor(ctx, taskType, nWords, wordsBag).pick
+      new PickActor(ctx, nWords, wordsBag).pick
     }
 }
 
-class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords: Int, var wordsBag: ActorRef[Command]){
+class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: ActorRef[Command]){
+
+  private val actorType: String = "Pick Actor"
 
   private val pick: Behavior[Command] = Behaviors.receiveMessagePartial {
     case Pick(from) =>
@@ -31,20 +33,20 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
       implicit val ec: ExecutionContextExecutor = ctx.executionContext
       //remember you can't call context on future callback
       f.onComplete({
-        case Success(value) if value.isInstanceOf[Return] => {
+        case Success(value) if value.isInstanceOf[Return] =>
           log("Bag copy acquired")
           val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map)
           from ! MaxWordsResult(maxWords)
-        }
+
         case _ => log("ERROR")
       })
 
       Behaviors.same
   }
 
-  private def log(msgs: String*): Unit = {
-    for (msg <- msgs) {
-      System.out.println("[" + taskType + "] " + msg)
+  private def log(messages: String*): Unit = {
+    for (msg <- messages) {
+      System.out.println("[" + actorType + "] " + msg)
     }
   }
 
@@ -54,7 +56,7 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
     if(map.nonEmpty) {
       val wordsProc: Int = map.values.sum
       maxList = pickWordsMax(map)
-      log(wordsProc.toString(), maxList.toString())
+      log(wordsProc.toString, maxList.toString())
       return Option.apply((wordsProc, maxList))
     }
 
@@ -63,7 +65,7 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
   }
 
   private def pickWordsMax(map: mutable.HashMap[String, Int]): List[(String, Integer)] = {
-    log("Picking...");
+    log("Picking...")
 
     var maxList: List[(String, Integer)] = List.empty
 
@@ -79,8 +81,6 @@ class PickActor(val ctx: ActorContext[Command], val taskType: String, var nWords
 
       maxList.foreach(pair => map.remove(pair._1))
     }
-
-    map.filter(entry => entry._1 == "text").foreach(entry => println(entry))
 
     log("Most frequent words computed")
 
