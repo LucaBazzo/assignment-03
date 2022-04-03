@@ -5,7 +5,7 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
-import pcd.assignment03.concurrency.StopMonitor
+import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
 import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, StartProcessing}
@@ -47,7 +47,7 @@ object MasterActor {
   private var workCompleted = false
   private var startTime = 0L
 
-  private var pdfProcessor: ActorRef[ProcessPDFMessage] = null
+  private var pdfProcessor: ActorRef[ProcessPDFMessage] = _
 
   private var taskType: String = ""
 
@@ -74,9 +74,14 @@ object MasterActor {
           log("Completed")
           this.pickWordsFrequency(ctx, picker, stopMonitor, view)
 
-        case StopComputation() => if(this.processWords != null) this.processWords ! StopActor()
+        case StopComputation() =>
+          if(this.processWords != null) this.processWords ! StopActor()
+          if(this.picker != null) this.picker ! WordsBagFilling.StopActor()
+          log("Interrupted")
+          view ! ChangeState("Interrupted")
+          Behaviors.stopped
 
-        case _ => log("ERRORONE")
+        case _ => log("ERROR")
       }
 
       Behaviors.same
@@ -163,6 +168,7 @@ object MasterActor {
     processWords ! ProcessList(stringList, numTasks)
 
     this.pickWordsFrequency(context, picker, stopMonitor, view)
+
 
     /*//TODO temporaneo, da mettere a posto
     if(!stopMonitor.isStopped) {

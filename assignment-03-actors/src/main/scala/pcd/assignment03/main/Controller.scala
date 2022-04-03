@@ -6,7 +6,7 @@ import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.Command
 import pcd.assignment03.main.View.ViewMessage
 import pcd.assignment03.tasks.MasterActor
-import pcd.assignment03.tasks.MasterActor.Start
+import pcd.assignment03.tasks.MasterActor.{MasterMessage, Start, StopComputation}
 
 import java.io.File
 
@@ -17,6 +17,7 @@ case class StopProcess() extends ControllerMessage
 object Controller {
 
   private val stopMonitor = new StopMonitor()
+  private var masterActor: ActorRef[MasterMessage] = _
 
   def apply(wordsBag: ActorRef[Command]): Behavior[ControllerMessage] = Behaviors.receive { (ctx, message) =>
     message match {
@@ -26,11 +27,11 @@ object Controller {
 
         val numTasks: Int = Runtime.getRuntime.availableProcessors() + 1
 
-        val master = ctx.spawn(MasterActor("Master", viewRef, directory, forbidden, wordsBag,
+        this.masterActor = ctx.spawn(MasterActor("Master", viewRef, directory, forbidden, wordsBag,
           stopMonitor, numTasks, nWords), "Master")
-        master ! Start()
+        this.masterActor ! Start()
 
-      case StopProcess() => stopMonitor.stop()
+      case StopProcess() => if(this.masterActor != null) this.masterActor ! StopComputation()
     }
 
     Behaviors.same

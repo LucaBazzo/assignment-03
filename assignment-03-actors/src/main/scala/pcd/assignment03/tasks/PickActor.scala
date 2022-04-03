@@ -4,7 +4,7 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
-import pcd.assignment03.concurrency.WordsBagFilling.{Command, GetBag, Pick, Return}
+import pcd.assignment03.concurrency.WordsBagFilling._
 import pcd.assignment03.tasks.MasterActor.MaxWordsResult
 
 import scala.collection.mutable
@@ -23,26 +23,36 @@ object PickActor {
 class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: ActorRef[Command]){
 
   private val actorType: String = "Pick Actor"
+  private var interrupted: Boolean = false
 
-  private val pick: Behavior[Command] = Behaviors.receiveMessagePartial {
-    case Pick(from) =>
-      log("Acquiring the bag...")
-      implicit val timeout: Timeout = 2.seconds
-      implicit val scheduler: Scheduler = ctx.system.scheduler
-      val f: Future[Command] = wordsBag ? (replyTo => GetBag(replyTo))
-      implicit val ec: ExecutionContextExecutor = ctx.executionContext
-      //remember you can't call context on future callback
-      f.onComplete({
-        case Success(value) if value.isInstanceOf[Return] =>
-          log("Bag copy acquired")
-          val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map)
-          from ! MaxWordsResult(maxWords)
+  private val pick: Behavior[Command] = Behaviors.receive[Command] { (context, message) =>
+    message match {
+      case Pick(from) =>
+        log("Acquiring the bag...")
+        implicit val timeout: Timeout = 2.seconds
+        implicit val scheduler: Scheduler = ctx.system.scheduler
+        val f: Future[Command] = wordsBag ? (replyTo => GetBag(replyTo))
+        implicit val ec: ExecutionContextExecutor = ctx.executionContext
+        //remember you can't call context on future callback
+        f.onComplete({
+          case Success(value) if value.isInstanceOf[Return] =>
+            if(!interrupted) {
+              log("Bag copy acquired")
+              val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map)
+              from ! MaxWordsResult(maxWords)
+            }
 
-        case _ => log("ERROR")
-      })
+          case _ => log("ERROR")
+        })
+        Behaviors.same
 
-      Behaviors.same
+      case StopActor() =>
+        log("Interrupted")
+        this.interrupted = true
+        Behaviors.stopped
+    }
   }
+
 
   private def log(messages: String*): Unit = {
     for (msg <- messages) {
