@@ -9,7 +9,7 @@ import pcd.assignment03.concurrency.StopMonitor
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
 import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, StartProcessing}
-import pcd.assignment03.tasks.ProcessWords.ProcessList
+import pcd.assignment03.tasks.ProcessWords.{ProcessList, ProcessWordsMessage, StopActor}
 
 import java.io.{File, FileNotFoundException}
 import java.util
@@ -29,6 +29,8 @@ object MasterActor {
   case class ProcessPDFCompleted() extends MasterMessage
   case class WordsLists(result: Option[List[String]]) extends MasterMessage
   case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
+
+  case class StopComputation() extends MasterMessage
 
   case class WorkEnded() extends MasterMessage
 
@@ -50,6 +52,7 @@ object MasterActor {
   private var taskType: String = ""
 
   private var picker: ActorRef[Command] = _
+  private var processWords: ActorRef[ProcessWordsMessage] = _
 
   def apply(taskType: String, view: ActorRef[ViewMessage], pdfDirectory: File, forbidden: File,
             wordsBag: ActorRef[Command], stopMonitor: StopMonitor, numTasks: Int,
@@ -70,6 +73,8 @@ object MasterActor {
         case WorkEnded() =>
           log("Completed")
           this.pickWordsFrequency(ctx, picker, stopMonitor, view)
+
+        case StopComputation() => if(this.processWords != null) this.processWords ! StopActor()
 
         case _ => log("ERRORONE")
       }
@@ -145,7 +150,7 @@ object MasterActor {
   private def mostFrequentWords(context: ActorContext[MasterMessage], nWords: Int,
                                 wordsBag: ActorRef[Command], view: ActorRef[ViewMessage],
                                 numTasks: Int, stopMonitor: StopMonitor): Unit = {
-    this.picker = context.spawn(PickActor("Pick Actor", nWords, wordsBag), "Picker")
+    this.picker = context.spawn(PickActor(nWords, wordsBag), "Picker")
 
     log("Computing most frequent words...")
     view ! ChangeState("Computing most frequent words...")
@@ -154,7 +159,7 @@ object MasterActor {
 
     log("List of words size: " + stringList.length, "Num of tasks: " + numTasks)
 
-    val processWords = context.spawn(ProcessWords(wordsBag, context.self), "WordsProcessor")
+    this.processWords = context.spawn(ProcessWords(wordsBag, context.self), "WordsProcessor")
     processWords ! ProcessList(stringList, numTasks)
 
     this.pickWordsFrequency(context, picker, stopMonitor, view)

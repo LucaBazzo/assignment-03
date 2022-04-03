@@ -15,7 +15,7 @@ object WordsBagFilling {
   final case class Return(map: mutable.HashMap[String, Int]) extends Command
 
   final case class Pick(from: ActorRef[MasterMessage]) extends Command
-  final case class Stop() extends Command
+  final case class StopActor() extends Command
   final case class CountWords(subList: List[String]) extends Command
 
   private val map: mutable.HashMap[String, Int] = new mutable.HashMap[String, Int]()

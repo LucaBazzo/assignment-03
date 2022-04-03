@@ -1,7 +1,8 @@
 package pcd.assignment03.tasks
 
-import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, Behavior}
+import pcd.assignment03.concurrency.WordsBagFilling
 import pcd.assignment03.concurrency.WordsBagFilling.{Command, CountWords}
 import pcd.assignment03.tasks.MasterActor.{MasterMessage, WorkEnded}
 
@@ -10,10 +11,12 @@ object ProcessWords {
   sealed trait ProcessWordsMessage
   case class ProcessList(list: List[String], numActors: Int) extends ProcessWordsMessage
   case class ChildEnded() extends ProcessWordsMessage
+  case class StopActor() extends ProcessWordsMessage
 
   private val actorType: String = "Process Words"
 
   private var nActors: Int = 0
+  private var childrenList: List[ActorRef[Command]] = List.empty
 
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[ProcessWordsMessage] = Behaviors.receive { (context, message) =>
     message match {
@@ -21,6 +24,7 @@ object ProcessWords {
         this.nActors = n
         round(list, n).foreach(sublist => {
           val actor = context.spawnAnonymous(WordsActor(bag, context.self))
+          this.childrenList = actor :: childrenList
           actor ! CountWords(sublist)
         })
       case ChildEnded() =>
@@ -34,6 +38,10 @@ object ProcessWords {
           log("Error")
           Behaviors.stopped
         }
+      case StopActor() =>
+        log("Interrupted")
+        this.childrenList.foreach(child => child ! WordsBagFilling.StopActor())
+        Behaviors.stopped
     }
 
     Behaviors.same
