@@ -5,22 +5,173 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
-import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
 import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
+import pcd.assignment03.concurrency.{StopMonitor, WordsBagFilling}
 import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
+import pcd.assignment03.tasks.MasterActor._
 import pcd.assignment03.tasks.ProcessPDFActor.{ProcessPDFMessage, StartProcessing}
 import pcd.assignment03.tasks.ProcessWords.{ProcessList, ProcessWordsMessage, StopActor}
 
-import java.io.{File, FileNotFoundException}
-import java.util
-import java.util.Scanner
-import java.util.concurrent.{Executors, Future}
+import java.io.File
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.DurationInt
 import scala.util.Success
-import scala.util.control.Breaks.{break, breakable}
 
 object MasterActor {
+
+  sealed trait MasterMessage
+  case class Start() extends MasterMessage
+  case class Error() extends MasterMessage
+  case class ProcessingReady() extends MasterMessage
+  case class ProcessPDFCompleted() extends MasterMessage
+  case class WordsLists(result: Option[List[String]]) extends MasterMessage
+  case class MaxWordsResult(result: Option[(Integer, List[(String, Integer)])]) extends MasterMessage
+
+  case class StopComputation() extends MasterMessage
+
+  case class WorkEnded() extends MasterMessage
+
+  def apply(view: ActorRef[ViewMessage], pdfDirectory: File, forbidden: File,
+            wordsBag: ActorRef[Command], stopMonitor: StopMonitor, numTasks: Int,
+            nWords: Int): Behavior[MasterMessage] =
+    Behaviors.setup { _ =>
+      new MasterActor(view, pdfDirectory, forbidden, wordsBag, stopMonitor, numTasks, nWords).waiting
+    }
+}
+
+class MasterActor(val view: ActorRef[ViewMessage], val pdfDirectory: File, val forbidden: File,
+                  val wordsBag: ActorRef[Command], val stopMonitor: StopMonitor, val numTasks: Int,
+                  val nWords: Int) {
+
+  private var stringList: List[String] = List.empty
+
+  private var workCompleted = false
+  private var startTime = 0L
+
+  private var pdfProcessor: ActorRef[ProcessPDFMessage] = _
+
+  private val actorType: String = "Master"
+
+  private var picker: ActorRef[Command] = _
+  private var processWords: ActorRef[ProcessWordsMessage] = _
+
+  private val waiting: Behavior[MasterMessage] = Behaviors.receive[MasterMessage] { (ctx, message) =>
+    message match {
+      case Start() =>
+        this.startTime = System.currentTimeMillis()
+        pdfProcessor = ctx.spawn(ProcessPDFActor(forbidden, view, pdfDirectory.listFiles(),
+          stopMonitor), "ProcessPDF")
+        pdfProcessor ! StartProcessing(ctx.self)
+        Behaviors.same
+
+      case WordsLists(strings) =>
+        stringList = strings.get
+        if (!stopMonitor.isStopped)
+          this.mostFrequentWords(ctx, nWords, wordsBag, view, numTasks, stopMonitor)
+        Behaviors.same
+
+      case WorkEnded() =>
+        log("Completed")
+        this.pickWordsFrequency(ctx, picker, stopMonitor, view)
+        Behaviors.same
+
+      case StopComputation() =>
+        if(this.processWords != null) this.processWords ! StopActor()
+        if(this.picker != null) this.picker ! WordsBagFilling.StopActor()
+        log("Interrupted")
+        view ! ChangeState("Interrupted")
+        Behaviors.stopped
+
+      case _ =>
+        log("ERROR")
+        Behaviors.stopped
+    }
+  }
+
+  private def mostFrequentWords(context: ActorContext[MasterMessage], nWords: Int,
+                                wordsBag: ActorRef[Command], view: ActorRef[ViewMessage],
+                                numTasks: Int, stopMonitor: StopMonitor): Unit = {
+    this.picker = context.spawn(PickActor(nWords, wordsBag), "Picker")
+
+    log("Computing most frequent words...")
+    view ! ChangeState("Computing most frequent words...")
+
+    wordsBag ! Clear()
+
+    log("List of words size: " + stringList.length, "Num of tasks: " + numTasks)
+
+    this.processWords = context.spawn(ProcessWords(wordsBag, context.self), "WordsProcessor")
+    processWords ! ProcessList(stringList, numTasks)
+
+    this.pickWordsFrequency(context, picker, stopMonitor, view)
+
+  }
+
+  private def pickWordsFrequency(context: ActorContext[MasterMessage], picker: ActorRef[Command],
+                                 stopMonitor: StopMonitor, view: ActorRef[ViewMessage]): Unit = {
+    log("Picking start")
+
+    implicit val timeout: Timeout = 2.seconds
+    implicit val scheduler: Scheduler = context.system.scheduler
+    //remember if ? doesn't work, it's because of an import that has been forgotten
+    val f: scala.concurrent.Future[MasterMessage] = picker ? (replyTo => Pick(replyTo))
+    implicit val ec: ExecutionContextExecutor = context.executionContext
+    //remember you can't call context on future callback
+    f.onComplete({
+      case Success(value) if value.isInstanceOf[MaxWordsResult] =>
+        var result: Option[(Integer, List[(String, Integer)])] = Option.empty
+        try {
+          result = value.asInstanceOf[MaxWordsResult].result
+          log("Pick result ready")
+        } catch {
+          case e: Exception =>
+            e.printStackTrace()
+            stopMonitor.stop()
+            log("Interrupted")
+            view ! ChangeState("Interrupted")
+        }
+
+        if(result.isDefined) {
+          val wordsProcessed: Int = result.get._1
+          val wordsFreq: List[(String, Integer)] = result.get._2
+
+          log("Words processed: " + wordsProcessed, wordsFreq.toString())
+
+          view ! UpdateResult(wordsProcessed, wordsFreq, this.workCompleted)
+          if(this.workCompleted) {
+            log("Most Frequent Words completed")
+
+            val timeElapsed: Long = System.currentTimeMillis() - startTime
+            log("Completed - time elapsed: " + timeElapsed)
+            view ! ChangeState("Completed - time elapsed: "+ timeElapsed)
+          }
+        }
+        else {
+          log("Empty bag")
+        }
+
+      case _ => log("ERROR")
+    })
+  }
+
+  private def log(messages: String*): Unit = {
+    for (msg <- messages) {
+      System.out.println("[" + actorType + "] " + msg)
+    }
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+/*object MasterActor {
 
   sealed trait MasterMessage
   case class Start() extends MasterMessage
@@ -62,7 +213,7 @@ object MasterActor {
         case Start() => this.taskType = taskType
           this.startTime = System.currentTimeMillis()
           pdfProcessor = ctx.spawn(ProcessPDFActor("Process PDF Actor", forbidden, view,
-                                       pdfDirectory.listFiles(), stopMonitor), "ProcessPDF")
+            pdfDirectory.listFiles(), stopMonitor), "ProcessPDF")
           pdfProcessor ! StartProcessing(ctx.self)
 
         case WordsLists(strings) =>
@@ -89,7 +240,7 @@ object MasterActor {
     }
 
   private def processPDF(forbidden: File, view: ActorRef[ViewMessage], pdfDirectory: Array[File],
-                        stopMonitor: StopMonitor): Unit = {
+                         stopMonitor: StopMonitor): Unit = {
     this.startTime = System.currentTimeMillis()
 
     try {
@@ -315,4 +466,4 @@ object MasterActor {
     }
   }
 
-}
+}*/

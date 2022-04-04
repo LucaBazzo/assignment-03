@@ -1,23 +1,14 @@
 package pcd.assignment03.tasks
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior, Scheduler}
-import akka.util.Timeout
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.concurrency.StopMonitor
-import pcd.assignment03.concurrency.WordsBagFilling.{Clear, Command, Pick}
-import pcd.assignment03.main.View.{ChangeState, UpdateResult, ViewMessage}
-import pcd.assignment03.tasks.MasterActor.{Error, MasterMessage, ProcessPDFCompleted, ProcessingReady, WordsLists, executor, extractResults, forbiddenList, log, pdfProcessor, stringList, taskList}
-import pcd.assignment03.tasks.PDFExtractActor.{PDFExtractMessage, StartExtraction, ResultList}
+import pcd.assignment03.main.View.{ChangeState, ViewMessage}
+import pcd.assignment03.tasks.MasterActor.{MasterMessage, WordsLists}
+import pcd.assignment03.tasks.PDFExtractActor.{PDFExtractMessage, StartExtraction}
 
 import java.io.{File, FileNotFoundException}
-import java.util
 import java.util.Scanner
-import java.util.concurrent.{Executors, Future}
-import scala.concurrent.ExecutionContextExecutor
-import scala.concurrent.duration.DurationInt
-import scala.util.Success
-import scala.util.control.Breaks.{break, breakable}
 
 object ProcessPDFActor {
 
@@ -28,16 +19,13 @@ object ProcessPDFActor {
 
   private var forbiddenList: List[String] = List.empty
   private var taskList: List[ActorRef[PDFExtractMessage]] = List.empty
-  private val executor = Executors.newCachedThreadPool()
-  private val extractResults: util.List[Future[List[String]]] = new util.LinkedList[Future[List[String]]]()
   private var stringList: List[String] = List.empty
-  private var taskType: String = ""
-  private var master: ActorRef[MasterMessage] = null
+  private val actorType: String = "Process PDF Actor"
+  private var master: ActorRef[MasterMessage] = _
   private var slaveActorCount: Int = 0
 
-  def apply(taskType: String, forbidden: File, view: ActorRef[ViewMessage], pdfDirectory: Array[File],
+  def apply(forbidden: File, view: ActorRef[ViewMessage], pdfDirectory: Array[File],
             stopMonitor: StopMonitor): Behavior[ProcessPDFMessage] = Behaviors.receive { (ctx, message) =>
-    this.taskType = taskType
     message match {
       case StartProcessing(from) =>
         try {
@@ -89,9 +77,9 @@ object ProcessPDFActor {
     Behaviors.same
     }
 
-  private def log(msgs: String*): Unit = {
-    for (msg <- msgs) {
-      System.out.println("[" + taskType + "] " + msg)
+  private def log(messages: String*): Unit = {
+    for (msg <- messages) {
+      System.out.println("[" + actorType + "] " + msg)
     }
   }
 

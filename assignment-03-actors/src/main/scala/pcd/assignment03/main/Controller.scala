@@ -27,7 +27,7 @@ object Controller {
 
         val numTasks: Int = Runtime.getRuntime.availableProcessors() + 1
 
-        this.masterActor = ctx.spawn(MasterActor("Master", viewRef, directory, forbidden, wordsBag,
+        this.masterActor = ctx.spawn(MasterActor(viewRef, directory, forbidden, wordsBag,
           stopMonitor, numTasks, nWords), "Master")
         this.masterActor ! Start()
 
