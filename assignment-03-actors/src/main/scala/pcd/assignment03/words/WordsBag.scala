@@ -14,7 +14,7 @@ object WordsBag {
   final case class GetBag(from: ActorRef[Command]) extends Command
   final case class Return(map: mutable.HashMap[String, Int]) extends Command
 
-  final case class Pick(from: ActorRef[MasterMessage]) extends Command
+  final case class Pick(nWords: Int, from: ActorRef[MasterMessage]) extends Command
   final case class StopActor() extends Command
   final case class CountWords(subList: List[String]) extends Command
 

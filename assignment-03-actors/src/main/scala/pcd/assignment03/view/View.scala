@@ -21,7 +21,7 @@ object View {
   def apply(width: Int, height: Int, pdfPath: String, ignoredFile: String,
             nWords: Int, controller: ActorRef[ControllerMessage]): Behavior[ViewMessage] =
     Behaviors.setup { ctx =>
-      new View(ctx, width, height, pdfPath, ignoredFile, nWords, controller).start
+      new View(ctx, width, height, pdfPath, ignoredFile, nWords, controller).standby
     }
 }
 
@@ -32,7 +32,7 @@ class View(val context: ActorContext[ViewMessage], val width: Int, val height: I
   private val event: ViewEvent = new ViewEvent(context.self)
   private val gui: ViewGUI = new ViewGUI(width, height, pdfPath, ignoredFile, nWords, event)
 
-  private val start: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
+  private val standby: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
     case View.Display() =>
       javax.swing.SwingUtilities.invokeLater(() => gui.setVisible(true))
       Behaviors.same
@@ -49,7 +49,7 @@ class View(val context: ActorContext[ViewMessage], val width: Int, val height: I
       Behaviors.same
 
     case View.StartProcess(pdfPath, ignoredPath, nWords) =>
-      controller ! StartProcess(pdfPath, ignoredPath, nWords, context.self)
+      controller ! StartProcess(pdfPath, ignoredPath, nWords)
       Behaviors.same
 
     case View.StopProcess() =>

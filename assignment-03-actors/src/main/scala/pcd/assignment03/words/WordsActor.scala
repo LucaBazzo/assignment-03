@@ -4,7 +4,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior, DispatcherSelector}
 import WordsBag.{Command, CountWords, StopActor, Update}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.words.WordsManager.{ChildEnded, ProcessWordsMessage}
+import pcd.assignment03.words.WordsManager.{ChildEnded, WordsManagerMessage}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -13,7 +13,7 @@ object WordsActor {
   private val actorType: String = ApplicationConstants.WordsActorType
   private var interrupted: Boolean = false
 
-  def apply(bag: ActorRef[Command], fatherRef: ActorRef[ProcessWordsMessage]): Behavior[Command] = Behaviors.receive { (ctx, message) =>
+  def apply(bag: ActorRef[Command], fatherRef: ActorRef[WordsManagerMessage]): Behavior[Command] = Behaviors.receive { (ctx, message) =>
     message match {
         case CountWords(subList) =>
           log("Started")

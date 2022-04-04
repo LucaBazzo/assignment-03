@@ -28,9 +28,10 @@ object Main {
     val wordsBag = context.spawn(WordsBag(), "WordsBag")
 
     val controller = context.spawn(Controller(wordsBag), "Controller")
-    val view = context.spawn(View(weight, height, this.pdfPath,
+    val view = context.spawn(View(this.weight, this.height, this.pdfPath,
       this.ignoredPath, this.nWords, controller), "View")
 
+    controller ! Initialize(view)
     view ! Display()
 
     Behaviors.empty

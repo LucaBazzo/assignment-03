@@ -15,20 +15,20 @@ import scala.util.Success
 
 object PickActor {
 
-  def apply(nWords: Int, wordsBag: ActorRef[Command]): Behavior[Command] =
+  def apply(wordsBag: ActorRef[Command]): Behavior[Command] =
     Behaviors.setup { ctx =>
-      new PickActor(ctx, nWords, wordsBag).pick
+      new PickActor(ctx, wordsBag).standby
     }
 }
 
-class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: ActorRef[Command]){
+class PickActor(val ctx: ActorContext[Command], var wordsBag: ActorRef[Command]){
 
   private val actorType: String = ApplicationConstants.PickerActorType
   private var interrupted: Boolean = false
 
-  private val pick: Behavior[Command] = Behaviors.receive[Command] { (_, message) =>
+  private val standby: Behavior[Command] = Behaviors.receive[Command] { (_, message) =>
     message match {
-      case Pick(from) =>
+      case Pick(nWords, from) =>
         log("Acquiring the bag...")
         implicit val timeout: Timeout = 2.seconds
         implicit val scheduler: Scheduler = ctx.system.scheduler
@@ -39,7 +39,7 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
           case Success(value) if value.isInstanceOf[Return] =>
             if(!interrupted) {
               log("Bag copy acquired")
-              val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map)
+              val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map, nWords)
               from ! MaxWordsResult(maxWords)
             }
 
@@ -54,12 +54,12 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
     }
   }
 
-  private def countingMaxWords(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
+  private def countingMaxWords(map: mutable.HashMap[String, Int], nWords: Int): Option[(Integer, List[(String, Integer)])] = {
     var maxList: List[(String, Integer)] = List.empty
 
     if(map.nonEmpty) {
       val wordsProc: Int = map.values.sum
-      maxList = pickWordsMax(map)
+      maxList = pickWordsMax(map, nWords)
       log(wordsProc.toString, maxList.toString())
       return Option.apply((wordsProc, maxList))
     }
@@ -68,7 +68,7 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
     Option.empty
   }
 
-  private def pickWordsMax(map: mutable.HashMap[String, Int]): List[(String, Integer)] = {
+  private def pickWordsMax(map: mutable.HashMap[String, Int], nWords: Int): List[(String, Integer)] = {
     log("Picking...")
 
     var maxList: List[(String, Integer)] = List.empty
@@ -93,7 +93,7 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
 
   private def log(messages: String*): Unit = {
     for (msg <- messages) {
-      System.out.println("[" + actorType + "] " + msg)
+      println("[" + actorType + "] " + msg)
     }
   }
 }

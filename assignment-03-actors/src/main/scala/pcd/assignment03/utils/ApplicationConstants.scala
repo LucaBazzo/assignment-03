@@ -9,6 +9,8 @@ object ApplicationConstants {
   val DefaultIgnoredPath = ".\\ignored\\ignored.txt"
   val DefaultNWords = 5
 
+  val NumProcessors: Int = Runtime.getRuntime.availableProcessors() + 1
+
   val MasterActorType: String = "Master Actor"
   val PDFExtractActorType: String = "PDF Extract Actor"
   val PickerActorType: String = "Picker Actor"

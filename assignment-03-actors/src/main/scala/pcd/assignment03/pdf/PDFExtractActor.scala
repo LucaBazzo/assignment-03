@@ -51,9 +51,11 @@ object PDFExtractActor {
 
         from ! RetrieveWords(Option.apply(resultString.split(" ").toList))
 
+        Behaviors.stopped
+
     }
 
-    Behaviors.same
+    //Behaviors.same
   }
 
   private def log(messages: String*): Unit = {

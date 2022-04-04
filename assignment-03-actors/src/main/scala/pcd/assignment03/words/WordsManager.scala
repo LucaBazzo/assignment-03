@@ -8,33 +8,33 @@ import pcd.assignment03.words.WordsBag.{Command, CountWords}
 
 object WordsManager {
 
-  sealed trait ProcessWordsMessage
-  case class ProcessList(list: List[String], numActors: Int) extends ProcessWordsMessage
-  case class ChildEnded() extends ProcessWordsMessage
-  case class StopActor() extends ProcessWordsMessage
+  sealed trait WordsManagerMessage
+  case class ManageList(list: List[String], numActors: Int) extends WordsManagerMessage
+  case class ChildEnded() extends WordsManagerMessage
+  case class StopActor() extends WordsManagerMessage
 
   private val actorType: String = ApplicationConstants.WordsManagerActorType
 
-  private var nActors: Int = 0
+  private var nActiveActors: Int = 0
   private var childrenList: List[ActorRef[Command]] = List.empty
 
-  def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[ProcessWordsMessage] = Behaviors.receive { (context, message) =>
+  def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[WordsManagerMessage] = Behaviors.receive { (context, message) =>
     message match {
-      case ProcessList(list, n) =>
-        this.nActors = n
+      case ManageList(list, n) =>
+        this.nActiveActors = n
         round(list, n).foreach(sublist => {
           val actor = context.spawnAnonymous(WordsActor(bag, context.self))
           this.childrenList = actor :: childrenList
           actor ! CountWords(sublist)
         })
       case ChildEnded() =>
-        nActors -= 1
-        log("Child terminated. " + nActors + " left")
-        if(nActors == 0) {
+        nActiveActors -= 1
+        log("Child terminated. " + nActiveActors + " left")
+        if(nActiveActors == 0) {
+          childrenList = List.empty
           fatherRef ! WorkEnded()
           log("Work completed")
-          Behaviors.stopped
-        } else if(nActors < 0) {
+        } else if(nActiveActors < 0) {
           log("Error")
           Behaviors.stopped
         }
