@@ -3,37 +3,33 @@ package pcd.assignment03.main
 import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
-import pcd.assignment03.concurrency.WordsBagFilling
-import pcd.assignment03.main.View.Display
+import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.words.WordsBag
+import pcd.assignment03.view.View
+import pcd.assignment03.view.View.Display
 
 object Main {
 
-  private var DEFAULT_PDF_PATH = ".\\pdf\\"
-  private var DEFAULT_IGNORED_PATH = ".\\ignored\\ignored.txt"
-  private var DEFAULT_N_WORDS = 5
+  private var pdfPath = ApplicationConstants.DefaultPDFPath
+  private var ignoredPath = ApplicationConstants.DefaultIgnoredPath
+  private var nWords = ApplicationConstants.DefaultNWords
+
+  private val weight: Int = ApplicationConstants.DisplayWeight
+  private val height: Int = ApplicationConstants.DisplayHeight
 
   def apply(initialConfig: Array[String]): Behavior[NotUsed] = Behaviors.setup { context =>
 
     if(initialConfig.length == 3) {
-      DEFAULT_PDF_PATH = initialConfig(0)
-      DEFAULT_IGNORED_PATH = initialConfig(1)
-      DEFAULT_N_WORDS = initialConfig(2).toInt
+      this.pdfPath = initialConfig(0)
+      this.ignoredPath = initialConfig(1)
+      this.nWords = initialConfig(2).toInt
     }
 
-    val weight: Int = 700
-    val height: Int = 400
-
-    //val wordsBag: WordsBagFilling = new WordsBagFilling()
-    val wordsBag = context.spawn(WordsBagFilling(), "WordsBag")
-
-    /*wordsBag ! Update("ciao")
-    wordsBag ! Update("piacere")
-    wordsBag ! Update("ciao")*/
-
+    val wordsBag = context.spawn(WordsBag(), "WordsBag")
 
     val controller = context.spawn(Controller(wordsBag), "Controller")
-    val view = context.spawn(View(weight, height, DEFAULT_PDF_PATH,
-      DEFAULT_IGNORED_PATH, DEFAULT_N_WORDS, controller), "View")
+    val view = context.spawn(View(weight, height, this.pdfPath,
+      this.ignoredPath, this.nWords, controller), "View")
 
     view ! Display()
 

@@ -1,12 +1,12 @@
-package pcd.assignment03.concurrency
+package pcd.assignment03.words
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.tasks.MasterActor.MasterMessage
+import pcd.assignment03.main.MasterActor.MasterMessage
 
 import scala.collection.mutable
 
-object WordsBagFilling {
+object WordsBag {
 
   sealed trait Command
   final case class Clear() extends Command
@@ -24,7 +24,7 @@ object WordsBagFilling {
     message match {
       case Update(word) =>
         var count: Int = 1
-        if(this.map.contains(word)) {
+        if (this.map.contains(word)) {
           count = this.map(word) + 1
         }
         this.map.put(word, count)

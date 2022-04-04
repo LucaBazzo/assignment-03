@@ -1,10 +1,10 @@
-package pcd.assignment03.main
+package pcd.assignment03.view
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.main.View.ViewMessage
-import pcd.assignment03.tasks.ImplicitConversions.tupleToPair
-import pcd.assignment03.view.{Pair, ViewGUI}
+import pcd.assignment03.utils.ImplicitConversions.tupleToPair
+import pcd.assignment03.main.{ControllerMessage, StartProcess, StopProcess}
+import pcd.assignment03.view.View.ViewMessage
 
 import java.util
 

@@ -1,11 +1,12 @@
-package pcd.assignment03.tasks
+package pcd.assignment03.words
 
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
-import pcd.assignment03.concurrency.WordsBagFilling._
-import pcd.assignment03.tasks.MasterActor.MaxWordsResult
+import WordsBag._
+import pcd.assignment03.main.MasterActor.MaxWordsResult
+import pcd.assignment03.utils.ApplicationConstants
 
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
@@ -22,10 +23,10 @@ object PickActor {
 
 class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: ActorRef[Command]){
 
-  private val actorType: String = "Pick Actor"
+  private val actorType: String = ApplicationConstants.PickerActorType
   private var interrupted: Boolean = false
 
-  private val pick: Behavior[Command] = Behaviors.receive[Command] { (context, message) =>
+  private val pick: Behavior[Command] = Behaviors.receive[Command] { (_, message) =>
     message match {
       case Pick(from) =>
         log("Acquiring the bag...")
@@ -53,14 +54,7 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
     }
   }
 
-
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      System.out.println("[" + actorType + "] " + msg)
-    }
-  }
-
-  def countingMaxWords(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
+  private def countingMaxWords(map: mutable.HashMap[String, Int]): Option[(Integer, List[(String, Integer)])] = {
     var maxList: List[(String, Integer)] = List.empty
 
     if(map.nonEmpty) {
@@ -95,5 +89,11 @@ class PickActor(val ctx: ActorContext[Command], var nWords: Int, var wordsBag: A
     log("Most frequent words computed")
 
     maxList
+  }
+
+  private def log(messages: String*): Unit = {
+    for (msg <- messages) {
+      System.out.println("[" + actorType + "] " + msg)
+    }
   }
 }

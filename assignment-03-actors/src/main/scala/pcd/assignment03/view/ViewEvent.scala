@@ -1,7 +1,7 @@
-package pcd.assignment03.main
+package pcd.assignment03.view
 
 import akka.actor.typed.ActorRef
-import pcd.assignment03.main.View.ViewMessage
+import pcd.assignment03.view.View.ViewMessage
 
 class ViewEvent(view: ActorRef[ViewMessage]) {
 

@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,8 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import pcd.assignment03.main.ViewEvent;
 
 /**
  *
@@ -166,9 +163,7 @@ public class ViewGUI extends JFrame implements ActionListener {
      * @param workEnded to let the view know if the job is finished or not
      */
     public void updateResult(final int count, final List<Pair<String, Integer>> result, final Boolean workEnded){
-        SwingUtilities.invokeLater(() -> {
-            this.setResult(count, result, workEnded);
-        });
+        SwingUtilities.invokeLater(() -> this.setResult(count, result, workEnded));
     }
 
     /**
@@ -268,7 +263,7 @@ public class ViewGUI extends JFrame implements ActionListener {
     }
 
     private void checkNumber(final String text) {
-        Integer num = 0;
+        int num = 0;
         try{
             num = Integer.parseInt(text);
         } catch (NumberFormatException ex) {

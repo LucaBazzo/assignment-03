@@ -1,19 +1,19 @@
-package pcd.assignment03.tasks
+package pcd.assignment03.words
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.concurrency.WordsBagFilling
-import pcd.assignment03.concurrency.WordsBagFilling.{Command, CountWords}
-import pcd.assignment03.tasks.MasterActor.{MasterMessage, WorkEnded}
+import pcd.assignment03.main.MasterActor.{MasterMessage, WorkEnded}
+import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.words.WordsBag.{Command, CountWords}
 
-object ProcessWords {
+object WordsManager {
 
   sealed trait ProcessWordsMessage
   case class ProcessList(list: List[String], numActors: Int) extends ProcessWordsMessage
   case class ChildEnded() extends ProcessWordsMessage
   case class StopActor() extends ProcessWordsMessage
 
-  private val actorType: String = "Process Words"
+  private val actorType: String = ApplicationConstants.WordsManagerActorType
 
   private var nActors: Int = 0
   private var childrenList: List[ActorRef[Command]] = List.empty
@@ -40,7 +40,7 @@ object ProcessWords {
         }
       case StopActor() =>
         log("Interrupted")
-        this.childrenList.foreach(child => child ! WordsBagFilling.StopActor())
+        this.childrenList.foreach(child => child ! WordsBag.StopActor())
         Behaviors.stopped
     }
 
