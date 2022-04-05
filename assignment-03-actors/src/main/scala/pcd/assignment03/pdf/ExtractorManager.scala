@@ -10,25 +10,29 @@ import pcd.assignment03.view.View.{ChangeState, ViewMessage}
 import java.io.{File, FileNotFoundException}
 import java.util.Scanner
 
-object ProcessPDFActor {
+object ExtractorManager {
 
-  sealed trait ProcessPDFMessage
+  sealed trait ExtractorManagerMessage
   case class StartProcessing(pdfDirectory: Array[File], forbidden: File,
-                             from: ActorRef[MasterMessage]) extends ProcessPDFMessage
-  case class RetrieveWords(result: Option[List[String]]) extends ProcessPDFMessage
+                             from: ActorRef[MasterMessage]) extends ExtractorManagerMessage
+  case class RetrieveWords(result: Option[List[String]],
+                           from: ActorRef[PDFExtractMessage]) extends ExtractorManagerMessage
+  case class StopActor() extends ExtractorManagerMessage
 
   private var forbiddenList: List[String] = List.empty
   private var stringList: List[String] = List.empty
-  private val actorType: String = ApplicationConstants.PDFExtractActorType
+  private val actorType: String = ApplicationConstants.ExtractorManagerActorType
   private var master: ActorRef[MasterMessage] = _
 
   private var nActiveActors: Int = 0
   private var childrenList: List[ActorRef[PDFExtractMessage]] = List.empty
+  private var interrupted: Boolean = false
 
-  def apply(view: ActorRef[ViewMessage]): Behavior[ProcessPDFMessage] =
+  def apply(view: ActorRef[ViewMessage]): Behavior[ExtractorManagerMessage] =
     Behaviors.receive { (ctx, message) =>
       message match {
         case StartProcessing(pdfDirectory, forbidden, from) =>
+          this.interrupted = false
           try {
             val reader: Scanner = new Scanner(forbidden)
             master = from
@@ -56,43 +60,38 @@ object ProcessPDFActor {
           view ! ChangeState("PDF Processing...")
 
           childrenList.foreach(x => x ! StartExtraction(ctx.self))
+          Behaviors.same
 
-          //TODO codice di com'era prima, try catch per me useless
-          /*try {
-            taskList.foreach(x => {
-              x ! StartExtraction(ctx.self)
-            })
-          } catch {
-            case _: Exception =>
-              stopMonitor.stop()
-              log("Interrupted")
-              view ! ChangeState("Interrupted")
-          }*/
+        case RetrieveWords(result, from) =>
+          if(!interrupted) {
+            if (result.isDefined) {
+              stringList = stringList.appendedAll(result.get)
+              nActiveActors -= 1
+              childrenList = childrenList.filterNot(child => child == from)
+              log("Child terminated. " + nActiveActors + " left")
+            }
+            if (nActiveActors == 0) {
+              log("Process PDF completed")
+              log("Completion arrived")
+              master ! WordsLists(Option.apply(stringList))
+              childrenList = List.empty
+              stringList = List.empty
+            } else if(nActiveActors < 0) {
+              log("Error")
+              return Behaviors.stopped
+            }
+          }
+          Behaviors.same
 
-        case RetrieveWords(result) =>
-          if (result.isDefined) {
-            stringList = stringList.appendedAll(result.get)
-            nActiveActors -= 1
-            log("Child terminated. " + nActiveActors + " left")
-          }
-          if (nActiveActors == 0) {
-            log("Process PDF completed")
-            log("Completion arrived")
-            master ! WordsLists(Option.apply(stringList))
-            childrenList = List.empty
-            stringList = List.empty
-          } else if(nActiveActors < 0) {
-            log("Error")
-            Behaviors.stopped
-          }
+        case StopActor() =>
+          log("Interrupted")
+          this.interrupted = true
+          this.childrenList.foreach(child => ctx.stop(child))
+          childrenList = List.empty
+          stringList = List.empty
+          Behaviors.same
       }
-    Behaviors.same
   }
 
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      System.out.println("[" + actorType + "] " + msg)
-    }
-  }
-
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 }

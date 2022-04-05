@@ -5,8 +5,8 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
 import pcd.assignment03.main.MasterActor._
-import pcd.assignment03.pdf.ProcessPDFActor
-import pcd.assignment03.pdf.ProcessPDFActor.{ProcessPDFMessage, StartProcessing}
+import pcd.assignment03.pdf.ExtractorManager
+import pcd.assignment03.pdf.ExtractorManager.{ExtractorManagerMessage, StartProcessing}
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View.{ChangeState, UpdateResult, ViewMessage}
 import pcd.assignment03.words.WordsBag.{Clear, Command, Pick}
@@ -49,8 +49,8 @@ class MasterActor(val context: ActorContext[MasterMessage],
 
   private val actorType: String = ApplicationConstants.MasterActorType
 
-  private val pdfProcessor: ActorRef[ProcessPDFMessage] =
-    context.spawn(ProcessPDFActor(view), "ProcessPDF")
+  private val pdfProcessor: ActorRef[ExtractorManagerMessage] =
+    context.spawn(ExtractorManager(view), "ProcessPDF")
   private val picker: ActorRef[Command] = context.spawn(PickActor(wordsBag), "Picker")
   private val wordsManager: ActorRef[WordsManagerMessage] =
     context.spawn(WordsManager(wordsBag, context.self), "WordsManager")
@@ -68,6 +68,10 @@ class MasterActor(val context: ActorContext[MasterMessage],
 
         gettingPDF
 
+      case StopComputation() =>
+        log("Already in standby")
+        Behaviors.same
+
       case _ =>
         log("ERROR")
         Behaviors.stopped
@@ -80,6 +84,13 @@ class MasterActor(val context: ActorContext[MasterMessage],
         this.mostFrequentWords(stringList.get)
 
         computingMostFrequentWords
+
+      case StopComputation() =>
+        this.pdfProcessor ! ExtractorManager.StopActor()
+        log("Interrupted")
+        view ! ChangeState("Interrupted")
+
+        standby
     }
   }
 
@@ -153,11 +164,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
     })
   }
 
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      System.out.println("[" + actorType + "] " + msg)
-    }
-  }
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 
 }
 

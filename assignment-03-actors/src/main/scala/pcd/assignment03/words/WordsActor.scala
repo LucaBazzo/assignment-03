@@ -1,21 +1,28 @@
 package pcd.assignment03.words
 
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior, DispatcherSelector}
-import WordsBag.{Command, CountWords, StopActor, Update}
+import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.words.WordsBag.{Command, CountWords, Update}
 import pcd.assignment03.words.WordsManager.{ChildEnded, WordsManagerMessage}
-
-import scala.concurrent.{ExecutionContext, Future}
 
 object WordsActor {
 
   private val actorType: String = ApplicationConstants.WordsActorType
-  private var interrupted: Boolean = false
 
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[WordsManagerMessage]): Behavior[Command] = Behaviors.receive { (ctx, message) =>
     message match {
         case CountWords(subList) =>
+          log("Started")
+          //waitFor(2000)
+          log("N° Words: " + subList.length)
+
+          subList.foreach(word => bag ! Update(word))
+          fatherRef ! ChildEnded(ctx.self)
+          log("Completed")
+          Behaviors.stopped
+
+        /*case CountWords(subList) =>
           log("Started")
           log("N° Words: " + subList.length)
 
@@ -26,22 +33,18 @@ object WordsActor {
             if(!interrupted) {
               fatherRef ! ChildEnded()
               log("Completed")
-              Behaviors.stopped
+              return Behaviors.stopped
             }
           }
-
-        case StopActor() =>
-          log("Interrupted")
-          this.interrupted = true
-          Behaviors.stopped
+          Behaviors.same*/
       }
-
-      Behaviors.same
   }
 
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      System.out.println("[" + actorType + "] " + msg)
-    }
+  @throws[InterruptedException]
+  private def waitFor(ms: Long): Unit = {
+    Thread.sleep(ms)
   }
+
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 }
+

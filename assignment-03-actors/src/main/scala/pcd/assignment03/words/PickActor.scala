@@ -91,9 +91,5 @@ class PickActor(val ctx: ActorContext[Command], var wordsBag: ActorRef[Command])
     maxList
   }
 
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      println("[" + actorType + "] " + msg)
-    }
-  }
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 }

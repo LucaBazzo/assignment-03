@@ -12,6 +12,7 @@ object ApplicationConstants {
   val NumProcessors: Int = Runtime.getRuntime.availableProcessors() + 1
 
   val MasterActorType: String = "Master Actor"
+  val ExtractorManagerActorType: String = "Extractor Manager Actor"
   val PDFExtractActorType: String = "PDF Extract Actor"
   val PickerActorType: String = "Picker Actor"
   val WordsActorType: String = "Words Actor"
