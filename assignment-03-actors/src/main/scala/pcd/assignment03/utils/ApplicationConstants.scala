@@ -1,5 +1,7 @@
 package pcd.assignment03.utils
 
+import scala.concurrent.duration.{DurationInt, FiniteDuration}
+
 object ApplicationConstants {
 
   val DisplayWeight: Int = 700
@@ -17,5 +19,7 @@ object ApplicationConstants {
   val PickerActorType: String = "Picker Actor"
   val WordsActorType: String = "Words Actor"
   val WordsManagerActorType: String = "Words Manager Actor"
+
+  val PickDelay: FiniteDuration = 10.milliseconds
 
 }

@@ -1,7 +1,7 @@
 package pcd.assignment03.pdf
 
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior, PostStop}
+import akka.actor.typed.{ActorRef, Behavior}
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission
 import org.apache.pdfbox.text.PDFTextStripper

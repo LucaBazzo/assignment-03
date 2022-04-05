@@ -13,9 +13,7 @@ object WordsActor {
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[WordsManagerMessage]): Behavior[Command] = Behaviors.receive { (ctx, message) =>
     message match {
         case CountWords(subList) =>
-          log("Started")
-          //waitFor(2000)
-          log("N° Words: " + subList.length)
+          log("Started with " + subList.length + " words")
 
           subList.foreach(word => bag ! Update(word))
           fatherRef ! ChildEnded(ctx.self)
@@ -38,11 +36,6 @@ object WordsActor {
           }
           Behaviors.same*/
       }
-  }
-
-  @throws[InterruptedException]
-  private def waitFor(ms: Long): Unit = {
-    Thread.sleep(ms)
   }
 
   private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)

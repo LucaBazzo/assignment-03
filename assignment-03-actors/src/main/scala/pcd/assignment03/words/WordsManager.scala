@@ -22,6 +22,8 @@ object WordsManager {
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[WordsManagerMessage] = Behaviors.receive { (context, message) =>
     message match {
       case ManageList(list, n) =>
+        log("Work with " + n + " actors started")
+        this.interrupted = false
         this.nActiveActors = n
         round(list, n).foreach(sublist => {
           val actor = context.spawnAnonymous(WordsActor(bag, context.self))
