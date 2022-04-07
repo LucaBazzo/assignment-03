@@ -3,7 +3,6 @@ package pcd.assignment03.main
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.main.MasterActor.{MasterMessage, Start, StopComputation}
-import pcd.assignment03.words.WordsBag.Command
 import pcd.assignment03.view.View.ViewMessage
 
 import java.io.File
@@ -16,17 +15,22 @@ case class ProcessCompleted() extends ControllerMessage
 
 object Controller {
 
-  def apply(wordsBag: ActorRef[Command]): Behavior[ControllerMessage] =
-    Behaviors.setup { ctx => new Controller(ctx, wordsBag).initializing }
+  def apply(): Behavior[ControllerMessage] =
+    Behaviors.setup { ctx => new Controller(ctx).initializing }
 }
 
-class Controller(context: ActorContext[ControllerMessage], wordsBag: ActorRef[Command]) {
+/** The Controller of the processes, receives messages from the view and the master
+ *
+ *  @constructor create a controller actor
+ *  @param context the actor context
+ */
+class Controller(context: ActorContext[ControllerMessage]) {
   private var masterActor: ActorRef[MasterMessage] = _
 
   private val initializing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case Initialize(viewRef) =>
-        this.masterActor = context.spawn(MasterActor(context.self, viewRef, wordsBag), "Master")
+        this.masterActor = context.spawn(MasterActor(context.self, viewRef), "Master")
 
         standby
     }

@@ -6,8 +6,8 @@ import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
 import pcd.assignment03.main.MasterActor.{MasterMessage, PickerResult}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.words.PickActor.{Pick, PickerMessage, StartPicking, StopPicking}
-import pcd.assignment03.words.WordsBag.{Command, GetBag, Return}
+import pcd.assignment03.words.PickActor.{Pick, PickerMessage, ReturnBag, StartPicking, StopPicking}
+import pcd.assignment03.words.WordsBag.{Command, GetBag}
 
 import scala.collection.mutable
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -19,6 +19,7 @@ object PickActor {
   sealed trait PickerMessage
   case class StartPicking(nWords: Int) extends PickerMessage
   case class Pick(nWords: Int, last: Boolean = false) extends PickerMessage
+  case class ReturnBag(map: mutable.HashMap[String, Int]) extends PickerMessage
   case class StopPicking() extends PickerMessage
 
   def apply(masterRef: ActorRef[MasterMessage], wordsBag: ActorRef[Command]): Behavior[PickerMessage] =
@@ -27,6 +28,13 @@ object PickActor {
     }
 }
 
+/** Actor that, when started, obtain the most frequent words periodically
+ *
+ *  @constructor create a new picker
+ *  @param ctx the actor context
+ *  @param masterRef the reference to the master, in order to send him the answers
+ *  @param wordsBag a bag that contain the collection of words occurrences
+ */
 class PickActor(val ctx: ActorContext[PickerMessage],
                 val masterRef: ActorRef[MasterMessage],
                 val wordsBag: ActorRef[Command]){
@@ -54,14 +62,14 @@ class PickActor(val ctx: ActorContext[PickerMessage],
         log("Acquiring the bag...")
         implicit val timeout: Timeout = 2.seconds
         implicit val scheduler: Scheduler = ctx.system.scheduler
-        val f: Future[Command] = wordsBag ? (replyTo => GetBag(replyTo))
+        val f: Future[PickerMessage] = wordsBag ? (replyTo => GetBag(replyTo))
         implicit val ec: ExecutionContextExecutor = ctx.executionContext
         //remember you can't call context on future callback
         f.onComplete({
-          case Success(value) if value.isInstanceOf[Return] =>
+          case Success(value) if value.isInstanceOf[ReturnBag] =>
             if(!interrupted) {
               log("Bag copy acquired")
-              val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map, nWords)
+              val maxWords = this.countingMaxWords(value.asInstanceOf[ReturnBag].map, nWords)
               masterRef ! PickerResult(maxWords, last)
               if(last) log("Pick completed")
             }

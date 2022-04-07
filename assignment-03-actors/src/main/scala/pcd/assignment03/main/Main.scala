@@ -4,10 +4,12 @@ import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.words.WordsBag
 import pcd.assignment03.view.View
 import pcd.assignment03.view.View.Display
 
+/** The object in which the program starts
+ *
+ */
 object Main {
 
   private var pdfPath = ApplicationConstants.DefaultPDFPath
@@ -25,9 +27,7 @@ object Main {
       this.nWords = initialConfig(2).toInt
     }
 
-    val wordsBag = context.spawn(WordsBag(), "WordsBag")
-
-    val controller = context.spawn(Controller(wordsBag), "Controller")
+    val controller = context.spawn(Controller(), "Controller")
     val view = context.spawn(View(this.weight, this.height, this.pdfPath,
       this.ignoredPath, this.nWords, controller), "View")
 

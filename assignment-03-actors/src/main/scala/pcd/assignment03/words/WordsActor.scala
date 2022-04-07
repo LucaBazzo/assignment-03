@@ -3,14 +3,24 @@ package pcd.assignment03.words
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.words.WordsBag.{Command, CountWords, Update}
+import pcd.assignment03.words.WordsBag.{Command, Update}
 import pcd.assignment03.words.WordsManager.{ChildEnded, WordsManagerMessage}
 
+/** Actor that adds words and their frequency into the bag
+ *
+ */
 object WordsActor {
+
+  sealed trait WordsMessage
+  case class CountWords(subList: List[String]) extends WordsMessage
 
   private val actorType: String = ApplicationConstants.WordsActorType
 
-  def apply(bag: ActorRef[Command], fatherRef: ActorRef[WordsManagerMessage]): Behavior[Command] = Behaviors.receive { (ctx, message) =>
+  /**
+   *  @param bag reference to the bag that contains all the words count
+   *  @param fatherRef the reference to the actor that has spawned this
+   */
+  def apply(bag: ActorRef[Command], fatherRef: ActorRef[WordsManagerMessage]): Behavior[WordsMessage] = Behaviors.receive { (ctx, message) =>
     message match {
         case CountWords(subList) =>
           log("Started with " + subList.length + " words")
@@ -19,22 +29,6 @@ object WordsActor {
           fatherRef ! ChildEnded(ctx.self)
           log("Completed")
           Behaviors.stopped
-
-        /*case CountWords(subList) =>
-          log("Started")
-          log("N° Words: " + subList.length)
-
-          implicit val executionContext: ExecutionContext =
-            ctx.system.dispatchers.lookup(DispatcherSelector.fromConfig("blocking-dispatcher"))
-          Future {
-            subList.foreach(word => if(!interrupted) bag ! Update(word))
-            if(!interrupted) {
-              fatherRef ! ChildEnded()
-              log("Completed")
-              return Behaviors.stopped
-            }
-          }
-          Behaviors.same*/
       }
   }
 

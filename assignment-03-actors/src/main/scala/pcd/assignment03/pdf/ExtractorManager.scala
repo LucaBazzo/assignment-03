@@ -10,6 +10,9 @@ import pcd.assignment03.view.View.{ChangeState, ViewMessage}
 import java.io.{File, FileNotFoundException}
 import java.util.Scanner
 
+/** Manages the pdf extract actors on the basis of the list of pdf sent by the master.
+ *  Based on this list, it spawns the same number of actor each one with his pdf
+ */
 object ExtractorManager {
 
   sealed trait ExtractorManagerMessage
@@ -28,6 +31,10 @@ object ExtractorManager {
   private var childrenList: List[ActorRef[PDFExtractMessage]] = List.empty
   private var interrupted: Boolean = false
 
+  /**
+   *
+   * @param view the view to interact with
+   */
   def apply(view: ActorRef[ViewMessage]): Behavior[ExtractorManagerMessage] =
     Behaviors.receive { (ctx, message) =>
       message match {
@@ -41,25 +48,21 @@ object ExtractorManager {
               forbiddenList = data :: forbiddenList
             }
             reader.close()
+
+            view ! ChangeState("Getting PDF...")
+            log("Wait completion")
+            pdfDirectory.foreach(pdfFile => {
+              val child = ctx.spawnAnonymous(PDFExtractActor(forbiddenList, pdfFile))
+              childrenList = child :: childrenList
+            })
+
+            nActiveActors = childrenList.length
+            view ! ChangeState("PDF Processing...")
+            childrenList.foreach(x => x ! StartExtraction(ctx.self))
           } catch {
-            case e: FileNotFoundException =>
-              log("An error occurred.")
-              e.printStackTrace()
-
+            case _: FileNotFoundException =>
+              log("ERROR. File not found")
           }
-
-          view ! ChangeState("Getting PDF...")
-          log("Wait completion")
-          pdfDirectory.foreach(pdfFile => {
-            val child = ctx.spawnAnonymous(PDFExtractActor(forbiddenList, pdfFile))
-            childrenList = child :: childrenList
-          })
-
-          nActiveActors = childrenList.length
-
-          view ! ChangeState("PDF Processing...")
-
-          childrenList.foreach(x => x ! StartExtraction(ctx.self))
           Behaviors.same
 
         case RetrieveWords(result, from) =>

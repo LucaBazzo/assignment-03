@@ -4,21 +4,30 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.main.MasterActor.{MasterMessage, WorkEnded}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.words.WordsBag.{Command, CountWords}
+import pcd.assignment03.words.WordsActor.{CountWords, WordsMessage}
+import pcd.assignment03.words.WordsBag.Command
 
+/** Manages the words actor on the basis of the list of words sent by the master.
+ *  Based on the actors to spawn, he divides the list into equal parts and gives them
+ *  to the respective actors
+ */
 object WordsManager {
 
   sealed trait WordsManagerMessage
   case class ManageList(list: List[String], numActors: Int) extends WordsManagerMessage
-  case class ChildEnded(childRef: ActorRef[Command]) extends WordsManagerMessage
+  case class ChildEnded(childRef: ActorRef[WordsMessage]) extends WordsManagerMessage
   case class StopActor() extends WordsManagerMessage
 
   private val actorType: String = ApplicationConstants.WordsManagerActorType
 
   private var nActiveActors: Int = 0
-  private var childrenList: List[ActorRef[Command]] = List.empty
+  private var childrenList: List[ActorRef[WordsMessage]] = List.empty
   private var interrupted: Boolean = false
 
+  /**
+   *  @param bag reference to the bag that contains all the words count
+   *  @param fatherRef the reference to the actor that has spawned this
+   */
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[WordsManagerMessage] = Behaviors.receive { (context, message) =>
     message match {
       case ManageList(list, n) =>

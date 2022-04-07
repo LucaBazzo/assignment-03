@@ -10,6 +10,9 @@ import pcd.assignment03.utils.ApplicationConstants
 
 import java.io.File
 
+/** Actor that extracts words from pdf document
+ *
+ */
 object PDFExtractActor {
 
   sealed trait PDFExtractMessage
@@ -18,13 +21,16 @@ object PDFExtractActor {
 
   private val actorType: String = ApplicationConstants.PDFExtractActorType
 
+  /**
+   *
+   * @param forbiddenList list that contains words to be ignored
+   * @param pdfDoc pdf document handled by this actor
+   */
   def apply(forbiddenList: List[String], pdfDoc: File): Behavior[PDFExtractMessage] =
     Behaviors.receive { (ctx, message) =>
     message match {
 
       case StartExtraction(from) =>
-
-        var resultString: String = ""
         this.log("Document " + pdfDoc.getName + " loaded")
         val document: PDDocument = PDDocument.load(pdfDoc)
         val ap: AccessPermission = document.getCurrentAccessPermission
@@ -35,16 +41,7 @@ object PDFExtractActor {
           stripper.setSortByPosition(true)
           val text: String = stripper.getText(document)
 
-          resultString = text.toLowerCase()
-            .trim()
-            .replaceAll("\n", " ")
-            .replaceAll("\r", " ")
-            .replaceAll(" +", " ")
-
-          for (x: String <- forbiddenList)
-            resultString = resultString.replaceAll(" " + x + " ", "")
-
-          from ! RetrieveWords(Option.apply(resultString.split(" ").toList), ctx.self)
+          from ! RetrieveWords(Option.apply(computeResult(text, forbiddenList)), ctx.self)
         }
         document.close()
 
@@ -52,49 +49,20 @@ object PDFExtractActor {
       }
     }
 
+  private def computeResult(text: String, forbiddenList: List[String]): List[String] = {
+    var resultString: String = text.toLowerCase()
+      .trim()
+      .replaceAll("\n", " ")
+      .replaceAll("\r", " ")
+      .replaceAll(" +", " ")
 
-  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
-
-}
-
-/*class PDFExtractTask(val forbiddenList: List[String], val pdfDoc: File) extends Callable[List[String]]{
-
-  override def call(): List[String] = {
-    var resultString: String = ""
-
-    if(!this.stopMonitor.isStopped) {
-
-      try {
-        this.log("Document " + pdfDoc.getName + " loaded")
-        val document: PDDocument = PDDocument.load(pdfDoc)
-        val ap: AccessPermission = document.getCurrentAccessPermission
-        if (!ap.canExtractContent) {
-          throw new IOException("You do not have permission to extract text")
-        }
-
-        val stripper: PDFTextStripper = new PDFTextStripper()
-        stripper.setSortByPosition(true)
-        var text: String = stripper.getText(document)
-
-        resultString = text.toLowerCase().trim()
-        resultString = resultString.replaceAll("\n", " ")
-        resultString = resultString.replaceAll("\r", " ")
-        resultString = resultString.replaceAll(" +", " ")
-        for (x: String <- forbiddenList)
-        resultString = resultString.replaceAll(" " + x + " ", "")
-
-        document.close()
-
-      } catch {
-        case ex: IOException => ex.printStackTrace()
-      }
-
-    }
-    else
-      throw new InterruptedException()
+    for (x: String <- forbiddenList)
+      resultString = resultString.replaceAll(" " + x + " ", "")
 
     resultString.split(" ").toList
   }
 
+
   private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
-}*/
+
+}
