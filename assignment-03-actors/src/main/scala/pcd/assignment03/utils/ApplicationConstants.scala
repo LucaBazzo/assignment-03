@@ -1,5 +1,10 @@
 package pcd.assignment03.utils
 
+import scala.concurrent.duration.{DurationInt, FiniteDuration}
+
+/** Utility to manage application constants more easily
+ *
+ */
 object ApplicationConstants {
 
   val DisplayWeight: Int = 700
@@ -12,9 +17,12 @@ object ApplicationConstants {
   val NumProcessors: Int = Runtime.getRuntime.availableProcessors() + 1
 
   val MasterActorType: String = "Master Actor"
+  val ExtractorManagerActorType: String = "Extractor Manager Actor"
   val PDFExtractActorType: String = "PDF Extract Actor"
   val PickerActorType: String = "Picker Actor"
   val WordsActorType: String = "Words Actor"
   val WordsManagerActorType: String = "Words Manager Actor"
+
+  val PickDelay: FiniteDuration = 10.milliseconds
 
 }

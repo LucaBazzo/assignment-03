@@ -4,53 +4,88 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Scheduler}
 import akka.util.Timeout
-import WordsBag._
-import pcd.assignment03.main.MasterActor.MaxWordsResult
+import pcd.assignment03.main.MasterActor.{MasterMessage, PickerResult}
 import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.words.PickActor.{Pick, PickerMessage, ReturnBag, StartPicking, StopPicking}
+import pcd.assignment03.words.WordsBag.{Command, GetBag}
 
 import scala.collection.mutable
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.{DurationInt, FiniteDuration}
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.Success
 
 object PickActor {
 
-  def apply(wordsBag: ActorRef[Command]): Behavior[Command] =
+  sealed trait PickerMessage
+  case class StartPicking(nWords: Int) extends PickerMessage
+  case class Pick(nWords: Int, last: Boolean = false) extends PickerMessage
+  case class ReturnBag(map: mutable.HashMap[String, Int]) extends PickerMessage
+  case class StopPicking() extends PickerMessage
+
+  def apply(masterRef: ActorRef[MasterMessage], wordsBag: ActorRef[Command]): Behavior[PickerMessage] =
     Behaviors.setup { ctx =>
-      new PickActor(ctx, wordsBag).standby
+      new PickActor(ctx, masterRef, wordsBag).standby
     }
 }
 
-class PickActor(val ctx: ActorContext[Command], var wordsBag: ActorRef[Command]){
+/** Actor that, when started, obtain the most frequent words periodically
+ *
+ *  @constructor create a new picker
+ *  @param ctx the actor context
+ *  @param masterRef the reference to the master, in order to send him the answers
+ *  @param wordsBag a bag that contain the collection of words occurrences
+ */
+class PickActor(val ctx: ActorContext[PickerMessage],
+                val masterRef: ActorRef[MasterMessage],
+                val wordsBag: ActorRef[Command]){
 
   private val actorType: String = ApplicationConstants.PickerActorType
   private var interrupted: Boolean = false
 
-  private val standby: Behavior[Command] = Behaviors.receive[Command] { (_, message) =>
+  private val pickDelay: FiniteDuration = ApplicationConstants.PickDelay
+
+  private val standby: Behavior[PickerMessage] = Behaviors.receive[PickerMessage] { (ctx, message) =>
     message match {
-      case Pick(nWords, from) =>
+      case StartPicking(nWords) =>
+        this.interrupted = false
+
+        ctx.scheduleOnce(this.pickDelay, ctx.self, Pick(nWords))
+        picking
+
+      case Pick(_, _) => Behaviors.same
+    }
+  }
+
+  private val picking: Behavior[PickerMessage] = Behaviors.receive[PickerMessage] { (_, message) =>
+    message match {
+      case Pick(nWords, last) =>
         log("Acquiring the bag...")
         implicit val timeout: Timeout = 2.seconds
         implicit val scheduler: Scheduler = ctx.system.scheduler
-        val f: Future[Command] = wordsBag ? (replyTo => GetBag(replyTo))
+        val f: Future[PickerMessage] = wordsBag ? (replyTo => GetBag(replyTo))
         implicit val ec: ExecutionContextExecutor = ctx.executionContext
         //remember you can't call context on future callback
         f.onComplete({
-          case Success(value) if value.isInstanceOf[Return] =>
+          case Success(value) if value.isInstanceOf[ReturnBag] =>
             if(!interrupted) {
               log("Bag copy acquired")
-              val maxWords = this.countingMaxWords(value.asInstanceOf[Return].map, nWords)
-              from ! MaxWordsResult(maxWords)
+              val maxWords = this.countingMaxWords(value.asInstanceOf[ReturnBag].map, nWords)
+              masterRef ! PickerResult(maxWords, last)
+              if(last) log("Pick completed")
             }
 
           case _ => log("ERROR")
         })
-        Behaviors.same
+        if(last) standby
+        else {
+          ctx.scheduleOnce(this.pickDelay, ctx.self, Pick(nWords))
+          Behaviors.same
+        }
 
-      case StopActor() =>
+      case StopPicking() =>
         log("Interrupted")
         this.interrupted = true
-        Behaviors.stopped
+        standby
     }
   }
 
@@ -91,9 +126,5 @@ class PickActor(val ctx: ActorContext[Command], var wordsBag: ActorRef[Command])
     maxList
   }
 
-  private def log(messages: String*): Unit = {
-    for (msg <- messages) {
-      println("[" + actorType + "] " + msg)
-    }
-  }
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 }

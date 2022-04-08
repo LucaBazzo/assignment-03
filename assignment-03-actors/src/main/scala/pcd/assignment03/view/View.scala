@@ -25,7 +25,16 @@ object View {
     }
 }
 
-
+/** Manages the view part
+ *
+ * @param context the actor context
+ * @param width the view's width
+ * @param height the view's height
+ * @param pdfPath the path where the pdf are contained
+ * @param ignoredFile the path where the ignored.txt is contained
+ * @param nWords the number of most frequent words to obtain
+ * @param controller reference to the controller, in order to send him the user events
+ */
 class View(val context: ActorContext[ViewMessage], val width: Int, val height: Int, val pdfPath: String,
            val ignoredFile: String, val nWords: Int, controller: ActorRef[ControllerMessage]) {
 

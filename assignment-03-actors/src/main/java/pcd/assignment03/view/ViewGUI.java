@@ -99,8 +99,8 @@ public class ViewGUI extends JFrame implements ActionListener {
 
         //Result part
         JPanel centerPanel = new JPanel();
-        GridBagLayout glayout = new GridBagLayout();
-        centerPanel.setLayout(glayout);
+        GridBagLayout gridlayout = new GridBagLayout();
+        centerPanel.setLayout(gridlayout);
         GridBagConstraints gbc = new GridBagConstraints();
 
         JPanel resultPanel = new JPanel();
@@ -172,9 +172,7 @@ public class ViewGUI extends JFrame implements ActionListener {
      * @param s the new state
      */
     public void updateState(final String s){
-        SwingUtilities.invokeLater(() -> {
-            state.setText(s);
-        });
+        SwingUtilities.invokeLater(() -> state.setText(s));
     }
 
     /**
@@ -184,32 +182,15 @@ public class ViewGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ev){
         String cmd = ev.getActionCommand();
 
-        switch(cmd) {
-            case "Choose directory" :
-            {
-                chooseDirectory();
-                break;
-            }
-            case "Choose file" :
-            {
-                chooseFile();
-                break;
-            }
-            case "Start" :
-            {
+        switch (cmd) {
+            case "Choose directory" -> chooseDirectory();
+            case "Choose file" -> chooseFile();
+            case "Start" -> {
                 emptyTextArea();
                 notifyStarted();
-                break;
             }
-            case "Stop" :
-            {
-                notifyStopped();
-                break;
-            }
-            default :
-            {
-                checkNumber(cmd);
-            }
+            case "Stop" -> notifyStopped();
+            default -> checkNumber(cmd);
         }
     }
 
