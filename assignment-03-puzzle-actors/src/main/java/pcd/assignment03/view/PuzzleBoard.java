@@ -28,13 +28,15 @@ public class PuzzleBoard extends JFrame {
 
 	final int rows, columns;
 	private List<Tile> tiles = new ArrayList<>();
+	private ViewEvent viewEvent;
+	private SelectionManager selectionManager;
 	
-	private SelectionManager selectionManager = new SelectionManager();
-	
-    public PuzzleBoard(final int rows, final int columns, final String imagePath) {
+    public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
-    	
+    	this.viewEvent = viewEvent;
+
+
     	setTitle("Puzzle");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,6 +47,7 @@ public class PuzzleBoard extends JFrame {
         getContentPane().add(board, BorderLayout.CENTER);
         
         createTiles(imagePath);
+        this.selectionManager = new SelectionManager(viewEvent, tiles);
         paintPuzzle(board);
     }
 
@@ -94,7 +97,8 @@ public class PuzzleBoard extends JFrame {
             btn.addActionListener(actionListener -> {
             	selectionManager.selectTile(tile, () -> {
             		paintPuzzle(board);
-                	checkSolution();
+            		if(selectionManager.isPuzzleCompleted())
+                        JOptionPane.showMessageDialog(this, "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
             	});
             });
     	});
@@ -103,10 +107,5 @@ public class PuzzleBoard extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void checkSolution() {
-    	if(tiles.stream().allMatch(Tile::isInRightPlace)) {
-    		JOptionPane.showMessageDialog(this, "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
-    	}
-    }
 }
 

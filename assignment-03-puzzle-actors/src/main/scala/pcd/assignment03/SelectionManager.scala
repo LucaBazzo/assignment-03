@@ -1,6 +1,8 @@
 package pcd.assignment03
 
-import pcd.assignment03.view.Tile
+import pcd.assignment03.view.{Tile, ViewEvent}
+
+import java.util
 
 object SelectionManager{
   trait Listener{
@@ -8,20 +10,18 @@ object SelectionManager{
   }
 }
 
-class SelectionManager{
+class SelectionManager(val viewEvent: ViewEvent, val tiles: util.List[Tile]){
 
-  private var selectionActive=false
-  private var selectedTile:Tile=null
+  private var selectedTile:Option[Tile]=Option.empty
 
   def selectTile(tile:Tile,listener:SelectionManager.Listener):Unit={
-    if(selectionActive){
-      selectionActive=false
-      swap(selectedTile,tile)
+    if(selectedTile.nonEmpty){
+      swap(selectedTile.get,tile)
       listener.onSwapPerformed()
+      selectedTile = Option.empty
     }
     else{
-      selectionActive=true
-      selectedTile=tile
+      selectedTile=Option.apply(tile)
     }
   }
 
@@ -29,6 +29,15 @@ class SelectionManager{
     val pos=t1.getCurrentPosition
     t1.setCurrentPosition(t2.getCurrentPosition)
     t2.setCurrentPosition(pos)
+    viewEvent.notifySwap(t1.getCurrentPosition, t2.getCurrentPosition());
+  }
+
+  def isPuzzleCompleted: Boolean = {
+    val result: Boolean = tiles.stream().allMatch(tile => tile.isInRightPlace)//tiles.forall(tile => tile.isInRightPlace)
+    if (result)
+      viewEvent.puzzleCompleted()
+
+    result
   }
 
 }
