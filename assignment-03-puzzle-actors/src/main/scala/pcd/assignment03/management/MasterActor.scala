@@ -4,8 +4,7 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.main.ControllerMessage
 import pcd.assignment03.management.MasterActor.{MasterMessage, Start, StopComputation}
-import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.view.View.{ViewMessage}
+import pcd.assignment03.view.View.ViewMessage
 
 import java.io.File
 
@@ -37,7 +36,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
                   val controller: ActorRef[ControllerMessage],
                   val view: ActorRef[ViewMessage]) {
 
-  private val actorType: String = ApplicationConstants.MasterActorType
+  private val actorType: String = "Master"
 
   private val standby: Behavior[MasterMessage] = Behaviors.receive { (ctx, message) =>
     message match {

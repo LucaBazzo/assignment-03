@@ -1,44 +1,57 @@
 package pcd.assignment03.view
 
-import java.util
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, Behavior}
+import pcd.assignment03.main.{ControllerMessage, SendUpdate}
+import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.view.SelectionManager.SelectionManagerMessage
 
-trait Listener {
-  def onSwapPerformed():Unit
-}
+object SelectionManager {
 
-object SelectionManager{
+  trait SelectionManagerMessage
+  case class UpdateTileList(newTileList: List[Tile]) extends SelectionManagerMessage
+  case class SelectTile(tile: Tile) extends SelectionManagerMessage
 
-}
-
-class SelectionManager(val viewEvent: ViewEvent, val tiles: util.List[Tile]){
-
-  private var selectedTile:Option[Tile]=Option.empty
-
-  def selectTile(tile:Tile, listener: Listener):Unit={
-    if(selectedTile.nonEmpty){
-      swap(selectedTile.get,tile)
-      listener.onSwapPerformed()
-      selectedTile = Option.empty
+  def apply(tiles: List[Tile], controllerRef: ActorRef[ControllerMessage]): Behavior[SelectionManagerMessage] =
+    Behaviors.setup { _ =>
+      new SelectionManager(tiles, controllerRef).waitingEvents
     }
-    else{
-      selectedTile=Option.apply(tile)
+}
+
+class SelectionManager(var tiles: List[Tile],
+                       val controllerRef: ActorRef[ControllerMessage]){
+
+  private val actorType: String = ApplicationConstants.SelectionManagerActorType
+  private var selectedTile: Option[Tile] = Option.empty
+
+  private val waitingEvents: Behavior[SelectionManagerMessage] = Behaviors.receive { (_, message) =>
+    message match {
+      case SelectionManager.UpdateTileList(newTileList) =>
+        this.tiles = newTileList
+
+        Behaviors.same
+
+      case SelectionManager.SelectTile(tile) =>
+        if(selectedTile.nonEmpty) {
+          swap(selectedTile.get, tile)
+          selectedTile = Option.empty
+          controllerRef ! SendUpdate(tiles, tiles.forall(tile => tile.isInRightPlace))
+        }
+        else
+          selectedTile = Option.apply(tile)
+
+        Behaviors.same
     }
   }
 
   private def swap(t1:Tile, t2:Tile): Unit = {
-    val pos=t1.getCurrentPosition
+    val pos = t1.getCurrentPosition
     t1.setCurrentPosition(t2.getCurrentPosition)
     t2.setCurrentPosition(pos)
-    viewEvent.notifySwap(t1.getCurrentPosition, t2.getCurrentPosition)
+
+    log(t2.currentPosition.toString + " " + t1.currentPosition.toString)
   }
 
-  def isPuzzleCompleted: Boolean = {
-    val result: Boolean = tiles.stream().allMatch(tile => tile.isInRightPlace)//tiles.forall(tile => tile.isInRightPlace)
-    if (result)
-      viewEvent.puzzleCompleted()
-
-    result
-  }
-
+  private def log(messages: String*): Unit = for (msg <- messages) println("[" + actorType + "] " + msg)
 }
 

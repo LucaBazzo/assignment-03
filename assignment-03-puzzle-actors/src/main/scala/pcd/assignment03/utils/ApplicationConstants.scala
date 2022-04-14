@@ -13,6 +13,8 @@ object ApplicationConstants {
   val NRows: Int = 3
   val NColumns: Int = 5
 
-  val MasterActorType: String = "Master Actor"
+  val ImagePath: String = "src/main/resources/bletchley-park-mansion.jpg"
+
+  val SelectionManagerActorType: String = "Selection Manager Actor"
 
 }

@@ -8,15 +8,11 @@ import pcd.assignment03.view.View.ViewMessage
  */
 class ViewEvent(view: ActorRef[ViewMessage]) {
 
-  /** Notifies the actor view of the user-side swap event
+  /** Notifies the actor view of the user-side tile selected event
    *
    */
-  def notifySwap(firstTilePosition: Int, secondTilePosition: Int): Unit = {
-    view ! View.SwapEvent(firstTilePosition, secondTilePosition)
-  }
-
-  def puzzleCompleted(): Unit = {
-    view ! View.PuzzleCompleted()
+  def notifyTileSelected(tile: Tile): Unit = {
+    view ! View.TileSelected(tile)
   }
 
 }

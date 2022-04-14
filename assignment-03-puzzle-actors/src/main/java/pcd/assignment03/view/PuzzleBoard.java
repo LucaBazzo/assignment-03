@@ -23,29 +23,44 @@ import java.util.stream.IntStream;
 
 public class PuzzleBoard extends JFrame {
 
-	final int rows, columns;
-	private final List<Tile> tiles = new ArrayList<>();
-    private final SelectionManager selectionManager;
+	private final int rows, columns;
+    private final ViewEvent viewEvent;
+
+	private List<Tile> tiles = new ArrayList<>();
+	private final JPanel board;
+
 	
     public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
-
+		this.viewEvent = viewEvent;
 
         setTitle("Puzzle");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        final JPanel board = new JPanel();
+        this.board = new JPanel();
         board.setBorder(BorderFactory.createLineBorder(Color.gray));
         board.setLayout(new GridLayout(rows, columns, 0, 0));
         getContentPane().add(board, BorderLayout.CENTER);
         
         createTiles(imagePath);
-        this.selectionManager = new SelectionManager(viewEvent, tiles);
-        paintPuzzle(board);
+        paintPuzzle();
     }
 
+    public void UpdatePuzzle(List<Tile> tiles) {
+        this.tiles = tiles;
+        paintPuzzle();
+    }
+
+    public void PuzzleCompleted() {
+        JOptionPane.showMessageDialog(this,
+                "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public List<Tile> getTileList() {
+        return this.tiles;
+    }
     
     private void createTiles(final String imagePath) {
 		final BufferedImage image;
@@ -80,7 +95,7 @@ public class PuzzleBoard extends JFrame {
         }
 	}
     
-    private void paintPuzzle(final JPanel board) {
+    private void paintPuzzle() {
     	board.removeAll();
     	
     	Collections.sort(tiles);
@@ -89,17 +104,14 @@ public class PuzzleBoard extends JFrame {
     		final TileButton btn = new TileButton(tile);
             board.add(btn);
             btn.setBorder(BorderFactory.createLineBorder(Color.gray));
-            btn.addActionListener(actionListener -> selectionManager.selectTile(tile, () -> {
-                paintPuzzle(board);
-                if(selectionManager.isPuzzleCompleted())
-                    JOptionPane.showMessageDialog(this,
-                            "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
-            }));
+            btn.addActionListener(actionListener -> this.viewEvent.notifyTileSelected(tile));
     	});
     	
     	pack();
         setLocationRelativeTo(null);
     }
+
+
 
 }
 

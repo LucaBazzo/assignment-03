@@ -2,15 +2,17 @@ package pcd.assignment03.view
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.main.{ControllerMessage, StopProcess, SwapEvent}
+import pcd.assignment03.main.{ControllerMessage, Initialize, TileSelected}
+import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View.ViewMessage
+import pcd.assignment03.utils.ImplicitConversions._
 
 object View {
 
   sealed trait ViewMessage
   case class Display() extends ViewMessage
-  case class SwapEvent(firstTilePosition: Int, secondTilePosition: Int) extends ViewMessage
-  case class PuzzleCompleted() extends ViewMessage
+  case class TileSelected(tile: Tile) extends ViewMessage
+  case class UpdateView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ViewMessage
 
 
   def apply(nRows: Int, nColumns: Int, controller: ActorRef[ControllerMessage]): Behavior[ViewMessage] =
@@ -30,20 +32,23 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
            controller: ActorRef[ControllerMessage]) {
 
   private val viewEvent: ViewEvent = new ViewEvent(context.self)
-  val imagePath: String = "src/main/resources/bletchley-park-mansion.jpg"
-  val gui: PuzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent)
+  private val imagePath: String = ApplicationConstants.ImagePath
+  private val puzzleBoard: PuzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent)
 
   private val standby: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
     case View.Display() =>
-      javax.swing.SwingUtilities.invokeLater(() => gui.setVisible(true))
+      controller ! Initialize(this.puzzleBoard.getTileList, context.self)
+      javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
       Behaviors.same
 
-    case View.SwapEvent(firstTilePosition, secondTilePosition) =>
-      controller ! SwapEvent(firstTilePosition, secondTilePosition)
+    case View.TileSelected(tile) =>
+      controller ! TileSelected(tile)
       Behaviors.same
 
-    case View.PuzzleCompleted() =>
-      controller ! StopProcess()
+    case View.UpdateView(tileList, isPuzzleCompleted) =>
+      this.puzzleBoard.UpdatePuzzle(tileList)
+      if(isPuzzleCompleted)
+        this.puzzleBoard.PuzzleCompleted()
       Behaviors.same
   }
 }

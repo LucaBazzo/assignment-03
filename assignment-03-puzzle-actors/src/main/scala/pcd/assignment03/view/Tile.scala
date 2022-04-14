@@ -13,4 +13,6 @@ class Tile(val image: Image, val originalPosition: Int, var currentPosition: Int
   def setCurrentPosition(newPosition: Int): Unit = currentPosition = newPosition
 
   override def compareTo(other: Tile): Int = this.currentPosition.compareTo(other.currentPosition)
+
+  override def toString = s"Tile($originalPosition, $currentPosition, $isInRightPlace)"
 }

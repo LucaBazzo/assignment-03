@@ -23,7 +23,6 @@ object Main {
     val controller = context.spawn(Controller(), "Controller")
     val view = context.spawn(View(this.nRows, this.nColumns, controller), "View")
 
-    controller ! Initialize(view)
     view ! Display()
 
     Behaviors.empty
