@@ -1,7 +1,5 @@
 package pcd.assignment03.view;
 
-import pcd.assignment03.SelectionManager;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -23,21 +21,18 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 
-@SuppressWarnings("serial")
 public class PuzzleBoard extends JFrame {
 
 	final int rows, columns;
-	private List<Tile> tiles = new ArrayList<>();
-	private ViewEvent viewEvent;
-	private SelectionManager selectionManager;
+	private final List<Tile> tiles = new ArrayList<>();
+    private final SelectionManager selectionManager;
 	
     public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
-    	this.viewEvent = viewEvent;
 
 
-    	setTitle("Puzzle");
+        setTitle("Puzzle");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -68,7 +63,7 @@ public class PuzzleBoard extends JFrame {
         int position = 0;
         
         final List<Integer> randomPositions = new ArrayList<>();
-        IntStream.range(0, rows*columns).forEach(item -> { randomPositions.add(item); }); 
+        IntStream.range(0, rows*columns).forEach(randomPositions::add);
         Collections.shuffle(randomPositions);
         
         for (int i = 0; i < rows; i++) {
@@ -94,13 +89,12 @@ public class PuzzleBoard extends JFrame {
     		final TileButton btn = new TileButton(tile);
             board.add(btn);
             btn.setBorder(BorderFactory.createLineBorder(Color.gray));
-            btn.addActionListener(actionListener -> {
-            	selectionManager.selectTile(tile, () -> {
-            		paintPuzzle(board);
-            		if(selectionManager.isPuzzleCompleted())
-                        JOptionPane.showMessageDialog(this, "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
-            	});
-            });
+            btn.addActionListener(actionListener -> selectionManager.selectTile(tile, () -> {
+                paintPuzzle(board);
+                if(selectionManager.isPuzzleCompleted())
+                    JOptionPane.showMessageDialog(this,
+                            "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
+            }));
     	});
     	
     	pack();

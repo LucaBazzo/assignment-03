@@ -3,10 +3,8 @@ package pcd.assignment03.main
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.management.MasterActor
-import pcd.assignment03.management.MasterActor.{MasterMessage, Start, StopComputation}
+import pcd.assignment03.management.MasterActor.{MasterMessage, StopComputation}
 import pcd.assignment03.view.View.ViewMessage
-
-import java.io.File
 
 sealed trait ControllerMessage
 case class Initialize(viewRef: ActorRef[ViewMessage]) extends ControllerMessage
@@ -33,33 +31,20 @@ class Controller(context: ActorContext[ControllerMessage]) {
       case Initialize(viewRef) =>
         this.masterActor = context.spawn(MasterActor(context.self, viewRef), "Master")
 
-        standby
+        waitingEvents
     }
   }
 
-  private val standby: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
+  private val waitingEvents: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case SwapEvent(firstTilePosition, secondTilePosition) =>
-        //this.masterActor ! Start()
         println(secondTilePosition, firstTilePosition)
 
         Behaviors.same
-        //computing
-      case StopProcess() =>
+      case ProcessCompleted() =>
         println("PUZZLE COMPLETED")
-        this.masterActor ! StopComputation()
+        //this.masterActor ! StopComputation()
         Behaviors.same
-    }
-  }
-
-  private val computing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
-    message match {
-      case StopProcess() =>
-        this.masterActor ! StopComputation()
-
-        standby
-
-      case ProcessCompleted() => standby
     }
   }
 }

@@ -8,11 +8,8 @@ import pcd.assignment03.view.View.ViewMessage
  */
 class ViewEvent(view: ActorRef[ViewMessage]) {
 
-  /** Notifies the actor view of the user-side start event
+  /** Notifies the actor view of the user-side swap event
    *
-   * @param pdfPath the path where the pdf are contained
-   * @param ignoredFile the path where the ignored.txt is contained
-   * @param nWords the number of most frequent words to obtain
    */
   def notifySwap(firstTilePosition: Int, secondTilePosition: Int): Unit = {
     view ! View.SwapEvent(firstTilePosition, secondTilePosition)

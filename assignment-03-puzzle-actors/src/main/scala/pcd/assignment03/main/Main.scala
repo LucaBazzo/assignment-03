@@ -4,21 +4,24 @@ import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import com.typesafe.config.ConfigFactory
+import pcd.assignment03.utils.ApplicationConstants
+import pcd.assignment03.view.View
 import pcd.assignment03.view.View.Display
-import pcd.assignment03.view.{PuzzleBoard, View}
 
 /** The object in which the program starts
  *
  */
 object Main {
 
-  private val n = 3
-  private val m = 5
+  private val nRows = ApplicationConstants.NRows
+  private val nColumns = ApplicationConstants.NColumns
+
+  private val defaultPort = ApplicationConstants.DefaultPort
 
   def apply(initialConfig: Array[String]): Behavior[NotUsed] = Behaviors.setup { context =>
 
     val controller = context.spawn(Controller(), "Controller")
-    val view = context.spawn(View(this.n, this.m, controller), "View")
+    val view = context.spawn(View(this.nRows, this.nColumns, controller), "View")
 
     controller ! Initialize(view)
     view ! Display()
@@ -29,7 +32,7 @@ object Main {
   def main(args: Array[String]): Unit = {
     val port =
       if (args.isEmpty)
-        Seq(25251)
+        Seq(this.defaultPort)
       else
         args.toSeq.map(_.toInt).head
 

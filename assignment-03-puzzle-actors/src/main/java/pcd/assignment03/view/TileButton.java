@@ -8,7 +8,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-@SuppressWarnings("serial")
 public class TileButton extends JButton{
 
 	public TileButton(final Tile tile) {

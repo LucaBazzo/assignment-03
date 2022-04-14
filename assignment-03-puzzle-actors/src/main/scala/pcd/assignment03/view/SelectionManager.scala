@@ -1,20 +1,20 @@
-package pcd.assignment03
-
-import pcd.assignment03.view.{Tile, ViewEvent}
+package pcd.assignment03.view
 
 import java.util
 
+trait Listener {
+  def onSwapPerformed():Unit
+}
+
 object SelectionManager{
-  trait Listener{
-    def onSwapPerformed():Unit
-  }
+
 }
 
 class SelectionManager(val viewEvent: ViewEvent, val tiles: util.List[Tile]){
 
   private var selectedTile:Option[Tile]=Option.empty
 
-  def selectTile(tile:Tile,listener:SelectionManager.Listener):Unit={
+  def selectTile(tile:Tile, listener: Listener):Unit={
     if(selectedTile.nonEmpty){
       swap(selectedTile.get,tile)
       listener.onSwapPerformed()
@@ -25,11 +25,11 @@ class SelectionManager(val viewEvent: ViewEvent, val tiles: util.List[Tile]){
     }
   }
 
-  private def swap(t1:Tile,t2:Tile):Unit={
+  private def swap(t1:Tile, t2:Tile): Unit = {
     val pos=t1.getCurrentPosition
     t1.setCurrentPosition(t2.getCurrentPosition)
     t2.setCurrentPosition(pos)
-    viewEvent.notifySwap(t1.getCurrentPosition, t2.getCurrentPosition());
+    viewEvent.notifySwap(t1.getCurrentPosition, t2.getCurrentPosition)
   }
 
   def isPuzzleCompleted: Boolean = {
