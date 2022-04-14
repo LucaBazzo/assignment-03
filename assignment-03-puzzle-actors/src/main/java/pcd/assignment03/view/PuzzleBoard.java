@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 
@@ -79,7 +80,7 @@ public class PuzzleBoard extends JFrame {
         
         final List<Integer> randomPositions = new ArrayList<>();
         IntStream.range(0, rows*columns).forEach(randomPositions::add);
-        Collections.shuffle(randomPositions);
+        Collections.shuffle(randomPositions, new Random(2));
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
