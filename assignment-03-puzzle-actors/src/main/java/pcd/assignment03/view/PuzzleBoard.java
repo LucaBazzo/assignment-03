@@ -15,10 +15,8 @@ import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 
@@ -29,12 +27,15 @@ public class PuzzleBoard extends JFrame {
 
 	private List<Tile> tiles = new ArrayList<>();
 	private final JPanel board;
+	private final Random puzzleSeed;
 
 	
-    public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
+    public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent, final Integer seed) {
     	this.rows = rows;
 		this.columns = columns;
 		this.viewEvent = viewEvent;
+
+        this.puzzleSeed = new Random(seed);
 
         setTitle("Puzzle");
         setResizable(false);
@@ -62,7 +63,9 @@ public class PuzzleBoard extends JFrame {
     public List<Tile> getTileList() {
         return this.tiles;
     }
-    
+
+    public Random getSeed() { return this.puzzleSeed; }
+
     private void createTiles(final String imagePath) {
 		final BufferedImage image;
         
@@ -80,7 +83,7 @@ public class PuzzleBoard extends JFrame {
         
         final List<Integer> randomPositions = new ArrayList<>();
         IntStream.range(0, rows*columns).forEach(randomPositions::add);
-        Collections.shuffle(randomPositions, new Random(2));
+        Collections.shuffle(randomPositions, puzzleSeed);
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {

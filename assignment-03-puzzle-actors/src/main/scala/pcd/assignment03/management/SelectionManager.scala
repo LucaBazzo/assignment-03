@@ -1,10 +1,11 @@
-package pcd.assignment03.view
+package pcd.assignment03.management
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.main.{ControllerMessage, SendUpdate, SynchronizeView}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.view.SelectionManager.SelectionManagerMessage
+import pcd.assignment03.management.SelectionManager.SelectionManagerMessage
+import pcd.assignment03.view.Tile
 
 object SelectionManager {
 

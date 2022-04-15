@@ -10,7 +10,7 @@ import pcd.assignment03.utils.ImplicitConversions._
 object View {
 
   sealed trait ViewMessage
-  case class Display() extends ViewMessage
+  case class Display(seed: Int) extends ViewMessage
   case class TileSelected(tile: Tile) extends ViewMessage
   case class UpdateView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ViewMessage
 
@@ -33,11 +33,12 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
 
   private val viewEvent: ViewEvent = new ViewEvent(context.self)
   private val imagePath: String = ApplicationConstants.ImagePath
-  private val puzzleBoard: PuzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent)
+  private var puzzleBoard: PuzzleBoard = _
 
   private val standby: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
-    case View.Display() =>
-      controller ! Initialize(this.puzzleBoard.getTileList, context.self)
+    case View.Display(seed) =>
+      puzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent, seed)
+      controller ! Initialize(this.puzzleBoard.getTileList)
       javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
       Behaviors.same
 

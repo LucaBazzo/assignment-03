@@ -23,10 +23,10 @@ object Main {
 
     Cluster(context.system)
 
-    val controller = context.spawn(Controller(), "Controller")
+    val controller = context.spawn(Controller(initialConfig.toSeq.map(_.toInt).head), "Controller")
     val view = context.spawn(View(this.nRows, this.nColumns, controller), "View")
 
-    view ! Display()
+    controller ! RegisterView(view)
 
     Behaviors.empty
   }
