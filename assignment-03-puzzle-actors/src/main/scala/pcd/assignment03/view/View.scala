@@ -2,7 +2,7 @@ package pcd.assignment03.view
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.main.{ControllerMessage, Initialize, TileSelected}
+import pcd.assignment03.main.{ControllerMessage, Initialize, InitializeFromAnotherPuzzle, TileSelected}
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View.ViewMessage
 import pcd.assignment03.utils.ImplicitConversions._
@@ -11,6 +11,7 @@ object View {
 
   sealed trait ViewMessage
   case class Display(seed: Int) extends ViewMessage
+  case class DisplayWithTileset(seed: Int, tileset: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ViewMessage
   case class TileSelected(tile: Tile) extends ViewMessage
   case class UpdateView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ViewMessage
 
@@ -40,7 +41,17 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
       puzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent, seed)
       controller ! Initialize(this.puzzleBoard.getTileList)
       javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
-      Behaviors.same
+      idle
+
+
+    case View.DisplayWithTileset(seed, tileset, isPuzzleCompleted) =>
+      puzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent, seed)
+      controller ! InitializeFromAnotherPuzzle(this.puzzleBoard.getTileList, tileset, isPuzzleCompleted)
+      javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
+      idle
+  }
+
+  private val idle: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
 
     case View.TileSelected(tile) =>
       controller ! TileSelected(tile)

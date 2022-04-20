@@ -5,7 +5,7 @@ import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.management.{ReceptionistManager, SelectionManager}
 import pcd.assignment03.management.ReceptionistManager.{ReceptionistManagerMessage, Swap}
 import pcd.assignment03.management.SelectionManager.{ReceivePuzzleUpdate, SelectTile, SelectionManagerMessage, UpdateTileList}
-import pcd.assignment03.view.View.{Display, UpdateView, ViewMessage}
+import pcd.assignment03.view.View.{Display, DisplayWithTileset, UpdateView, ViewMessage}
 import pcd.assignment03.view.Tile
 import pcd.assignment03.utils.ImplicitConversions
 
@@ -13,6 +13,7 @@ import scala.language.implicitConversions
 
 sealed trait ControllerMessage
 case class Initialize(tileList: List[Tile]) extends ControllerMessage
+case class InitializeFromAnotherPuzzle(tileList: List[Tile], movesList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
 case class UpdatePuzzle(tileList: List[Tile]) extends ControllerMessage
 case class SendUpdate(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ControllerMessage
 case class ReceiveUpdate(tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
@@ -22,6 +23,7 @@ case class StopProcess() extends ControllerMessage
 case class ProcessCompleted() extends ControllerMessage
 case class RegisterView(viewRef: ActorRef[ViewMessage]) extends ControllerMessage
 case class DisplayView(seed: Int) extends ControllerMessage
+case class DisplayViewWithTileset(seed: Int, tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
 
 object Controller {
 
@@ -49,6 +51,11 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
         this.selectionManager = context.spawn(SelectionManager(tileList, context.self), "SelectionManager")
         waitingEvents
 
+      case InitializeFromAnotherPuzzle(tileList, movesList, isPuzzleCompleted) =>
+        this.selectionManager = context.spawn(SelectionManager(tileList, context.self), "SelectionManager")
+        this.selectionManager ! ReceivePuzzleUpdate(movesList, isPuzzleCompleted)
+        waitingEvents
+
       case RegisterView(viewRef) =>
         this.viewRef = viewRef
         Behaviors.same
@@ -56,6 +63,11 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
       case DisplayView(seed) =>
         println(seed)
         this.viewRef ! Display(seed)
+        Behaviors.same
+
+      case DisplayViewWithTileset(seed, tileset, isPuzzleCompleted) =>
+        println(seed)
+        this.viewRef ! DisplayWithTileset(seed, tileset, isPuzzleCompleted)
         Behaviors.same
     }
   }
