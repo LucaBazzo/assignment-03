@@ -1,6 +1,8 @@
 package pcd.assignment03.utils
 
 
+import pcd.assignment03.view.TileProperties
+
 import java.util
 
 /** Implicit conversions object
@@ -18,6 +20,12 @@ object ImplicitConversions {
     val javaList: util.List[T] = new util.ArrayList[T]()
     scalaList.foreach(tile => javaList.add(tile))
     javaList
+  }
+
+  implicit def TileListToIntPairList(tileList: List[TileProperties]): List[(Int, Int)] = {
+    var intList: List[(Int, Int)] = List.empty
+    tileList.foreach(tile => intList = Tuple2(tile.getStartPosition, tile.getCurrentPosition) :: intList)
+    intList.sortBy(_._1)
   }
 
 }

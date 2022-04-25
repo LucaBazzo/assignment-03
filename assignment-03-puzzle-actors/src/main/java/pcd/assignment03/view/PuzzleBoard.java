@@ -1,5 +1,7 @@
 package pcd.assignment03.view;
 
+import pcd.assignment03.utils.ApplicationConstants;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -16,7 +18,6 @@ import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 
@@ -25,17 +26,17 @@ public class PuzzleBoard extends JFrame {
 	private final int rows, columns;
     private final ViewEvent viewEvent;
 
-	private List<Tile> tiles = new ArrayList<>();
+	private List<TileProperties> tiles = new ArrayList<>();
 	private final JPanel board;
 	private final Random puzzleSeed;
 
 	
-    public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent, final Integer seed) {
+    public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
 		this.viewEvent = viewEvent;
 
-        this.puzzleSeed = new Random(seed);
+        this.puzzleSeed = new Random(ApplicationConstants.DefaultSeed());
 
         setTitle("Puzzle");
         setResizable(false);
@@ -50,7 +51,7 @@ public class PuzzleBoard extends JFrame {
         paintPuzzle();
     }
 
-    public void UpdatePuzzle(List<Tile> tiles) {
+    public void UpdatePuzzle(List<TileProperties> tiles) {
         this.tiles = tiles;
         paintPuzzle();
     }
@@ -60,11 +61,9 @@ public class PuzzleBoard extends JFrame {
                 "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public List<Tile> getTileList() {
+    public List<TileProperties> getTileList() {
         return this.tiles;
     }
-
-    public Random getSeed() { return this.puzzleSeed; }
 
     private void createTiles(final String imagePath) {
 		final BufferedImage image;
@@ -93,7 +92,7 @@ public class PuzzleBoard extends JFrame {
                         					(imageWidth / columns), 
                         					imageHeight / rows)));
 
-                tiles.add(new Tile(imagePortion, position, randomPositions.get(position)));
+                tiles.add(new Tile(position, randomPositions.get(position), imagePortion));
                 position++;
             }
         }
@@ -105,10 +104,10 @@ public class PuzzleBoard extends JFrame {
     	Collections.sort(tiles);
     	
     	tiles.forEach(tile -> {
-    		final TileButton btn = new TileButton(tile);
+    		final TileButton btn = new TileButton((Tile) tile);
             board.add(btn);
             btn.setBorder(BorderFactory.createLineBorder(Color.gray));
-            btn.addActionListener(actionListener -> this.viewEvent.notifyTileSelected(tile));
+            btn.addActionListener(actionListener -> this.viewEvent.notifyTileSelected((Tile) tile));
     	});
     	
     	pack();

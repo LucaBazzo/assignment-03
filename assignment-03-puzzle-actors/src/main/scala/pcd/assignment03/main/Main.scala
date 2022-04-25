@@ -5,9 +5,9 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.cluster.typed.Cluster
 import com.typesafe.config.ConfigFactory
-import pcd.assignment03.main.Controller.RegisterView
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View
+import pcd.assignment03.view.View.Initialize
 
 /** The object in which the program starts
  *
@@ -26,7 +26,7 @@ object Main {
     val controller = context.spawn(Controller(port), "Controller")
     val view = context.spawn(View(this.nRows, this.nColumns, controller), "View")
 
-    controller ! RegisterView(view)
+    view ! Initialize()
 
     Behaviors.empty
   }

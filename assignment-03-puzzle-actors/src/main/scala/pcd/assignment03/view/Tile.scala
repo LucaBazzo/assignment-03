@@ -2,11 +2,9 @@ package pcd.assignment03.view
 
 import java.awt.Image
 
-class Tile(val image: Image, val originalPosition: Int, var currentPosition: Int) extends Comparable[Tile]{
+class TileProperties(val originalPosition: Int, var currentPosition: Int) extends Comparable[TileProperties]{
 
   val startPosition: Int = currentPosition
-
-  def getImage: Image = image
 
   def isInRightPlace: Boolean = currentPosition == originalPosition
 
@@ -16,7 +14,13 @@ class Tile(val image: Image, val originalPosition: Int, var currentPosition: Int
 
   def setCurrentPosition(newPosition: Int): Unit = currentPosition = newPosition
 
-  override def compareTo(other: Tile): Int = this.currentPosition.compareTo(other.currentPosition)
+  override def compareTo(other: TileProperties): Int = this.currentPosition.compareTo(other.currentPosition)
 
   override def toString = s"Tile($originalPosition, $currentPosition, $isInRightPlace)"
+}
+
+class Tile(override val originalPosition: Int, currentPosition: Int, val image: Image)
+  extends TileProperties(originalPosition, currentPosition) {
+
+  def getImage: Image = image
 }

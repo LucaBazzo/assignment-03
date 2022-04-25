@@ -2,19 +2,21 @@ package pcd.assignment03.view
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.main.Controller.{ControllerMessage, Initialize, InitializeFromAnotherPuzzle, TileSelected}
+import pcd.assignment03.main.Controller.{ControllerMessage, Initialize, TileSelected}
 import pcd.assignment03.utils.ApplicationConstants
-import pcd.assignment03.view.View.ViewMessage
 import pcd.assignment03.utils.ImplicitConversions._
+import pcd.assignment03.view.View.ViewMessage
 
 object View {
 
   sealed trait ViewMessage
-  case class Display(seed: Int) extends ViewMessage
-  case class DisplayWithTileset(seed: Int, tileset: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ViewMessage
-  case class TileSelected(tile: Tile) extends ViewMessage
-  case class UpdateView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ViewMessage
 
+  case class Initialize() extends ViewMessage
+  case class Display() extends ViewMessage
+  case class DisplayWithTileset(tileList: List[TileProperties], isPuzzleCompleted: Boolean) extends ViewMessage
+
+  case class TileSelected(tile: Tile) extends ViewMessage
+  case class UpdateView(tileList: List[TileProperties], isPuzzleCompleted: Boolean) extends ViewMessage
 
   def apply(nRows: Int, nColumns: Int, controller: ActorRef[ControllerMessage]): Behavior[ViewMessage] =
     Behaviors.setup { ctx =>
@@ -34,20 +36,21 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
 
   private val viewEvent: ViewEvent = new ViewEvent(context.self)
   private val imagePath: String = ApplicationConstants.ImagePath
-  private var puzzleBoard: PuzzleBoard = _
+  private val puzzleBoard: PuzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent)
 
   private val standby: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
-    case View.Display(seed) =>
-      puzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent, seed)
-      controller ! Initialize(this.puzzleBoard.getTileList)
-      javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
+
+    case View.Initialize() =>
+      controller ! Initialize(this.context.self, this.puzzleBoard.getTileList)
+      Behaviors.same
+
+    case View.Display() =>
+      this.display()
       idle
 
-
-    case View.DisplayWithTileset(seed, tileset, isPuzzleCompleted) =>
-      puzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent, seed)
-      controller ! InitializeFromAnotherPuzzle(this.puzzleBoard.getTileList, tileset, isPuzzleCompleted)
-      javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
+    case View.DisplayWithTileset(tileList, isPuzzleCompleted) =>
+      this.update(tileList, isPuzzleCompleted)
+      this.display()
       idle
   }
 
@@ -58,9 +61,15 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
       Behaviors.same
 
     case View.UpdateView(tileList, isPuzzleCompleted) =>
-      this.puzzleBoard.UpdatePuzzle(tileList)
-      if(isPuzzleCompleted)
-        this.puzzleBoard.PuzzleCompleted()
+      this.update(tileList, isPuzzleCompleted)
       Behaviors.same
+  }
+
+  private def display(): Unit = javax.swing.SwingUtilities.invokeLater(() => puzzleBoard.setVisible(true))
+
+  private def update(tileList: List[TileProperties], isPuzzleCompleted: Boolean): Unit = {
+    this.puzzleBoard.UpdatePuzzle(tileList)
+    if(isPuzzleCompleted)
+      this.puzzleBoard.PuzzleCompleted()
   }
 }

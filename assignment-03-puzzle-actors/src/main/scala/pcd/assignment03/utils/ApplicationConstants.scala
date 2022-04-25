@@ -15,6 +15,8 @@ object ApplicationConstants {
 
   val ImagePath: String = "src/main/resources/bletchley-park-mansion.jpg"
 
+  val DefaultSeed: Int = 1
+
   val SelectionManagerActorType: String = "Selection Manager Actor"
   val ReceptionistManagerActorType: String = "Receptionist Manager Actor"
 }
