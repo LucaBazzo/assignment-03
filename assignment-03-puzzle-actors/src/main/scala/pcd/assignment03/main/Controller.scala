@@ -2,30 +2,32 @@ package pcd.assignment03.main
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
+import pcd.assignment03.main.Controller._
 import pcd.assignment03.management.{ReceptionistManager, SelectionManager}
-import pcd.assignment03.management.ReceptionistManager.{ReceptionistManagerMessage, Swap}
+import pcd.assignment03.management.ReceptionistManager.{InitializeTileList, ReceptionistManagerMessage, Swap}
 import pcd.assignment03.management.SelectionManager.{ReceivePuzzleUpdate, SelectTile, SelectionManagerMessage, UpdateTileList}
 import pcd.assignment03.view.View.{Display, DisplayWithTileset, UpdateView, ViewMessage}
 import pcd.assignment03.view.Tile
-import pcd.assignment03.utils.ImplicitConversions
 
 import scala.language.implicitConversions
 
-sealed trait ControllerMessage
-case class Initialize(tileList: List[Tile]) extends ControllerMessage
-case class InitializeFromAnotherPuzzle(tileList: List[Tile], movesList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
-case class UpdatePuzzle(tileList: List[Tile]) extends ControllerMessage
-case class SendUpdate(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ControllerMessage
-case class ReceiveUpdate(tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
-case class SynchronizeView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ControllerMessage
-case class TileSelected(tile: Tile) extends ControllerMessage
-case class StopProcess() extends ControllerMessage
-case class ProcessCompleted() extends ControllerMessage
-case class RegisterView(viewRef: ActorRef[ViewMessage]) extends ControllerMessage
-case class DisplayView(seed: Int) extends ControllerMessage
-case class DisplayViewWithTileset(seed: Int, tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
 
 object Controller {
+
+  sealed trait ControllerMessage
+  case class Initialize(tileList: List[Tile]) extends ControllerMessage
+  case class InitializeFromAnotherPuzzle(tileList: List[Tile], movesList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
+
+  case class UpdatePuzzle(tileList: List[Tile]) extends ControllerMessage
+  case class SendUpdate(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ControllerMessage
+  case class ReceiveUpdate(tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
+  case class TileSelected(tile: Tile) extends ControllerMessage
+
+  case class SynchronizeView(tileList: List[Tile], isPuzzleCompleted: Boolean) extends ControllerMessage
+  case class RegisterView(viewRef: ActorRef[ViewMessage]) extends ControllerMessage
+  case class DisplayView(seed: Int) extends ControllerMessage
+  case class DisplayViewWithTileset(seed: Int, tileList: List[(Int, Int)], isPuzzleCompleted: Boolean) extends ControllerMessage
+
 
   def apply(port: Int): Behavior[ControllerMessage] =
     Behaviors.setup { ctx => new Controller(ctx, port).initializing }
@@ -40,15 +42,13 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
 
   private var viewRef: ActorRef[ViewMessage] = _
   private var selectionManager: ActorRef[SelectionManagerMessage] = _
-  private var receptionistManager: ActorRef[ReceptionistManagerMessage] = _
+  private val receptionistManager: ActorRef[ReceptionistManagerMessage] = context.spawn(ReceptionistManager(context.self, port), "ReceptionistManager")
 
   private val initializing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
-    if(this.receptionistManager == null)
-      this.receptionistManager = context.spawn(ReceptionistManager(context.self, port), "ReceptionistManager")
-
     message match {
       case Initialize(tileList) =>
         this.selectionManager = context.spawn(SelectionManager(tileList, context.self), "SelectionManager")
+        this.receptionistManager ! InitializeTileList(tileList)
         waitingEvents
 
       case InitializeFromAnotherPuzzle(tileList, movesList, isPuzzleCompleted) =>
@@ -96,11 +96,6 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
       case SynchronizeView(tileList, isPuzzleCompleted) =>
         viewRef ! UpdateView(tileList, isPuzzleCompleted)
 
-        Behaviors.same
-
-      case ProcessCompleted() =>
-        println("PUZZLE COMPLETED")
-        //this.masterActor ! StopComputation()
         Behaviors.same
     }
   }

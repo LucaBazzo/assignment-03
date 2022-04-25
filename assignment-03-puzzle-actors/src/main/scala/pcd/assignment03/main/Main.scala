@@ -5,9 +5,9 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.cluster.typed.Cluster
 import com.typesafe.config.ConfigFactory
+import pcd.assignment03.main.Controller.RegisterView
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View
-import pcd.assignment03.view.View.Display
 
 /** The object in which the program starts
  *
@@ -19,11 +19,11 @@ object Main {
 
   private val defaultPort = ApplicationConstants.DefaultPort
 
-  def apply(initialConfig: Array[String]): Behavior[NotUsed] = Behaviors.setup { context =>
+  def apply(port: Int): Behavior[NotUsed] = Behaviors.setup { context =>
 
     Cluster(context.system)
 
-    val controller = context.spawn(Controller(initialConfig.toSeq.map(_.toInt).head), "Controller")
+    val controller = context.spawn(Controller(port), "Controller")
     val view = context.spawn(View(this.nRows, this.nColumns, controller), "View")
 
     controller ! RegisterView(view)
@@ -32,9 +32,9 @@ object Main {
   }
 
   def main(args: Array[String]): Unit = {
-    val port =
+    val port: Int =
       if (args.isEmpty)
-        Seq(this.defaultPort)
+        this.defaultPort
       else
         args.toSeq.map(_.toInt).head
 
@@ -42,7 +42,7 @@ object Main {
       akka.remote.artery.canonical.port=$port
       """).withFallback(ConfigFactory.load())
 
-    ActorSystem(Main(args), "PuzzleActorSystem", config)
+    ActorSystem(Main(port), "PuzzleActorSystem", config)
   }
 
 }

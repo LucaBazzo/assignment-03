@@ -112,7 +112,7 @@ public class PuzzleBoard extends JFrame {
     	});
     	
     	pack();
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
     }
 
 

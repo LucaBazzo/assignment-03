@@ -2,7 +2,7 @@ package pcd.assignment03.view
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import pcd.assignment03.main.{ControllerMessage, Initialize, InitializeFromAnotherPuzzle, TileSelected}
+import pcd.assignment03.main.Controller.{ControllerMessage, Initialize, InitializeFromAnotherPuzzle, TileSelected}
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View.ViewMessage
 import pcd.assignment03.utils.ImplicitConversions._
