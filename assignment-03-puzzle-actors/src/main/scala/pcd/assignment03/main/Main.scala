@@ -4,6 +4,7 @@ import akka.NotUsed
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.cluster.typed.Cluster
+import akka.remote.RemoteTransportException
 import com.typesafe.config.ConfigFactory
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.View
@@ -38,11 +39,25 @@ object Main {
       else
         args.toSeq.map(_.toInt).head
 
-    val config = ConfigFactory.parseString(s"""
-      akka.remote.artery.canonical.port=$port
-      """).withFallback(ConfigFactory.load())
+    this.startCluster(port)
 
-    ActorSystem(Main(port), "PuzzleActorSystem", config)
+  }
+
+  def startCluster(port: Int): Unit = {
+    var tempPort = port
+    var isPortValid = false
+
+    while(!isPortValid) {
+      try {
+        val config = ConfigFactory.parseString(ApplicationConstants.PortConfiguration + tempPort).withFallback(ConfigFactory.load())
+        ActorSystem(Main(tempPort), "PuzzleActorSystem", config)
+        isPortValid = true
+      }
+      catch {
+        case _: RemoteTransportException =>
+          tempPort += 1
+      }
+    }
   }
 
 }

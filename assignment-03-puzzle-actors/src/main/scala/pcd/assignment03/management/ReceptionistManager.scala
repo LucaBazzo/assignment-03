@@ -3,14 +3,11 @@ package pcd.assignment03.management
 import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import akka.util.Timeout
 import pcd.assignment03.CborSerializable
 import pcd.assignment03.main.Controller.{ControllerMessage, DisplayView}
 import pcd.assignment03.management.ReceptionistManager._
 import pcd.assignment03.management.SelectionManager.{ReceivePuzzleUpdate, SelectionManagerMessage}
 import pcd.assignment03.utils.ApplicationConstants
-
-import scala.concurrent.duration.DurationInt
 
 object ReceptionistManager {
 
@@ -23,6 +20,8 @@ object ReceptionistManager {
   case class InitializeTileList(tileList: List[(Int, Int)]) extends ReceptionistManagerMessage
   case class TilesHasChanged(tileList: List[(Int, Int)]) extends ReceptionistManagerMessage
   case class ExpandChange(tileList: List[(Int, Int)]) extends ReceptionistManagerMessage with CborSerializable
+  case class SendClockInfo() extends ReceptionistManagerMessage
+  case class CheckClockIntegrity(clock: Int, tileList: List[(Int, Int)], sourcePort: Int) extends ReceptionistManagerMessage with CborSerializable
 
   val ReceptionistServiceKey: ServiceKey[ReceptionistManagerMessage] = ServiceKey[ReceptionistManagerMessage]("ReceptionNode")
 
@@ -47,8 +46,15 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
   private var tileList: List[(Int, Int)] = _
 
   var actorSet: Set[ActorRef[ReceptionistManagerMessage]] = Set.empty
+  var internalClock: Int = 0
+  var polling: Boolean = true
 
   private val waitingEvents: Behavior[ReceptionistManagerMessage] = Behaviors.receive { (ctx, message) =>
+    if (polling) {
+      //start polling for checking clocks different between cluster nodes
+      ctx.scheduleOnce(ApplicationConstants.PollingDelay, ctx.self, SendClockInfo())
+      polling = false
+    }
     message match {
 
       case Add(workerSet) =>
@@ -67,12 +73,14 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
       case InitializeTileList(tileList) => this.tileList = tileList
 
       case TilesHasChanged(tileList) =>
+        this.internalClock += 1
         this.tileList = tileList
-        implicit val timeout: Timeout = 5.seconds
         actorSet.foreach(w => if (checkIP(w)) {
           w ! ExpandChange(tileList) })
 
       case ExpandChange(tileList) =>
+        this.internalClock += 1
+        this.tileList = tileList
         selectionRef ! ReceivePuzzleUpdate(tileList)
 
       case RequestTileset(from) => from ! ReceiveTileset(this.tileList)
@@ -80,6 +88,27 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
       case ReceiveTileset(tileList) =>
         this.tileList = tileList
         selectionRef ! ReceivePuzzleUpdate(tileList)
+
+      case SendClockInfo() =>
+        if(ApplicationConstants.PollingDebug) log("DEBUG - Polling - internal clock " + internalClock)
+        actorSet.foreach(p => if (checkIP(p)) {
+          p ! CheckClockIntegrity(this.internalClock, this.tileList, this.port) })
+        ctx.scheduleOnce(ApplicationConstants.PollingDelay, ctx.self, SendClockInfo())
+
+      /** Check if the internal clock is different (but not greater) from the one received from other nodes,
+       * in that case it means that this node's tileset isn't the latest in the cluster and needs to be updated.
+       * If clocks are equals, tileset are checked and, if different, it means that some updates went lost between those nodes
+       * and so it is prioritized the one coming from the node with lower port number. In this way, only the nodes with greater port number will be updated
+       *
+       */
+      case CheckClockIntegrity(clock, tileList, sourcePort) =>
+        if(ApplicationConstants.PollingDebug) log("DEBUG - check clock integrity: clock received - " + clock + " port received - " + sourcePort )
+        if ((this.internalClock < clock) || (this.internalClock == clock && this.tileList != tileList && this.port > sourcePort)){
+          if(ApplicationConstants.PollingDebug) log("DEBUG - Update performed")
+          this.tileList = tileList
+          this.internalClock = clock
+          selectionRef ! ReceivePuzzleUpdate(this.tileList)
+        }
 
       case _ => log("Error")
     }

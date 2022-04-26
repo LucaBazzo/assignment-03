@@ -28,13 +28,16 @@ public class PuzzleBoard extends JFrame {
 
 	private List<TileProperties> tiles = new ArrayList<>();
 	private final JPanel board;
-	private final Random puzzleSeed;
+	private final String imagePath;
+
+    private Random puzzleSeed;
 
 	
     public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
 		this.viewEvent = viewEvent;
+		this.imagePath = imagePath;
 
         this.puzzleSeed = new Random(ApplicationConstants.DefaultSeed());
 
@@ -47,6 +50,12 @@ public class PuzzleBoard extends JFrame {
         board.setLayout(new GridLayout(rows, columns, 0, 0));
         getContentPane().add(board, BorderLayout.CENTER);
         
+        createTiles(imagePath);
+        paintPuzzle();
+    }
+
+    public void changeSeed(Integer newSeed) {
+        this.puzzleSeed = new Random(newSeed);
         createTiles(imagePath);
         paintPuzzle();
     }

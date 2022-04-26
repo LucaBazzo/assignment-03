@@ -1,5 +1,7 @@
 package pcd.assignment03.utils
 
+import scala.concurrent.duration.{DurationInt, FiniteDuration}
+
 /** Utility to manage application constants more easily
  *
  */
@@ -19,4 +21,8 @@ object ApplicationConstants {
 
   val SelectionManagerActorType: String = "Selection Manager Actor"
   val ReceptionistManagerActorType: String = "Receptionist Manager Actor"
+
+  val PortConfiguration: String = "akka.remote.artery.canonical.port="
+  val PollingDelay: FiniteDuration = 5.seconds
+  val PollingDebug: Boolean = false
 }
