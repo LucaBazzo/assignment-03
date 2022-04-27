@@ -8,7 +8,7 @@ import pcd.assignment03.management.SelectionManager.{SelectTile, SelectionManage
 import pcd.assignment03.management.{ReceptionistManager, SelectionManager}
 import pcd.assignment03.utils.ImplicitConversions._
 import pcd.assignment03.view.TileProperties
-import pcd.assignment03.view.View.{Display, DisplayWithTileset, UpdateView, ViewMessage}
+import pcd.assignment03.view.View.{DisplayWithTileset, UpdateView, ViewMessage}
 
 
 object Controller {
@@ -16,7 +16,6 @@ object Controller {
   sealed trait ControllerMessage
 
   case class Initialize(viewRef: ActorRef[ViewMessage], tileList: List[TileProperties]) extends ControllerMessage
-  case class DisplayView() extends ControllerMessage
 
   case class TileSelected(tile: TileProperties) extends ControllerMessage
   case class SendUpdate(tileList: List[TileProperties], isPuzzleCompleted: Boolean) extends ControllerMessage
@@ -50,11 +49,6 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
         this.receptionistManager ! InitializeTileList(tileList)
 
         Behaviors.same
-
-      case DisplayView() =>
-        this.viewRef ! Display()
-
-        waitingEvents
 
       case SynchronizeView(tileList, isPuzzleCompleted) =>
         this.viewRef ! DisplayWithTileset(tileList, isPuzzleCompleted)

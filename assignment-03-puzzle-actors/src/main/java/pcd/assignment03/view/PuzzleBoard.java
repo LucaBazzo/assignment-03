@@ -54,12 +54,6 @@ public class PuzzleBoard extends JFrame {
         paintPuzzle();
     }
 
-    public void changeSeed(Integer newSeed) {
-        this.puzzleSeed = new Random(newSeed);
-        createTiles(imagePath);
-        paintPuzzle();
-    }
-
     public void UpdatePuzzle(List<TileProperties> tiles) {
         this.tiles = tiles;
         paintPuzzle();

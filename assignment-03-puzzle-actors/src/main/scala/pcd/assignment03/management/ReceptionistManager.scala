@@ -4,10 +4,12 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.CborSerializable
-import pcd.assignment03.main.Controller.{ControllerMessage, DisplayView}
+import pcd.assignment03.main.Controller.ControllerMessage
 import pcd.assignment03.management.ReceptionistManager._
 import pcd.assignment03.management.SelectionManager.{ReceivePuzzleUpdate, SelectionManagerMessage}
 import pcd.assignment03.utils.ApplicationConstants
+
+import scala.util.Random
 
 object ReceptionistManager {
 
@@ -46,8 +48,11 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
   private var tileList: List[(Int, Int)] = _
 
   var actorSet: Set[ActorRef[ReceptionistManagerMessage]] = Set.empty
+
   var internalClock: Int = 0
   var polling: Boolean = true
+
+  var hasStarted: Boolean = false
 
   private val waitingEvents: Behavior[ReceptionistManagerMessage] = Behaviors.receive { (ctx, message) =>
     if (polling) {
@@ -63,11 +68,16 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
           actorSet = workerSet
         log(workerSet.toString())
 
-        if (actorSet.size == 1 && !checkIP(actorSet.head) && port == ApplicationConstants.DefaultPort) {
-          controllerRef ! DisplayView()
-        } else {
-          if (actorSet.exists(a => checkIP(a)))
-            actorSet.filter(a => checkIP(a)).head ! RequestTileset(ctx.self)
+        if(!hasStarted){
+          if (isFirst) {
+            this.tileList = Random.shuffle(this.tileList)
+            selectionRef ! ReceivePuzzleUpdate(this.tileList)
+            this.hasStarted = true
+          }
+          else if (actorSet.exists(a => checkIP(a))) {
+              actorSet.filter(a => checkIP(a)).head ! RequestTileset(ctx.self)
+            this.hasStarted = true
+          }
         }
 
       case InitializeTileList(tileList) => this.tileList = tileList
@@ -114,6 +124,8 @@ class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessa
     }
     Behaviors.same
   }
+
+  private def isFirst: Boolean = actorSet.size == 1 && !checkIP(actorSet.head) && port == ApplicationConstants.DefaultPort
 
   private def checkIP[T](ref: ActorRef[T]): Boolean = ref.path.toString.contains("127.0.0.1")
 

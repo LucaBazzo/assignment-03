@@ -53,7 +53,7 @@ class SelectionManager(var tiles: List[TileProperties],
     firstTile.setCurrentPosition(secondTile.getCurrentPosition)
     secondTile.setCurrentPosition(pos)
 
-    log(secondTile.currentPosition.toString + " " + firstTile.currentPosition.toString)
+    log(secondTile.currentPosition.toString + " --> " + firstTile.currentPosition.toString)
   }
 
   private def isPuzzleCompleted(tiles: List[TileProperties]): Boolean =

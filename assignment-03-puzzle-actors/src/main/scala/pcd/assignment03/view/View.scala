@@ -12,7 +12,6 @@ object View {
   sealed trait ViewMessage
 
   case class Initialize() extends ViewMessage
-  case class Display() extends ViewMessage
   case class DisplayWithTileset(tileList: List[TileProperties], isPuzzleCompleted: Boolean) extends ViewMessage
 
   case class TileSelected(tile: Tile) extends ViewMessage
@@ -43,10 +42,6 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
     case View.Initialize() =>
       controller ! Initialize(this.context.self, this.puzzleBoard.getTileList)
       Behaviors.same
-
-    case View.Display() =>
-      this.display()
-      idle
 
     case View.DisplayWithTileset(tileList, isPuzzleCompleted) =>
       this.update(tileList, isPuzzleCompleted)
