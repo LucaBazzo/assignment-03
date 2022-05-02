@@ -30,4 +30,9 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    
+     //http
+    implementation 'org.apache.httpcomponents:httpcore:4.0.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.3.4'
+    implementation 'org.jsoup:jsoup:1.14.3'
 }
