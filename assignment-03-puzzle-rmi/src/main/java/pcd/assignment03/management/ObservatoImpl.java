@@ -20,6 +20,7 @@ public class ObservatoImpl implements Observato {
         this.tileset = tileset;
         this.obsevers.forEach(o -> {
 			try {
+			    System.out.println(o);
 				o.notify(this.tileset);
 			} catch (RemoteException e) {
 				e.printStackTrace();

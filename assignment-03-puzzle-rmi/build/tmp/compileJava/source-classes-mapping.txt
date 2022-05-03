@@ -1,41 +1,71 @@
-pcd/assignment03/rmi/MyClass1.java
- pcd.assignment03.rmi.MyClass1
-pcd/assignment03/main/Controller.java
- pcd.assignment03.main.Controller
-pcd/assignment03/rmi/HelloService.java
- pcd.assignment03.rmi.HelloService
 pcd/assignment03/rmi/HelloServiceImpl.java
  pcd.assignment03.rmi.HelloServiceImpl
-pcd/assignment03/rmi/MyClass2Impl.java
- pcd.assignment03.rmi.MyClass2Impl
-pcd/assignment03/utils/Pair.java
- pcd.assignment03.utils.Pair
-pcd/assignment03/rmi/MessageExt.java
- pcd.assignment03.rmi.MessageExt
+pcd/assignment03/rmi/Counter.java
+ pcd.assignment03.rmi.Counter
+pcd/assignment03/management/ObservatoImpl.java
+ pcd.assignment03.management.ObservatoImpl
+pcd/assignment03/rmi/Test02_Client2.java
+ pcd.assignment03.rmi.Test02_Client2
 pcd/assignment03/rmi/MyClass2.java
  pcd.assignment03.rmi.MyClass2
 pcd/assignment03/rmi/MyClass1Impl.java
  pcd.assignment03.rmi.MyClass1Impl
 pcd/assignment03/management/TileProperties.java
  pcd.assignment03.management.TileProperties
-pcd/assignment03/rmi/Test01_Client1a.java
- pcd.assignment03.rmi.Test01_Client1a
 pcd/assignment03/main/Process.java
  pcd.assignment03.main.Process
+pcd/assignment03/rmi/Test02_Server2.java
+ pcd.assignment03.rmi.Test02_Server2
 pcd/assignment03/view/PuzzleBoard.java
  pcd.assignment03.view.PuzzleBoard
+pcd/assignment03/main/Main.java
+ pcd.assignment03.main.Main
+pcd/assignment03/view/Tile.java
+ pcd.assignment03.view.Tile
+pcd/assignment03/rmi/MyClass1.java
+ pcd.assignment03.rmi.MyClass1
+pcd/assignment03/main/Controller.java
+ pcd.assignment03.main.Controller
+pcd/assignment03/rmi/Test01_Client1b.java
+ pcd.assignment03.rmi.Test01_Client1b
+pcd/assignment03/rmi/HelloService.java
+ pcd.assignment03.rmi.HelloService
+pcd/assignment03/rmi/MyClass2Impl.java
+ pcd.assignment03.rmi.MyClass2Impl
+pcd/assignment03/utils/Pair.java
+ pcd.assignment03.utils.Pair
+pcd/assignment03/rmi/MessageExt.java
+ pcd.assignment03.rmi.MessageExt
+pcd/assignment03/rmi/Test01_Client1a.java
+ pcd.assignment03.rmi.Test01_Client1a
+pcd/assignment03/rmi/Test01_Server.java
+ pcd.assignment03.rmi.Test01_Server
+pcd/assignment03/management/Observato.java
+ pcd.assignment03.management.Observato
 pcd/assignment03/view/TileButton.java
  pcd.assignment03.view.TileButton
  pcd.assignment03.view.TileButton$1
+pcd/assignment03/rmi/Message.java
+ pcd.assignment03.rmi.Message
 pcd/assignment03/view/View.java
  pcd.assignment03.view.View
 pcd/assignment03/management/SelectionManager.java
  pcd.assignment03.management.SelectionManager
-pcd/assignment03/main/Main.java
- pcd.assignment03.main.Main
-pcd/assignment03/rmi/Test01_Server.java
- pcd.assignment03.rmi.Test01_Server
-pcd/assignment03/rmi/Message.java
- pcd.assignment03.rmi.Message
-pcd/assignment03/view/Tile.java
- pcd.assignment03.view.Tile
+pcd/assignment03/rmi/CounterImpl.java
+ pcd.assignment03.rmi.CounterImpl
+pcd/assignment03/management/RemoteObserver.java
+ pcd.assignment03.management.RemoteObserver
+pcd/assignment03/management/ObserverServer.java
+ pcd.assignment03.management.ObserverServer
+pcd/assignment03/management/RemoteObservable.java
+ pcd.assignment03.management.RemoteObservable
+pcd/assignment03/management/ObserverClient.java
+ pcd.assignment03.management.ObserverClient
+pcd/assignment03/management/MainObs.java
+ pcd.assignment03.management.MainObs
+pcd/assignment03/test/BanqueRMIInterface.java
+ pcd.assignment03.test.BanqueRMIInterface
+pcd/assignment03/test/Succursale.java
+ pcd.assignment03.test.Succursale
+pcd/assignment03/test/Banque.java
+ pcd.assignment03.test.Banque

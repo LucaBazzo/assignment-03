@@ -25,8 +25,11 @@ public class ObserverClient implements RemoteObserver {
 
             System.out.println("done.");
             
-            obj.update(List.of(3,4,5));
-            
+            obj.update(List.of(response.get(0) + 1, response.get(1) + 1, response.get(2) + 1));
+
+            Thread.sleep(10000);
+
+            Thread.sleep(10000);
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
