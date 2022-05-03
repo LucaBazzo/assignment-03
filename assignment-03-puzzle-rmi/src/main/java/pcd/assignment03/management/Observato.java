@@ -9,5 +9,7 @@ public interface Observato extends Remote {
     void update(List<Integer> tileset) throws RemoteException;
 
     List<Integer> get() throws RemoteException;
+    
+    void addObserver(RemoteObserver o) throws RemoteException;
 
 }
