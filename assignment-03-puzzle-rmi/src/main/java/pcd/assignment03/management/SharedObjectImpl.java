@@ -1,5 +1,7 @@
 package pcd.assignment03.management;
 
+import pcd.assignment03.utils.Pair;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,36 +9,30 @@ import java.util.List;
 
 public class SharedObjectImpl implements SharedObject {
 
-    private List<Integer> tileset;
-    private List<RemoteObserver> obsevers;
+    private final Peer peer;
+    private final String peerRemoteName;
+    private final SelectionManager selectionManager;
 
-    public SharedObjectImpl(List<Integer> tileset) {
-        this.tileset = tileset;
-        this.obsevers = new ArrayList<>();
+    public SharedObjectImpl(Peer peer, String peerRemoteName, SelectionManager selectionManager) {
+        this.peer = peer;
+        this.peerRemoteName = peerRemoteName;
+        this.selectionManager = selectionManager;
     }
 
     @Override
-    public void updateTileset(List<Integer> tileset) throws RemoteException {
-        this.tileset = tileset;
-        System.out.println("Tileset updated --> " + tileset);
-        /*this.obsevers.forEach(o -> {
-            try {
-                System.out.println(o);
-                o.notify(this.tileset);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        });*/
+    public void updateTileset(List<Pair<Integer, Integer>> tileset) throws RemoteException {
+        System.out.println("Peer: " + this.peerRemoteName + " tileset updated --> " + tileset);
+        this.selectionManager.updateTileset(tileset);
     }
 
     @Override
-    public List<Integer> getTileset() throws RemoteException {
-        return this.tileset;
+    public List<Pair<Integer, Integer>> getTileset() throws RemoteException {
+        return this.selectionManager.getPairList();
     }
 
     @Override
     public void addRemote(String remoteName) throws RemoteException {
-        new ObserverClient(remoteName);
+        this.peer.addSharedObject(remoteName);
     }
 
 

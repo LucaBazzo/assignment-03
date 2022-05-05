@@ -107,7 +107,7 @@ public class PuzzleBoard extends JFrame {
     
     private void paintPuzzle() {
     	board.removeAll();
-    	
+    	System.out.println(tiles.toString());
     	Collections.sort(tiles);
     	
     	tiles.forEach(tile -> {

@@ -1,11 +1,13 @@
 package pcd.assignment03.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * Defines a pair of two objects
  *
  */
-public class Pair<X,Y> {
+public class Pair<X,Y> implements Serializable {
 
     private final X first;
     private final Y second;

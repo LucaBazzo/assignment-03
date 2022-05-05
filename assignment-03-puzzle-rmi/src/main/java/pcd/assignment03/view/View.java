@@ -3,6 +3,7 @@ package pcd.assignment03.view;
 import pcd.assignment03.main.Process;
 import pcd.assignment03.management.TileProperties;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class View {
         this.listeners = new ArrayList<>();
     }
 
-    public void addListener(Process listener){
+    public void addListener(Process listener) throws RemoteException {
         this.listeners.add(listener);
         listener.initialize(this, puzzleBoard.getTileList());
     }
@@ -29,7 +30,8 @@ public class View {
     /**
      * Set the GUI visible
      */
-    public void display() {
+    public void display(List<TileProperties> tileList, Boolean isPuzzleCompleted) {
+        update(tileList, isPuzzleCompleted);
         javax.swing.SwingUtilities.invokeLater(() -> this.puzzleBoard.setVisible(true));
     }
 
