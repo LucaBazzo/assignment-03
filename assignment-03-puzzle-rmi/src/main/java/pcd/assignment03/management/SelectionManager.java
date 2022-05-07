@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SelectionManager {
 
@@ -43,17 +44,13 @@ public class SelectionManager {
 
     public void updateTileset(List<Pair<Integer, Integer>> pairList) {
         System.out.println("Peer: tileset updated --> " + pairList);
-        //List<TileProperties> tilesetTest = new ArrayList<>();
-        controller.updateView(convertPairListToTileset(pairList), isPuzzleCompleted());
-        //pairList.forEach(p -> tilesetTest.add(new TileProperties(p.getFirst(), p.getSecond())));
-        //controller.updateView(tilesetTest, isPuzzleCompleted());
+        convertPairListToTileset(pairList);
+        controller.updateView(this.tiles, isPuzzleCompleted());
     }
 
     public void displayTileset(Optional<List<Pair<Integer, Integer>>> pairList) {
         System.out.println(" tileset: " + pairList.toString());
-        if(pairList.isPresent())
-            convertPairListToTileset(pairList.get());
-        System.out.println(" tileset: " + tiles.toString());
+        pairList.ifPresent(this::convertPairListToTileset);
         controller.displayView(this.tiles, isPuzzleCompleted());
     }
 
@@ -69,10 +66,8 @@ public class SelectionManager {
         return tiles.stream().allMatch(TileProperties::isInRightPlace);
     }
 
-    private List<TileProperties> convertPairListToTileset(List<Pair<Integer, Integer>> pairList) {
-        List<TileProperties> tilesCopy = List.copyOf(this.tiles);
-        tilesCopy.forEach(tile -> tile.setCurrentPosition(pairList.get(tile.getCurrentPosition()).getFirst()));
-        return tilesCopy;
+    private void convertPairListToTileset(List<Pair<Integer, Integer>> pairList) {
+        this.tiles.forEach(tile -> tile.setCurrentPosition(pairList.stream().filter(d -> d.getSecond() == tile.getOriginalPosition()).findFirst().get().getFirst()));
     }
 
     private List<Pair<Integer, Integer>> convertTilesetToPairList(List<TileProperties> tiles) {

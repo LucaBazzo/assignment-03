@@ -31,7 +31,7 @@ public class PuzzleBoard extends JFrame {
 
 	private final int rows, columns;
 
-	private List<TileProperties> tiles = new ArrayList<>();
+	private List<TileProperties> tiles = new  ArrayList<>();
 	private final JPanel board;
 
     private final Random puzzleSeed;
