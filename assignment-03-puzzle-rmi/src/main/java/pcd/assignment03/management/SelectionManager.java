@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 
 public class SelectionManager {
 
@@ -28,8 +29,15 @@ public class SelectionManager {
         if(selectedTile.isPresent()) {
             this.swap(selectedTile.get(), tile);
             selectedTile = Optional.empty();
+            
+            //asynchronously call to update the view without waiting the peer
+            Executors.newSingleThreadExecutor().submit(new Runnable() {
+                public void run() {
+                	peer.update(convertTilesetToPairList(tiles));
+                }
+            });
+            
             this.controller.updateView(this.tiles, isPuzzleCompleted());
-            this.peer.update(convertTilesetToPairList(this.tiles));
             this.selectedTile = Optional.empty();
         }
         else
