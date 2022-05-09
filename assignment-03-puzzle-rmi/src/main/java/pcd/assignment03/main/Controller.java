@@ -1,15 +1,11 @@
 package pcd.assignment03.main;
 
-import pcd.assignment03.management.Peer;
-import pcd.assignment03.management.PeerImpl;
 import pcd.assignment03.management.SelectionManager;
-import pcd.assignment03.utils.Pair;
 import pcd.assignment03.management.TileProperties;
 import pcd.assignment03.view.View;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -38,7 +34,7 @@ public class Controller implements Process {
     }
 
     public void updateView(List<TileProperties> tileset, boolean isPuzzleCompleted) {
-        System.out.println("COntroller: tileset updated --> " + tileset.toString());
+        System.out.println("Controller: tileset updated --> " + tileset.toString());
         this.view.updateView(tileset, isPuzzleCompleted);
     }
 

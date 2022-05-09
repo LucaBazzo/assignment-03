@@ -2,17 +2,13 @@ package pcd.assignment03.management;
 
 import pcd.assignment03.main.Controller;
 import pcd.assignment03.utils.Pair;
-import pcd.assignment03.view.Tile;
 
-import java.awt.*;
-import java.awt.image.CropImageFilter;
-import java.awt.image.FilteredImageSource;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SelectionManager {
 
@@ -34,8 +30,10 @@ public class SelectionManager {
             selectedTile = Optional.empty();
             this.controller.updateView(this.tiles, isPuzzleCompleted());
             this.peer.update(convertTilesetToPairList(this.tiles));
+            this.selectedTile = Optional.empty();
         }
-        selectedTile = Optional.of(tile);
+        else
+        	selectedTile = Optional.of(tile);
     }
 
     public List<Pair<Integer, Integer>> getPairList() {
@@ -50,7 +48,10 @@ public class SelectionManager {
 
     public void displayTileset(Optional<List<Pair<Integer, Integer>>> pairList) {
         System.out.println(" tileset: " + pairList.toString());
-        pairList.ifPresent(this::convertPairListToTileset);
+        if(pairList.isPresent())
+        	this.convertPairListToTileset(pairList.get());
+        else
+        	this.shuffleTileset();
         controller.displayView(this.tiles, isPuzzleCompleted());
     }
 
@@ -73,9 +74,19 @@ public class SelectionManager {
     private List<Pair<Integer, Integer>> convertTilesetToPairList(List<TileProperties> tiles) {
         List<Pair<Integer, Integer>> pairList = new ArrayList<>();
 
-        tiles.forEach(tile -> pairList.add(new Pair(tile.getCurrentPosition(), tile.getOriginalPosition())));
+        tiles.forEach(tile -> pairList.add(new Pair<Integer, Integer>(tile.getCurrentPosition(), tile.getOriginalPosition())));
 
         return pairList;
+    }
+    
+    private void shuffleTileset()
+    {
+    	List<Integer> currentPositions = new ArrayList<>();
+        this.tiles.forEach(tile -> currentPositions.add(tile.getCurrentPosition()));
+        Collections.shuffle(currentPositions);
+        for(int i=0; i< this.tiles.size(); i++) {
+        	this.tiles.get(i).setCurrentPosition(currentPositions.get(i));
+        }
     }
 
     private void log(String ... messages) {
