@@ -21,19 +21,26 @@ public class SharedObjectImpl implements SharedObject {
 
     @Override
     public void updateTileset(List<Pair<Integer, Integer>> tileset) throws RemoteException {
-        System.out.println("Peer: " + this.peerRemoteName + " tileset updated --> " + tileset);
-        this.selectionManager.updateTileset(tileset);
+        this.selectionManager.updateTileset(tileset, true);
     }
 
     @Override
     public List<Pair<Integer, Integer>> getTileset() throws RemoteException {
         return this.selectionManager.getPairList();
     }
+    
+    @Override
+	public String getPeerRemoteName() throws RemoteException {
+		return this.peerRemoteName;
+	}
 
     @Override
     public void addRemote(String remoteName) throws RemoteException {
         this.peer.addSharedObject(remoteName);
     }
 
-
+	@Override
+	public void checkClockIntegrity(Integer clock, List<Pair<Integer, Integer>> tileset, Integer sourceRemoteNumber)  throws RemoteException {
+		this.selectionManager.checkClockIntegrity(clock, tileset, sourceRemoteNumber);
+	}
 }

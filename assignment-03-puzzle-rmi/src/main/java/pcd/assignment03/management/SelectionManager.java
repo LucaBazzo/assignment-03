@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SelectionManager {
 
@@ -18,17 +20,36 @@ public class SelectionManager {
     private final Peer peer;
 
     private Optional<TileProperties> selectedTile = Optional.empty();
+    
+    private Integer internalClock = 0;
+    private boolean polling = true;
 
     public SelectionManager(Controller controller, List<TileProperties> tiles) throws RemoteException {
         this.tiles = tiles;
         this.controller = controller;
         this.peer = new PeerImpl(this);
+        
+        if (polling) 
+        {
+            //start polling for checking clocks different between cluster nodes
+        	ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+            Runnable task = () -> {
+            	System.out.println("DEBUG - Polling - internal clock " + internalClock);
+            	this.peer.sendClockInfo(internalClock, convertTilesetToPairList(tiles));
+            };
+            
+            executorService.scheduleAtFixedRate(task, 0, 3, TimeUnit.SECONDS);
+            polling = false;
+        }
     }
 
     public void selectTile(TileProperties tile) {
         if(selectedTile.isPresent()) {
             this.swap(selectedTile.get(), tile);
             selectedTile = Optional.empty();
+            
+            this.internalClock++;
             
             //asynchronously call to update the view without waiting the peer
             Executors.newSingleThreadExecutor().submit(new Runnable() {
@@ -48,19 +69,39 @@ public class SelectionManager {
         return convertTilesetToPairList(this.tiles);
     }
 
-    public void updateTileset(List<Pair<Integer, Integer>> pairList) {
-        System.out.println("Peer: tileset updated --> " + pairList);
+    public void updateTileset(List<Pair<Integer, Integer>> pairList, boolean updateClock) {
+        log("Tileset updated --> " + pairList);
         convertPairListToTileset(pairList);
+        
+        if(updateClock)
+        	this.internalClock++;
+        
         controller.updateView(this.tiles, isPuzzleCompleted());
     }
 
     public void displayTileset(Optional<List<Pair<Integer, Integer>>> pairList) {
-        System.out.println(" tileset: " + pairList.toString());
+        log("Tileset: " + pairList.toString());
         if(pairList.isPresent())
         	this.convertPairListToTileset(pairList.get());
         else
         	this.shuffleTileset();
         controller.displayView(this.tiles, isPuzzleCompleted());
+    }
+    
+    public void checkClockIntegrity(Integer clock, List<Pair<Integer, Integer>> pairList, Integer sourceRemoteNumber) {
+    	System.out.println("DEBUG - check clock integrity: clock received - " + clock + " source number received - " + sourceRemoteNumber);
+
+		List<Pair<Integer, Integer>> tileList = convertTilesetToPairList(this.tiles);
+		log(this.internalClock + " - " + clock + " / " + !pairList.equals(tileList) 
+				+ " / " + this.peer.getRemoteNumber() + " - " + sourceRemoteNumber);
+		
+        if ((this.internalClock < clock) || (this.internalClock == clock && !pairList.equals(tileList) 
+        		&& this.peer.getRemoteNumber() > sourceRemoteNumber))
+        {
+          log("DEBUG - Update performed");
+          this.internalClock = clock;
+          updateTileset(pairList, false);
+        }
     }
 
     private void swap(final TileProperties firstTile, final TileProperties secondTile) {
@@ -77,6 +118,12 @@ public class SelectionManager {
 
     private void convertPairListToTileset(List<Pair<Integer, Integer>> pairList) {
         this.tiles.forEach(tile -> tile.setCurrentPosition(pairList.stream().filter(d -> d.getSecond() == tile.getOriginalPosition()).findFirst().get().getFirst()));
+    }
+    
+    private List<TileProperties> convertPairListToTileset2(List<Pair<Integer, Integer>> pairList) {
+    	List<TileProperties> l = new ArrayList<>();
+    	pairList.forEach(pair -> l.add(new TileProperties(pair.getSecond(), pair.getFirst())));
+        return l;
     }
 
     private List<Pair<Integer, Integer>> convertTilesetToPairList(List<TileProperties> tiles) {

@@ -16,6 +16,8 @@ public class PeerImpl implements Peer{
     private static final String REMOTE_NAME = "shareObject-";
     private final List<SharedObject> sharedObjects = new ArrayList<>();
     private final SelectionManager selectionManager;
+    
+    private Integer remoteNumber = START_NUMBER;
 
     public PeerImpl(SelectionManager selectionManager) throws RemoteException {
         this.selectionManager = selectionManager;
@@ -26,10 +28,9 @@ public class PeerImpl implements Peer{
 
         System.out.println("Started");
         boolean numberFound = false;
-        Integer count = START_NUMBER;
-
+        
         while (!numberFound) {
-            String remoteName = REMOTE_NAME + count;
+            String remoteName = REMOTE_NAME + remoteNumber;
             try {
                 Registry registry = LocateRegistry.getRegistry();
                 SharedObject sharedObject = (SharedObject) registry.lookup(remoteName);
@@ -60,9 +61,9 @@ public class PeerImpl implements Peer{
                     System.out.println(ex);
                 }
             }
-
-            count ++;
+            remoteNumber++;
         }
+        remoteNumber--;
 
         selectionManager.displayTileset(sharedObjects.isEmpty() ? Optional.empty() : Optional.of(sharedObjects.get(0).getTileset()));
 
@@ -95,5 +96,22 @@ public class PeerImpl implements Peer{
             e.printStackTrace();
         }
     }
+    
+    @Override
+	public void sendClockInfo(Integer internalClock, List<Pair<Integer, Integer>> tileset){
+		this.sharedObjects.forEach(obj -> {
+			try {
+				System.out.println("Sending clock to " + obj.getPeerRemoteName());
+				obj.checkClockIntegrity(internalClock, tileset, this.remoteNumber);
+			} catch (RemoteException e) {
+				System.out.println("Object no more present");
+			}
+		});
+	}
+
+	@Override
+	public Integer getRemoteNumber() {
+		return this.remoteNumber;
+	}
 
 }

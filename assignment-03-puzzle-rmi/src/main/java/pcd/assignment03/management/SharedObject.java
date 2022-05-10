@@ -12,6 +12,10 @@ public interface SharedObject extends Remote {
     void updateTileset(List<Pair<Integer, Integer>> tileset) throws RemoteException;
 
     List<Pair<Integer, Integer>> getTileset() throws RemoteException;
+    
+    String getPeerRemoteName() throws RemoteException;
+    
+    void checkClockIntegrity(Integer clock, List<Pair<Integer, Integer>> tileset, Integer sourceRemoteNumber) throws RemoteException ;
 
     void addRemote(String remoteName) throws RemoteException, NotBoundException;
 
