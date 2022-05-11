@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of Peer interface.
+ */
 public class PeerImpl implements Peer{
 
     private static final Integer START_NUMBER = 0;
@@ -19,6 +22,12 @@ public class PeerImpl implements Peer{
     
     private Integer remoteNumber = START_NUMBER;
 
+    /**
+     * Instantiates a new Peer.
+     *
+     * @param selectionManager reference to the selection manager
+     * @throws RemoteException remote exception if RMI service encounters a problem
+     */
     public PeerImpl(SelectionManager selectionManager) throws RemoteException {
         this.selectionManager = selectionManager;
         this.start();
@@ -92,7 +101,7 @@ public class PeerImpl implements Peer{
             //System.out.println(remoteName + " tileset: " + response.toString());
             sharedObjects.add(sharedObject);
         } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
+            System.err.println("Client exception: " + e);
             e.printStackTrace();
         }
     }

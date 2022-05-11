@@ -17,13 +17,18 @@ import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.*;
 import java.util.stream.IntStream;
 
 
+/**
+ * Class for the management of the puzzle
+ */
 public class PuzzleBoard extends JFrame {
 
-	private static final long serialVersionUID = 1836190396492499398L;
+	@Serial
+    private static final long serialVersionUID = 1836190396492499398L;
 
 	private final static Integer DEFAULT_SEED = 1;
 
@@ -36,7 +41,15 @@ public class PuzzleBoard extends JFrame {
 
     private final Random puzzleSeed;
 
-	
+
+    /**
+     * Instantiates a new Puzzle board.
+     *
+     * @param view      View reference
+     * @param rows      number of rows of the puzzle grid
+     * @param columns   number of columns of the puzzle grid
+     * @param imagePath image path
+     */
     public PuzzleBoard(final View view, final int rows, final int columns, final String imagePath) {
     	this.rows = rows;
 		this.columns = columns;
@@ -58,16 +71,29 @@ public class PuzzleBoard extends JFrame {
         paintPuzzle();
     }
 
+    /**
+     * Update puzzle with a new tileset
+     *
+     * @param tiles new tileset
+     */
     public void UpdatePuzzle(List<TileProperties> tiles) {
         this.tiles = tiles;
         paintPuzzle();
     }
 
+    /**
+     * Puzzle completed.
+     */
     public void PuzzleCompleted() {
         JOptionPane.showMessageDialog(this,
                 "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Gets tile list.
+     *
+     * @return the tile list
+     */
     public List<TileProperties> getTileList() {
         return this.tiles;
     }

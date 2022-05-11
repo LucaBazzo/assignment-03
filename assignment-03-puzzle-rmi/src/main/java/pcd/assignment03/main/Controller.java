@@ -8,15 +8,16 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
  * The Controller of the processes
- *
  */
 public class Controller implements Process {
 
     private View view;
     private SelectionManager selectionManager;
 
+    /**
+     * Instantiates a new Controller.
+     */
     public Controller() {
     }
 
@@ -33,11 +34,23 @@ public class Controller implements Process {
         this.selectionManager.selectTile(tile);
     }
 
+    /**
+     * Update view with a new tileset
+     *
+     * @param tileset           new tileset
+     * @param isPuzzleCompleted true if puzzle is completed
+     */
     public void updateView(List<TileProperties> tileset, boolean isPuzzleCompleted) {
         System.out.println("Controller: tileset updated --> " + tileset.toString());
         this.view.updateView(tileset, isPuzzleCompleted);
     }
 
+    /**
+     * Display view.
+     *
+     * @param tileset           initial tileset
+     * @param isPuzzleCompleted true if puzzle is completed
+     */
     public void displayView(List<TileProperties> tileset, boolean isPuzzleCompleted) {
         this.view.display(tileset, isPuzzleCompleted);
     }
