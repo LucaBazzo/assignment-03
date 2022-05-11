@@ -11,6 +11,9 @@ import pcd.assignment03.utils.ApplicationConstants
 
 import scala.util.Random
 
+/** Companion Object for [[ReceptionistManager]], contains the messages accepted by Receptionist actors
+ *
+ */
 object ReceptionistManager {
 
   trait ReceptionistManagerMessage
@@ -41,6 +44,12 @@ object ReceptionistManager {
     }
 }
 
+/** Manages the comunications between this and the other nodes of the cluster
+ *
+ * @param port the port of this node
+ * @param controllerRef reference to the controller actor of this node
+ * @param selectionRef reference to the selection manager actor of this node
+ */
 class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessage],
                           val selectionRef: ActorRef[SelectionManagerMessage]){
 

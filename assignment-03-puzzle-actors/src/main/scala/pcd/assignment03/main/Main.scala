@@ -43,6 +43,10 @@ object Main {
 
   }
 
+  /** Try many port until a valid one is found and start a Cluster on that port
+   *
+   * @param port the initial port given by configuration
+   */
   def startCluster(port: Int): Unit = {
     var tempPort = port
     var isPortValid = false

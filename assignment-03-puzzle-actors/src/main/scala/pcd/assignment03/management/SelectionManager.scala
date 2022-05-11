@@ -7,6 +7,9 @@ import pcd.assignment03.management.SelectionManager.SelectionManagerMessage
 import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.view.TileProperties
 
+/** Companion object for [[SelectionManager]], contains the messages accepted by Receptionist actors
+ *
+ */
 object SelectionManager {
 
   trait SelectionManagerMessage
@@ -20,6 +23,11 @@ object SelectionManager {
     }
 }
 
+/** Manages the selection and swap of puzzle pieces, even if received by other nodes
+ *
+ * @param tiles list of puzzle pieces
+ * @param controllerRef reference to the controller actor of this node
+ */
 class SelectionManager(var tiles: List[TileProperties],
                        val controllerRef: ActorRef[ControllerMessage]){
 

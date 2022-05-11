@@ -4,8 +4,9 @@ package pcd.assignment03.utils
 import pcd.assignment03.view.TileProperties
 
 import java.util
+import scala.language.implicitConversions
 
-/** Implicit conversions object
+/** Implicit conversions for compatibility between Scala and Java Lists, and from TileProperties to Pair
  *
  */
 object ImplicitConversions {

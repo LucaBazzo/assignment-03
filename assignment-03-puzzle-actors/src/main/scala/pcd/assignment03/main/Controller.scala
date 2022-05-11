@@ -10,7 +10,9 @@ import pcd.assignment03.utils.ImplicitConversions._
 import pcd.assignment03.view.TileProperties
 import pcd.assignment03.view.View.{DisplayWithTileset, UpdateView, ViewMessage}
 
-
+/** Companion object for [[Controller]], contains the messages accepted by Controller actor
+ *
+ */
 object Controller {
 
   sealed trait ControllerMessage

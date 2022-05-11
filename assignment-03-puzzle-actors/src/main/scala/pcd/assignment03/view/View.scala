@@ -7,6 +7,9 @@ import pcd.assignment03.utils.ApplicationConstants
 import pcd.assignment03.utils.ImplicitConversions._
 import pcd.assignment03.view.View.ViewMessage
 
+/** Companion object for [[View]], contains the messages accepted by the View actor
+ *
+ */
 object View {
 
   sealed trait ViewMessage
