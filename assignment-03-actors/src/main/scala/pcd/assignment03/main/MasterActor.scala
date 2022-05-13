@@ -53,7 +53,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
   private val actorType: String = ApplicationConstants.MasterActorType
 
   private val wordsBag = context.spawn(WordsBag(), "WordsBag")
-  private val pdfProcessor: ActorRef[ExtractorManagerMessage] =
+  private val extractorManager: ActorRef[ExtractorManagerMessage] =
     context.spawn(ExtractorManager(view), "ProcessPDF")
   private val picker: ActorRef[PickerMessage] = context.spawn(PickActor(context.self, wordsBag),
     "Picker")
@@ -71,7 +71,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
         this.startTime = System.currentTimeMillis()
         this.nWords = nWords
         wordsBag ! Clear()
-        pdfProcessor ! StartProcessing(pdfDirectory.listFiles(), forbidden, ctx.self)
+        extractorManager ! StartProcessing(pdfDirectory.listFiles(), forbidden, ctx.self)
 
         gettingPDF
 
@@ -92,7 +92,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
         log("Computing most frequent words...")
         view ! ChangeState("Computing most frequent words...")
 
-        log("List of words size: " + result.length, "Num of tasks: " + numActors)
+        log("List of words size: " + result.length, "Num of actors: " + numActors)
 
         this.wordsManager ! ManageList(result, numActors)
 
@@ -102,7 +102,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
         computingMostFrequentWords
 
       case StopComputation() =>
-        this.pdfProcessor ! ExtractorManager.StopActor()
+        this.extractorManager ! ExtractorManager.StopActor()
         log("Interrupted")
         view ! ChangeState("Interrupted")
 
