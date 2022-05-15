@@ -33,22 +33,16 @@ object Main {
   }
 
   def main(args: Array[String]): Unit = {
-    val port: Int =
-      if (args.isEmpty)
-        this.defaultPort
-      else
-        args.toSeq.map(_.toInt).head
 
-    this.startCluster(port)
+    this.startCluster()
 
   }
 
-  /** Try many port until a valid one is found and start a Cluster on that port
+  /** Try many ports (starting from the default 25251) until a valid one is found and start a Cluster on that port
    *
-   * @param port the initial port given by configuration
    */
-  def startCluster(port: Int): Unit = {
-    var tempPort = port
+  def startCluster(): Unit = {
+    var tempPort = this.defaultPort
     var isPortValid = false
 
     while(!isPortValid) {
