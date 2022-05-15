@@ -4,7 +4,6 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import pcd.assignment03.CborSerializable
-import pcd.assignment03.main.Controller.ControllerMessage
 import pcd.assignment03.management.ReceptionistManager._
 import pcd.assignment03.management.SelectionManager.{ReceivePuzzleUpdate, SelectionManagerMessage}
 import pcd.assignment03.utils.ApplicationConstants
@@ -30,7 +29,7 @@ object ReceptionistManager {
 
   val ReceptionistServiceKey: ServiceKey[ReceptionistManagerMessage] = ServiceKey[ReceptionistManagerMessage]("ReceptionNode")
 
-  def apply(controllerRef: ActorRef[ControllerMessage], selectionRef: ActorRef[SelectionManagerMessage],
+  def apply(selectionRef: ActorRef[SelectionManagerMessage],
             port: Int): Behavior[ReceptionistManagerMessage] =
     Behaviors.setup { ctx =>
       val subscriptionAdapter = ctx.messageAdapter[Receptionist.Listing] {
@@ -40,18 +39,16 @@ object ReceptionistManager {
       ctx.system.receptionist ! Receptionist.Subscribe(ReceptionistServiceKey, subscriptionAdapter)
       ctx.system.receptionist ! Receptionist.Register(ReceptionistServiceKey, ctx.self)
 
-      new ReceptionistManager(port, controllerRef, selectionRef).waitingEvents
+      new ReceptionistManager(port, selectionRef).waitingEvents
     }
 }
 
 /** Manages the comunications between this and the other nodes of the cluster
  *
  * @param port the port of this node
- * @param controllerRef reference to the controller actor of this node
  * @param selectionRef reference to the selection manager actor of this node
  */
-class ReceptionistManager(val port: Int, controllerRef: ActorRef[ControllerMessage],
-                          val selectionRef: ActorRef[SelectionManagerMessage]){
+class ReceptionistManager(val port: Int, val selectionRef: ActorRef[SelectionManagerMessage]){
 
   private val actorType: String = ApplicationConstants.ReceptionistManagerActorType
   private var tileList: List[(Int, Int)] = _

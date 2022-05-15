@@ -46,7 +46,7 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
         this.selectionManager =
           context.spawn(SelectionManager(tileList, context.self), "SelectionManager")
         this.receptionistManager =
-          context.spawn(ReceptionistManager(context.self, selectionManager, port), "ReceptionistManager")
+          context.spawn(ReceptionistManager(selectionManager, port), "ReceptionistManager")
 
         this.receptionistManager ! InitializeTileList(tileList)
 
