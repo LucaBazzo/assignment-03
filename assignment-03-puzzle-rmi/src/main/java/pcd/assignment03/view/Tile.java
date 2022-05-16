@@ -9,7 +9,9 @@ import java.awt.*;
  */
 public class Tile extends TileProperties {
 
-    private final Image image;
+	private static final long serialVersionUID = -8372007800962773205L;
+	
+	private final Image image;
 
     /**
      * Instantiates a new Tile.

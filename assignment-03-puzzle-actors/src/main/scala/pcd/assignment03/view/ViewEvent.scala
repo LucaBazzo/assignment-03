@@ -11,8 +11,6 @@ class ViewEvent(view: ActorRef[ViewMessage]) {
   /** Notifies the actor view of the user-side tile selected event
    *
    */
-  def notifyTileSelected(tile: Tile): Unit = {
-    view ! View.TileSelected(tile)
-  }
+  def notifyTileSelected(tile: Tile): Unit = view ! View.TileSelected(tile)
 
 }

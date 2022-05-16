@@ -48,9 +48,9 @@ class View(val context: ActorContext[ViewMessage], val width: Int, val height: I
 
     case View.UpdateResult(count, result, workEnded) =>
       //conversion of Scala List to Java list for the ViewGUI
-      val w: util.List[Pair[String, Integer]] = new util.ArrayList[Pair[String, Integer]]()
-      result.foreach(tuple => w.add(tuple))
-      gui.updateResult(count, w, workEnded)
+      val res: util.List[Pair[String, Integer]] = new util.ArrayList[Pair[String, Integer]]()
+      result.foreach(tuple => res.add(tuple))
+      gui.updateResult(count, res, workEnded)
       Behaviors.same
 
     case View.ChangeState(state) =>

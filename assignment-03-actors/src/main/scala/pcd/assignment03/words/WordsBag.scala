@@ -26,7 +26,9 @@ object WordsBag {
           count = this.map(word) + 1
         }
         this.map.put(word, count)
+
       case GetBag(from) => from ! ReturnBag(map.clone())
+
       case Clear() => this.map.clear()
     }
 

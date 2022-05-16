@@ -20,24 +20,31 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
 
-
+/**
+ *  Interface that shows the puzzle and in which the user can interact
+ */
 public class PuzzleBoard extends JFrame {
 
 	private final int rows, columns;
     private final ViewEvent viewEvent;
 
 	private List<TileProperties> tiles = new ArrayList<>();
+
 	private final JPanel board;
-	private final String imagePath;
+    private final Random puzzleSeed;
 
-    private Random puzzleSeed;
-
-	
+    /**
+     * Instantiates a new PuzzleBoard.
+     *
+     * @param rows number of rows
+     * @param columns number of columns
+     * @param imagePath path to the puzzle image
+     * @param viewEvent intermediary for the management of events from java to scala actors
+     */
     public PuzzleBoard(final int rows, final int columns, final String imagePath, final ViewEvent viewEvent) {
     	this.rows = rows;
 		this.columns = columns;
 		this.viewEvent = viewEvent;
-		this.imagePath = imagePath;
 
         this.puzzleSeed = new Random(ApplicationConstants.DefaultSeed());
 
@@ -54,16 +61,29 @@ public class PuzzleBoard extends JFrame {
         paintPuzzle();
     }
 
+    /**
+     * Allows the graphic update of the puzzle
+     *
+     * @param tiles the updated puzzle
+     */
     public void UpdatePuzzle(List<TileProperties> tiles) {
         this.tiles = tiles;
         paintPuzzle();
     }
 
+    /**
+     * Called when the puzzle is completed. Shows a notification on the screen
+     */
     public void PuzzleCompleted() {
         JOptionPane.showMessageDialog(this,
                 "Puzzle Completed!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Returns the list of tiles
+     *
+     * @return the puzzle properties without any image
+     */
     public List<TileProperties> getTileList() {
         return this.tiles;
     }
@@ -114,10 +134,6 @@ public class PuzzleBoard extends JFrame {
     	});
     	
     	pack();
-        //setLocationRelativeTo(null);
     }
-
-
-
 }
 

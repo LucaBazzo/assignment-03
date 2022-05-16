@@ -9,7 +9,9 @@ import java.io.Serializable;
  */
 public class Pair<X,Y> implements Serializable {
 
-    private final X first;
+	private static final long serialVersionUID = 4757397407414917303L;
+	
+	private final X first;
     private final Y second;
 
     /**

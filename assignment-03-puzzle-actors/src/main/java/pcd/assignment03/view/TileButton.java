@@ -8,8 +8,16 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+/**
+ *  Represents the button to select a specific tile
+ */
 public class TileButton extends JButton{
 
+	/**
+	 * Instantiates a new TileButton.
+	 *
+	 * @param tile the tile to associate the button with
+	 */
 	public TileButton(final Tile tile) {
 		super(new ImageIcon(tile.getImage()));
 		

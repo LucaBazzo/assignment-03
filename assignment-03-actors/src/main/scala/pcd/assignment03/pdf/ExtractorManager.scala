@@ -51,6 +51,8 @@ object ExtractorManager {
 
             view ! ChangeState("Getting PDF...")
             log("Wait completion")
+
+            //for each pdf a PDFExtractActor to get all the words inside, is spawn
             pdfDirectory.foreach(pdfFile => {
               val child = ctx.spawnAnonymous(PDFExtractActor(forbiddenList, pdfFile))
               childrenList = child :: childrenList
@@ -65,6 +67,9 @@ object ExtractorManager {
           }
           Behaviors.same
 
+        /**
+         * Message with the result sent by his children, every time they finish their computation
+         */
         case RetrieveWords(result, from) =>
           if(!interrupted) {
             if (result.isDefined) {
@@ -73,6 +78,8 @@ object ExtractorManager {
               childrenList = childrenList.filterNot(child => child == from)
               log("Child terminated. " + nActiveActors + " left")
             }
+
+            //at the end notify the master
             if (nActiveActors == 0) {
               log("Process PDF completed")
               log("Completion arrived")
@@ -86,6 +93,9 @@ object ExtractorManager {
           }
           Behaviors.same
 
+        /**
+         * Message from the master to stop all the computation
+         */
         case StopActor() =>
           log("Interrupted")
           this.interrupted = true

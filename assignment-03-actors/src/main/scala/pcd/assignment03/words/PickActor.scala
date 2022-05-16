@@ -44,6 +44,7 @@ class PickActor(val ctx: ActorContext[PickerMessage],
 
   private val pickDelay: FiniteDuration = ApplicationConstants.PickDelay
 
+  //Expect to be notified to periodically count the most frequent words
   private val standby: Behavior[PickerMessage] = Behaviors.receive[PickerMessage] { (ctx, message) =>
     message match {
       case StartPicking(nWords) =>
@@ -56,14 +57,17 @@ class PickActor(val ctx: ActorContext[PickerMessage],
     }
   }
 
+  //picks to count the required number of max words
   private val picking: Behavior[PickerMessage] = Behaviors.receive[PickerMessage] { (_, message) =>
     message match {
       case Pick(nWords, last) =>
         log("Acquiring the bag...")
+
         implicit val timeout: Timeout = 2.seconds
         implicit val scheduler: Scheduler = ctx.system.scheduler
         val f: Future[PickerMessage] = wordsBag ? (replyTo => GetBag(replyTo))
         implicit val ec: ExecutionContextExecutor = ctx.executionContext
+
         //remember you can't call context on future callback
         f.onComplete({
           case Success(value) if value.isInstanceOf[ReturnBag] =>
@@ -76,6 +80,7 @@ class PickActor(val ctx: ActorContext[PickerMessage],
 
           case _ => log("ERROR")
         })
+
         if(last) standby
         else {
           ctx.scheduleOnce(this.pickDelay, ctx.self, Pick(nWords))

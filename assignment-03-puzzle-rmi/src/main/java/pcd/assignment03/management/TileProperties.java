@@ -7,7 +7,9 @@ import java.io.Serializable;
  */
 public class TileProperties implements Comparable<TileProperties>, Serializable {
 
-    private final int originalPosition;
+	private static final long serialVersionUID = 7149838911424575637L;
+	
+	private final int originalPosition;
     private int currentPosition;
 
     /**
@@ -22,7 +24,6 @@ public class TileProperties implements Comparable<TileProperties>, Serializable 
     }
 
     /**
-     *
      *
      * @return true if this tile is in its original position
      */

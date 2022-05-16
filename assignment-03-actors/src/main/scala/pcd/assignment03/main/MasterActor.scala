@@ -79,12 +79,11 @@ class MasterActor(val context: ActorContext[MasterMessage],
         log("Already in standby")
         Behaviors.same
 
-      case _ =>
-        log("ERROR")
-        Behaviors.stopped
+      case _ => Behaviors.same
     }
   }
 
+  //state in which it requires the opening of the pdf to obtain the text
   private val gettingPDF: Behavior[MasterMessage] = Behaviors.receive { (_, message) =>
     message match {
       case WordsLists(stringList) =>
@@ -110,6 +109,7 @@ class MasterActor(val context: ActorContext[MasterMessage],
     }
   }
 
+  //behavior while other actors are counting words, wait for notifications from the Picker and WordsManager
   private val computingMostFrequentWords: Behavior[MasterMessage] = Behaviors.receive { (_, message) =>
     message match {
       case WorkEnded() =>
@@ -118,6 +118,9 @@ class MasterActor(val context: ActorContext[MasterMessage],
 
         Behaviors.same
 
+      /**
+       * Message that arrives every time the picker counts the words frequency
+       */
       case PickerResult(result, isLast) =>
         if(result.isDefined) {
           val wordsProcessed: Int = result.get._1

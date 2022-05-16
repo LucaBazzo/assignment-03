@@ -38,7 +38,7 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
   private var selectionManager: ActorRef[SelectionManagerMessage] = _
   private var receptionistManager: ActorRef[ReceptionistManagerMessage] = _
 
-
+  //behavior for when the puzzle is not ready
   private val initializing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case Initialize(viewRef, tileList) =>
@@ -59,6 +59,7 @@ class Controller(context: ActorContext[ControllerMessage], port: Int) {
     }
   }
 
+  //waiting for messages from the View or changes given by other players
   private val waitingEvents: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
 

@@ -17,14 +17,14 @@ public interface Peer {
     void update(List<Pair<Integer, Integer>> tileset);
 
     /**
-     * Add a shared object.
+     * Given a remote name, a lookup is performed to obtain the sharedObject associated with that name.
      *
      * @param remoteName name of the Peer
      */
     void addSharedObject(String remoteName);
 
     /**
-     * Send clock info.
+     * Send local information to all other nodes in the cluster.
      *
      * @param internalClock the internal clock
      * @param tileset       the tileset

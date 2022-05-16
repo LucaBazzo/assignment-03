@@ -43,7 +43,7 @@ object ReceptionistManager {
     }
 }
 
-/** Manages the comunications between this and the other nodes of the cluster
+/** Manages the communications between this and the other nodes of the cluster
  *
  * @param port the port of this node
  * @param selectionRef reference to the selection manager actor of this node
@@ -68,6 +68,9 @@ class ReceptionistManager(val port: Int, val selectionRef: ActorRef[SelectionMan
     }
     message match {
 
+      /** Message that comes every time a new node is connected
+       *  If we are the first node, we do not require the tileset
+       */
       case Add(workerSet) =>
         log("Worker Set Updated")
         if(workerSet.nonEmpty)
@@ -88,12 +91,16 @@ class ReceptionistManager(val port: Int, val selectionRef: ActorRef[SelectionMan
 
       case InitializeTileList(tileList) => this.tileList = tileList
 
+      /** When we modify the puzzle, we notify the other nodes
+       */
       case TilesHasChanged(tileList) =>
         this.internalClock += 1
         this.tileList = tileList
         actorSet.foreach(w => if (checkIP(w)) {
           w ! ExpandChange(tileList) })
 
+      /** Updated puzzle received from another node
+       */
       case ExpandChange(tileList) =>
         this.internalClock += 1
         this.tileList = tileList
@@ -105,6 +112,8 @@ class ReceptionistManager(val port: Int, val selectionRef: ActorRef[SelectionMan
         this.tileList = tileList
         selectionRef ! ReceivePuzzleUpdate(tileList)
 
+      /** Sends local information to all other nodes in the cluster
+       */
       case SendClockInfo() =>
         if(ApplicationConstants.PollingDebug) log("DEBUG - Polling - internal clock " + internalClock)
         actorSet.foreach(p => if (checkIP(p)) {

@@ -30,6 +30,10 @@ object WordsManager {
    */
   def apply(bag: ActorRef[Command], fatherRef: ActorRef[MasterMessage]): Behavior[WordsManagerMessage] = Behaviors.receive { (context, message) =>
     message match {
+
+      /**
+       * Splits the set of words into equal parts and creates a WordsActor for each
+       */
       case ManageList(list, n) =>
         log("Work with " + n + " actors started")
         this.interrupted = false
@@ -40,11 +44,16 @@ object WordsManager {
           actor ! CountWords(sublist)
         })
 
+      /**
+       * Message that notifies this actor about the end of the computation of a child
+       */
       case ChildEnded(childRef) =>
         if(!interrupted) {
           nActiveActors -= 1
           childrenList = childrenList.filterNot(child => child == childRef)
           log("Child terminated. " + nActiveActors + " left")
+
+          //at the end notify the master
           if(nActiveActors == 0) {
             childrenList = List.empty
             fatherRef ! WorkEnded()

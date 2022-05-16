@@ -27,6 +27,7 @@ object Controller {
 class Controller(context: ActorContext[ControllerMessage]) {
   private var masterActor: ActorRef[MasterMessage] = _
 
+  //Behavior for when all key actors have not yet been initialized
   private val initializing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case Initialize(viewRef) =>
@@ -36,6 +37,7 @@ class Controller(context: ActorContext[ControllerMessage]) {
     }
   }
 
+  //Active behavior at the beginning and every time a computation ends
   private val standby: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case StartProcess(pdfPath, ignoredPath, nWords) =>
@@ -48,6 +50,7 @@ class Controller(context: ActorContext[ControllerMessage]) {
     }
   }
 
+  //During the computation it gives the possibility to stop
   private val computing: Behavior[ControllerMessage] = Behaviors.receive { (_, message) =>
     message match {
       case StopProcess() =>

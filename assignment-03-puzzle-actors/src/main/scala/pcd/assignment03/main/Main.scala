@@ -38,8 +38,8 @@ object Main {
 
   }
 
-  /** Try many ports (starting from the default 25251) until a valid one is found and start a Cluster on that port
-   *
+  /** Try many ports (starting from the default 25251)
+   *  until a valid one is found and start a Cluster on that port
    */
   def startCluster(): Unit = {
     var tempPort = this.defaultPort
@@ -52,8 +52,7 @@ object Main {
         isPortValid = true
       }
       catch {
-        case _: RemoteTransportException =>
-          tempPort += 1
+        case _: RemoteTransportException => tempPort += 1
       }
     }
   }

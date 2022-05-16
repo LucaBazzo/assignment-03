@@ -30,6 +30,8 @@ object PDFExtractActor {
     Behaviors.receive { (ctx, message) =>
     message match {
 
+      /** Extracts the words from the pdf document and sends the result to the father
+       */
       case StartExtraction(from) =>
         this.log("Document " + pdfDoc.getName + " loaded")
         val document: PDDocument = PDDocument.load(pdfDoc)

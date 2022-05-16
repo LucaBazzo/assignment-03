@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 
 /**
@@ -42,7 +43,7 @@ public class PeerImpl implements Peer{
             String remoteName = REMOTE_NAME + remoteNumber;
             try {
                 Registry registry = LocateRegistry.getRegistry();
-                SharedObject sharedObject = (SharedObject) registry.lookup(remoteName);
+                registry.lookup(remoteName);
                 this.addSharedObject(remoteName);
             } catch (Exception e) {
                 System.out.println(remoteName + " not found. Creating a new object.");
@@ -94,28 +95,28 @@ public class PeerImpl implements Peer{
         try {
             Registry registry = LocateRegistry.getRegistry();
             SharedObject sharedObject = (SharedObject) registry.lookup(remoteName);
-
             System.out.println( remoteName + " obtained ");
-
-            List<Pair<Integer, Integer>> response = sharedObject.getTileset();
-            //System.out.println(remoteName + " tileset: " + response.toString());
             sharedObjects.add(sharedObject);
         } catch (Exception e) {
-            System.err.println("Client exception: " + e);
+            System.err.println("Exception: " + e);
             e.printStackTrace();
         }
     }
     
     @Override
 	public void sendClockInfo(Integer internalClock, List<Pair<Integer, Integer>> tileset){
-		this.sharedObjects.forEach(obj -> {
+    	ListIterator<SharedObject> iterator = this.sharedObjects.listIterator();
+    	while(iterator.hasNext()){
+    		SharedObject obj = iterator.next();
 			try {
-				System.out.println("Sending clock to " + obj.getPeerRemoteName());
+	    		System.out.println("Sending clock to " + obj.getPeerRemoteName());
 				obj.checkClockIntegrity(internalClock, tileset, this.remoteNumber);
 			} catch (RemoteException e) {
 				System.out.println("Object no more present");
+				iterator.remove();
 			}
-		});
+    	    
+    	}
 	}
 
 	@Override

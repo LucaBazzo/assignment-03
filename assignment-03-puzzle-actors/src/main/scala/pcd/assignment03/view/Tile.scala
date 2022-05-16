@@ -12,7 +12,6 @@ class TileProperties(val originalPosition: Int, var currentPosition: Int) extend
   val startPosition: Int = currentPosition
 
   /**
-   *
    * @return if the piece is in its original position
    */
   def isInRightPlace: Boolean = currentPosition == originalPosition
@@ -20,7 +19,6 @@ class TileProperties(val originalPosition: Int, var currentPosition: Int) extend
   def getCurrentPosition: Int = currentPosition
 
   /**
-   *
    * @return the first position occupied by the puzzle piece post initial shuffling
    */
   def getStartPosition: Int = startPosition

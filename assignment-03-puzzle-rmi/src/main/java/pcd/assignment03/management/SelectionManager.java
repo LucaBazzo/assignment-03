@@ -13,7 +13,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+/** Manages the selection and swap of puzzle pieces, even if received by other nodes
+*
+*/
 public class SelectionManager {
+	
+	private final static boolean DEBUG = false;
 
     private final List<TileProperties> tiles;
     private final Controller controller;
@@ -22,28 +28,25 @@ public class SelectionManager {
     private Optional<TileProperties> selectedTile = Optional.empty();
     
     private Integer internalClock = 0;
-    private boolean polling = true;
 
+    /** SelectionManager constructor.
+    *
+    * @param controller reference to the controller
+    * @param tiles list of puzzle pieces
+    */
     public SelectionManager(Controller controller, List<TileProperties> tiles) throws RemoteException {
         this.tiles = tiles;
         this.controller = controller;
         this.peer = new PeerImpl(this);
         
-        if (polling) 
-        {
-            //start polling for checking clocks different between cluster nodes
-        	ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-
-            Runnable task = () -> {
-            	System.out.println("DEBUG - Polling - internal clock " + internalClock);
-            	this.peer.sendClockInfo(internalClock, convertTilesetToPairList(tiles));
-            };
-            
-            executorService.scheduleAtFixedRate(task, 0, 3, TimeUnit.SECONDS);
-            polling = false;
-        }
+        this.StartCheckClock();
     }
 
+    /**
+     * Stores the selected tile or allows a swap with the previously selected one.
+     *
+     * @param tile		the selected tile
+     */
     public void selectTile(TileProperties tile) {
         if(selectedTile.isPresent()) {
             this.swap(selectedTile.get(), tile);
@@ -65,10 +68,19 @@ public class SelectionManager {
         	selectedTile = Optional.of(tile);
     }
 
+    /**
+     * @return the list of tiles in a format that can be sent to other applications
+     */
     public List<Pair<Integer, Integer>> getPairList() {
         return convertTilesetToPairList(this.tiles);
     }
 
+    /** 
+     * Updates the local tile list with the one received
+     * 
+     * @param pairList		the list of tiles obtained from another application
+     * @param updateClock	performed only when the update is not caused by a checkClockIntegrity
+     */
     public void updateTileset(List<Pair<Integer, Integer>> pairList, boolean updateClock) {
         log("Tileset updated --> " + pairList);
         convertPairListToTileset(pairList);
@@ -79,6 +91,11 @@ public class SelectionManager {
         controller.updateView(this.tiles, isPuzzleCompleted());
     }
 
+    /** 
+     * Requires the display of the sent tileset
+     * 
+     * @param pairList		the list of tiles obtained from another application, can be empty if we are the first application
+     */
     public void displayTileset(Optional<List<Pair<Integer, Integer>>> pairList) {
         log("Tileset: " + pairList.toString());
         if(pairList.isPresent())
@@ -88,19 +105,29 @@ public class SelectionManager {
         controller.displayView(this.tiles, isPuzzleCompleted());
     }
     
+    /** Check if the internal clock is different (but not greater) from the one received from other nodes,
+     *  in that case it means that this node's tileset isn't the latest in the cluster and needs to be updated.
+     *  If clocks are equals, tileset are checked and, if different, it means that some updates went lost between those nodes
+     *  and so it is prioritized the one coming from the node with lower remote number. 
+     *  In this way, only the nodes with greater remote number will be updated.
+     *  
+     *  @param clock				the internal clock number of the other application
+     *  @param pairList 			the tileset of the other application
+     *  @param sourceRemoteNumber 	the remote number of who requested the clock check
+     */
     public void checkClockIntegrity(Integer clock, List<Pair<Integer, Integer>> pairList, Integer sourceRemoteNumber) {
-    	System.out.println("DEBUG - check clock integrity: clock received - " + clock + " source number received - " + sourceRemoteNumber);
-
 		List<Pair<Integer, Integer>> tileList = convertTilesetToPairList(this.tiles);
-		log(this.internalClock + " - " + clock + " / " + !pairList.equals(tileList) 
-				+ " / " + this.peer.getRemoteNumber() + " - " + sourceRemoteNumber);
+		if(DEBUG)
+			log(this.internalClock + " - " + clock + " / " + !pairList.equals(tileList) 
+					+ " / " + this.peer.getRemoteNumber() + " - " + sourceRemoteNumber);
 		
         if ((this.internalClock < clock) || (this.internalClock == clock && !pairList.equals(tileList) 
         		&& this.peer.getRemoteNumber() > sourceRemoteNumber))
         {
-          log("DEBUG - Update performed");
-          this.internalClock = clock;
-          updateTileset(pairList, false);
+        	if(DEBUG)
+        		log("DEBUG - Update performed");
+        	this.internalClock = clock;
+        	updateTileset(pairList, false);
         }
     }
 
@@ -119,12 +146,6 @@ public class SelectionManager {
     private void convertPairListToTileset(List<Pair<Integer, Integer>> pairList) {
         this.tiles.forEach(tile -> tile.setCurrentPosition(pairList.stream().filter(d -> d.getSecond() == tile.getOriginalPosition()).findFirst().get().getFirst()));
     }
-    
-    private List<TileProperties> convertPairListToTileset2(List<Pair<Integer, Integer>> pairList) {
-    	List<TileProperties> l = new ArrayList<>();
-    	pairList.forEach(pair -> l.add(new TileProperties(pair.getSecond(), pair.getFirst())));
-        return l;
-    }
 
     private List<Pair<Integer, Integer>> convertTilesetToPairList(List<TileProperties> tiles) {
         List<Pair<Integer, Integer>> pairList = new ArrayList<>();
@@ -142,6 +163,19 @@ public class SelectionManager {
         for(int i=0; i< this.tiles.size(); i++) {
         	this.tiles.get(i).setCurrentPosition(currentPositions.get(i));
         }
+    }
+    
+    private void StartCheckClock() {
+    	//start polling for checking clocks difference between cluster nodes
+    	ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+        Runnable task = () -> {
+        	if(DEBUG)
+        		log("DEBUG - Polling - internal clock " + internalClock);
+        	this.peer.sendClockInfo(internalClock, convertTilesetToPairList(tiles));
+        };
+        
+        executorService.scheduleAtFixedRate(task, 0, 3, TimeUnit.SECONDS);
     }
 
     private void log(String ... messages) {

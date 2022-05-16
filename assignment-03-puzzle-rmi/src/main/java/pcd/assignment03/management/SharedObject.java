@@ -21,7 +21,7 @@ public interface SharedObject extends Remote {
     void updateTileset(List<Pair<Integer, Integer>> tileset) throws RemoteException;
 
     /**
-     * Gets tileset.
+     * Gets the tileset.
      *
      * @return the tileset
      * @throws RemoteException remote exception if RMI service encounters a problem
@@ -47,7 +47,7 @@ public interface SharedObject extends Remote {
     void checkClockIntegrity(Integer clock, List<Pair<Integer, Integer>> tileset, Integer sourceRemoteNumber) throws RemoteException ;
 
     /**
-     * Add remote.
+     * Given a remote name, requires the peer to perform a lookup in order to obtain the sharedObject associated with that name.
      *
      * @param remoteName the remote name
      * @throws RemoteException   remote exception if RMI service encounters a problem

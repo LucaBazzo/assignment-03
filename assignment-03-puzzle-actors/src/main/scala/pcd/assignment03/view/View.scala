@@ -40,6 +40,7 @@ class View(val context: ActorContext[ViewMessage], val nRows: Int, val nColumns:
   private val imagePath: String = ApplicationConstants.ImagePath
   private val puzzleBoard: PuzzleBoard = new PuzzleBoard(nRows, nColumns, imagePath, viewEvent)
 
+  //View behaviour maintained until the puzzle is displayed on the screen
   private val standby: Behavior[ViewMessage] = Behaviors.receiveMessagePartial {
 
     case View.Initialize() =>
