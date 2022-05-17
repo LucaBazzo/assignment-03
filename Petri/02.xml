@@ -61,6 +61,26 @@
                 <value>0</value>
             </capacity>
         </place>
+        <place id="New tileset">
+            <graphics>
+                <position x="1035.0" y="420.0"/>
+            </graphics>
+            <name>
+                <value>New tileset</value>
+                <graphics>
+                    <offset x="46.0" y="40.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
         <place id="Node on Cluster">
             <graphics>
                 <position x="255.0" y="30.0"/>
@@ -223,7 +243,7 @@
         </place>
         <place id="Tileset received from node">
             <graphics>
-                <position x="1065.0" y="360.0"/>
+                <position x="1155.0" y="375.0"/>
             </graphics>
             <name>
                 <value>Tileset received from node</value>
@@ -503,6 +523,32 @@
                 <value>1</value>
             </priority>
         </transition>
+        <transition id="Send tileset to other nodes and update View">
+            <graphics>
+                <position x="1080.0" y="390.0"/>
+            </graphics>
+            <name>
+                <value>Send tileset to other nodes and update View</value>
+                <graphics>
+                    <offset x="229.0" y="40.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
         <transition id="Spawn Controlller and View and send Initialize">
             <graphics>
                 <position x="345.0" y="30.0"/>
@@ -555,14 +601,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Swap and updateView">
+        <transition id="Swap ">
             <graphics>
                 <position x="960.0" y="405.0"/>
             </graphics>
             <name>
-                <value>Swap and updateView</value>
+                <value>Swap </value>
                 <graphics>
-                    <offset x="147.0" y="29.0"/>
+                    <offset x="63.0" y="26.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -583,7 +629,7 @@
         </transition>
         <transition id="Update View">
             <graphics>
-                <position x="1065.0" y="465.0"/>
+                <position x="1155.0" y="480.0"/>
             </graphics>
             <name>
                 <value>Update View</value>
@@ -660,7 +706,7 @@
             <arcpath id="001" x="637" y="408" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Controller: waitingEvents to Swap and updateView" source="Controller: waitingEvents" target="Swap and updateView">
+        <arc id="Controller: waitingEvents to Swap " source="Controller: waitingEvents" target="Swap ">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -670,7 +716,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="521" y="344" curvePoint="false"/>
-            <arcpath id="001" x="966" y="420" curvePoint="false"/>
+            <arcpath id="001" x="966" y="422" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Controller: waitingEvents to Update View" source="Controller: waitingEvents" target="Update View">
@@ -683,7 +729,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="521" y="345" curvePoint="false"/>
-            <arcpath id="001" x="1072" y="474" curvePoint="false"/>
+            <arcpath id="001" x="1162" y="487" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Controller has received Initialize to Spawn Receptionist and SelectionManager, send InitializeTileList" source="Controller has received Initialize" target="Spawn Receptionist and SelectionManager, send InitializeTileList">
@@ -749,7 +795,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="1006" y="332" curvePoint="false"/>
-            <arcpath id="001" x="1063" y="364" curvePoint="false"/>
+            <arcpath id="001" x="1152" y="382" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Receive tileset from other node to Receptionist: waitingForEvents" source="Receive tileset from other node" target="Receptionist: waitingForEvents">
@@ -791,6 +837,20 @@
             <arcpath id="001" x="997" y="322" curvePoint="false"/>
             <type value="normal"/>
         </arc>
+        <arc id="Receptionist: waitingForEvents to Send tileset to other nodes and update View" source="Receptionist: waitingForEvents" target="Send tileset to other nodes and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="958" y="266" curvePoint="false"/>
+            <arcpath id="001" x="972" y="372" curvePoint="false"/>
+            <arcpath id="002" x="1087" y="397" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
         <arc id="Receptionist has received InitializeTileList to Receive tileset from other node" source="Receptionist has received InitializeTileList" target="Receive tileset from other node">
             <graphics/>
             <inscription>
@@ -830,7 +890,7 @@
             <arcpath id="001" x="647" y="409" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="SelectionManager: waitingEvents to Swap and updateView" source="SelectionManager: waitingEvents" target="Swap and updateView">
+        <arc id="SelectionManager: waitingEvents to Swap " source="SelectionManager: waitingEvents" target="Swap ">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -975,6 +1035,35 @@
             <arcpath id="001" x="129" y="289" curvePoint="false"/>
             <type value="normal"/>
         </arc>
+        <arc id="Send tileset to other nodes and update View to Receptionist: waitingForEvents" source="Send tileset to other nodes and update View" target="Receptionist: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1092" y="387" curvePoint="false"/>
+            <arcpath id="001" x="1137" y="252" curvePoint="false"/>
+            <arcpath id="002" x="972" y="252" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send tileset to other nodes and update View to View: idle" source="Send tileset to other nodes and update View" target="View: idle">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1092" y="417" curvePoint="false"/>
+            <arcpath id="001" x="1092" y="552" curvePoint="false"/>
+            <arcpath id="002" x="492" y="507" curvePoint="false"/>
+            <arcpath id="003" x="442" y="457" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
         <arc id="Spawn Controlller and View and send Initialize to Controller: Initialize" source="Spawn Controlller and View and send Initialize" target="Controller: Initialize">
             <graphics/>
             <inscription>
@@ -1054,7 +1143,7 @@
             <arcpath id="001" x="141" y="42" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Swap and updateView to Controller: waitingEvents" source="Swap and updateView" target="Controller: waitingEvents">
+        <arc id="Swap  to Controller: waitingEvents" source="Swap " target="Controller: waitingEvents">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1063,12 +1152,12 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="967" y="411" curvePoint="false"/>
+            <arcpath id="000" x="967" y="407" curvePoint="false"/>
             <arcpath id="001" x="867" y="372" curvePoint="false"/>
             <arcpath id="002" x="521" y="343" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Swap and updateView to SelectionManager: waitingEvents" source="Swap and updateView" target="SelectionManager: waitingEvents">
+        <arc id="Swap  to New tileset" source="Swap " target="New tileset">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1077,11 +1166,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="967" y="414" curvePoint="false"/>
-            <arcpath id="001" x="821" y="362" curvePoint="false"/>
+            <arcpath id="000" x="976" y="417" curvePoint="false"/>
+            <arcpath id="001" x="1032" y="428" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Swap and updateView to View: idle" source="Swap and updateView" target="View: idle">
+        <arc id="Swap  to SelectionManager: waitingEvents" source="Swap " target="SelectionManager: waitingEvents">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1090,13 +1179,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="966" y="429" curvePoint="false"/>
-            <arcpath id="001" x="912" y="507" curvePoint="false"/>
-            <arcpath id="002" x="432" y="507" curvePoint="false"/>
-            <arcpath id="003" x="432" y="462" curvePoint="false"/>
+            <arcpath id="000" x="967" y="412" curvePoint="false"/>
+            <arcpath id="001" x="821" y="361" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Tile selected to Swap and updateView" source="Tile selected" target="Swap and updateView">
+        <arc id="Tile selected to Swap " source="Tile selected" target="Swap ">
             <graphics/>
             <inscription>
                 <value>Default,2</value>
@@ -1106,7 +1193,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="851" y="431" curvePoint="false"/>
-            <arcpath id="001" x="966" y="423" curvePoint="false"/>
+            <arcpath id="001" x="966" y="427" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Tileset received from node to Update View" source="Tileset received from node" target="Update View">
@@ -1118,8 +1205,8 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1077" y="386" curvePoint="false"/>
-            <arcpath id="001" x="1077" y="462" curvePoint="false"/>
+            <arcpath id="000" x="1167" y="401" curvePoint="false"/>
+            <arcpath id="001" x="1167" y="477" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Tileset received to send message DisplayWithTileset" source="Tileset received" target="send message DisplayWithTileset">
@@ -1144,7 +1231,7 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1077" y="492" curvePoint="false"/>
+            <arcpath id="000" x="1161" y="502" curvePoint="false"/>
             <arcpath id="001" x="1062" y="537" curvePoint="false"/>
             <arcpath id="002" x="521" y="346" curvePoint="false"/>
             <type value="normal"/>
@@ -1158,7 +1245,7 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1072" y="468" curvePoint="false"/>
+            <arcpath id="000" x="1162" y="482" curvePoint="false"/>
             <arcpath id="001" x="897" y="297" curvePoint="false"/>
             <arcpath id="002" x="819" y="348" curvePoint="false"/>
             <type value="normal"/>
@@ -1172,7 +1259,7 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1071" y="486" curvePoint="false"/>
+            <arcpath id="000" x="1161" y="497" curvePoint="false"/>
             <arcpath id="001" x="942" y="537" curvePoint="false"/>
             <arcpath id="002" x="417" y="537" curvePoint="false"/>
             <arcpath id="003" x="429" y="461" curvePoint="false"/>
@@ -1191,7 +1278,7 @@
             <arcpath id="001" x="636" y="420" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="View: idle to Swap and updateView" source="View: idle" target="Swap and updateView">
+        <arc id="View: idle to Send tileset to other nodes and update View" source="View: idle" target="Send tileset to other nodes and update View">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1201,8 +1288,8 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="446" y="449" curvePoint="false"/>
-            <arcpath id="001" x="762" y="492" curvePoint="false"/>
-            <arcpath id="002" x="966" y="426" curvePoint="false"/>
+            <arcpath id="001" x="762" y="507" curvePoint="false"/>
+            <arcpath id="002" x="1086" y="407" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="View: idle to Update View" source="View: idle" target="Update View">
@@ -1215,7 +1302,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="446" y="447" curvePoint="false"/>
-            <arcpath id="001" x="1071" y="480" curvePoint="false"/>
+            <arcpath id="001" x="1161" y="492" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="View: standby to send message DisplayWithTileset" source="View: standby" target="send message DisplayWithTileset">
