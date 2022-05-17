@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+    <net id="Net-One" type="P/T net">
+        <token id="Default" enabled="true" red="0" green="0" blue="0"/>
+        <place id="Controller: computing">
+            <graphics>
+                <position x="450.0" y="195.0"/>
+            </graphics>
+            <name>
+                <value>Controller: computing</value>
+                <graphics>
+                    <offset x="77.0" y="-10.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Controller: standby">
+            <graphics>
+                <position x="300.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>Controller: standby</value>
+                <graphics>
+                    <offset x="59.0" y="-3.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Extraction completed">
+            <graphics>
+                <position x="1095.0" y="270.0"/>
+            </graphics>
+            <name>
+                <value>Extraction completed</value>
+                <graphics>
+                    <offset x="102.0" y="1.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="ExtractorManager has received message StartProcessing">
+            <graphics>
+                <position x="600.0" y="225.0"/>
+            </graphics>
+            <name>
+                <value>ExtractorManager has received message StartProcessing</value>
+                <graphics>
+                    <offset x="214.0" y="-20.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="ExtractorManager is ready to begin extraction">
+            <graphics>
+                <position x="810.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>ExtractorManager is ready to begin extraction</value>
+                <graphics>
+                    <offset x="137.0" y="-3.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="ExtractorManager waiting for PDFExtractor to complete">
+            <graphics>
+                <position x="990.0" y="120.0"/>
+            </graphics>
+            <name>
+                <value>ExtractorManager waiting for PDFExtractor to complete</value>
+                <graphics>
+                    <offset x="317.0" y="16.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master: gettingPDF">
+            <graphics>
+                <position x="735.0" y="330.0"/>
+            </graphics>
+            <name>
+                <value>Master: gettingPDF</value>
+                <graphics>
+                    <offset x="66.0" y="39.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master: standby">
+            <graphics>
+                <position x="270.0" y="255.0"/>
+            </graphics>
+            <name>
+                <value>Master: standby</value>
+                <graphics>
+                    <offset x="79.0" y="39.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master has received message Start">
+            <graphics>
+                <position x="585.0" y="375.0"/>
+            </graphics>
+            <name>
+                <value>Master has received message Start</value>
+                <graphics>
+                    <offset x="148.0" y="43.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master is ready to begin computation of most frequent words">
+            <graphics>
+                <position x="1020.0" y="345.0"/>
+            </graphics>
+            <name>
+                <value>Master is ready to begin computation of most frequent words</value>
+                <graphics>
+                    <offset x="185.0" y="46.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Open program">
+            <graphics>
+                <position x="90.0" y="75.0"/>
+            </graphics>
+            <name>
+                <value>Open program</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="PDFExtract ready to begin">
+            <graphics>
+                <position x="945.0" y="15.0"/>
+            </graphics>
+            <name>
+                <value>PDFExtract ready to begin</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View: standby">
+            <graphics>
+                <position x="255.0" y="345.0"/>
+            </graphics>
+            <name>
+                <value>View: standby</value>
+                <graphics>
+                    <offset x="106.0" y="2.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Words list obtained">
+            <graphics>
+                <position x="1140.0" y="15.0"/>
+            </graphics>
+            <name>
+                <value>Words list obtained</value>
+                <graphics>
+                    <offset x="83.0" y="-6.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Create View and Controller actors and send Display and Initialize message respectively">
+            <graphics>
+                <position x="150.0" y="150.0"/>
+            </graphics>
+            <name>
+                <value>Create View and Controller actors and send Display and Initialize message respectively</value>
+                <graphics>
+                    <offset x="302.0" y="-15.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Extract forbidden words and spawn a PDFExtract actor for each PDF file">
+            <graphics>
+                <position x="630.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>Extract forbidden words and spawn a PDFExtract actor for each PDF file</value>
+                <graphics>
+                    <offset x="312.0" y="49.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Extract words">
+            <graphics>
+                <position x="1035.0" y="15.0"/>
+            </graphics>
+            <name>
+                <value>Extract words</value>
+                <graphics>
+                    <offset x="31.0" y="39.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send message RetrieveWords">
+            <graphics>
+                <position x="1095.0" y="195.0"/>
+            </graphics>
+            <name>
+                <value>Send message RetrieveWords</value>
+                <graphics>
+                    <offset x="184.0" y="10.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send message WordsList ">
+            <graphics>
+                <position x="990.0" y="285.0"/>
+            </graphics>
+            <name>
+                <value>Send message WordsList </value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send StartExtraction message to every PDFExtract actor">
+            <graphics>
+                <position x="945.0" y="90.0"/>
+            </graphics>
+            <name>
+                <value>Send StartExtraction message to every PDFExtract actor</value>
+                <graphics>
+                    <offset x="24.0" y="5.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send StartProcessing to ExtractorManager Actor">
+            <graphics>
+                <position x="600.0" y="315.0"/>
+            </graphics>
+            <name>
+                <value>Send StartProcessing to ExtractorManager Actor</value>
+                <graphics>
+                    <offset x="150.0" y="-9.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Start from GUI">
+            <graphics>
+                <position x="390.0" y="345.0"/>
+            </graphics>
+            <name>
+                <value>Start from GUI</value>
+                <graphics>
+                    <offset x="47.0" y="41.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="Controller: standby to Start from GUI" source="Controller: standby" target="Start from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="319" y="204" curvePoint="false"/>
+            <arcpath id="001" x="402" y="342" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Create View and Controller actors and send Display and Initialize message respectively to Controller: standby" source="Create View and Controller actors and send Display and Initialize message respectively" target="Controller: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="167" y="157" curvePoint="false"/>
+            <arcpath id="001" x="297" y="188" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Create View and Controller actors and send Display and Initialize message respectively to Master: standby" source="Create View and Controller actors and send Display and Initialize message respectively" target="Master: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="166" y="167" curvePoint="false"/>
+            <arcpath id="001" x="270" y="257" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Create View and Controller actors and send Display and Initialize message respectively to View: standby" source="Create View and Controller actors and send Display and Initialize message respectively" target="View: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="162" y="177" curvePoint="false"/>
+            <arcpath id="001" x="259" y="344" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Extract forbidden words and spawn a PDFExtract actor for each PDF file to ExtractorManager is ready to begin extraction" source="Extract forbidden words and spawn a PDFExtract actor for each PDF file" target="ExtractorManager is ready to begin extraction">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="646" y="147" curvePoint="false"/>
+            <arcpath id="001" x="807" y="147" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Extraction completed to Send message WordsList " source="Extraction completed" target="Send message WordsList ">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1092" y="284" curvePoint="false"/>
+            <arcpath id="001" x="1006" y="297" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="ExtractorManager has received message StartProcessing to Extract forbidden words and spawn a PDFExtract actor for each PDF file" source="ExtractorManager has received message StartProcessing" target="Extract forbidden words and spawn a PDFExtract actor for each PDF file">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="617" y="223" curvePoint="false"/>
+            <arcpath id="001" x="642" y="162" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="ExtractorManager is ready to begin extraction to Send StartExtraction message to every PDFExtract actor" source="ExtractorManager is ready to begin extraction" target="Send StartExtraction message to every PDFExtract actor">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="836" y="142" curvePoint="false"/>
+            <arcpath id="001" x="951" y="102" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="ExtractorManager waiting for PDFExtractor to complete to Send message RetrieveWords" source="ExtractorManager waiting for PDFExtractor to complete" target="Send message RetrieveWords">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1013" y="141" curvePoint="false"/>
+            <arcpath id="001" x="1101" y="207" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Extract words to Words list obtained" source="Extract words" target="Words list obtained">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1051" y="27" curvePoint="false"/>
+            <arcpath id="001" x="1137" y="27" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Master: gettingPDF to Send message WordsList " source="Master: gettingPDF" target="Send message WordsList ">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="761" y="339" curvePoint="false"/>
+            <arcpath id="001" x="996" y="297" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Master: standby to Start from GUI" source="Master: standby" target="Start from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="293" y="276" curvePoint="false"/>
+            <arcpath id="001" x="397" y="352" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Master has received message Start to Send StartProcessing to ExtractorManager Actor" source="Master has received message Start" target="Send StartProcessing to ExtractorManager Actor">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="601" y="372" curvePoint="false"/>
+            <arcpath id="001" x="612" y="342" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Open program to Create View and Controller actors and send Display and Initialize message respectively" source="Open program" target="Create View and Controller actors and send Display and Initialize message respectively">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="102" y="102" curvePoint="false"/>
+            <arcpath id="001" x="102" y="87" curvePoint="false"/>
+            <arcpath id="002" x="156" y="162" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="PDFExtract ready to begin to Extract words" source="PDFExtract ready to begin" target="Extract words">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="971" y="27" curvePoint="false"/>
+            <arcpath id="001" x="1041" y="27" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send message RetrieveWords to Extraction completed" source="Send message RetrieveWords" target="Extraction completed">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1107" y="222" curvePoint="false"/>
+            <arcpath id="001" x="1107" y="267" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send message WordsList  to Master is ready to begin computation of most frequent words" source="Send message WordsList " target="Master is ready to begin computation of most frequent words">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1002" y="312" curvePoint="false"/>
+            <arcpath id="001" x="1023" y="344" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send StartExtraction message to every PDFExtract actor to ExtractorManager waiting for PDFExtractor to complete" source="Send StartExtraction message to every PDFExtract actor" target="ExtractorManager waiting for PDFExtractor to complete">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="961" y="102" curvePoint="false"/>
+            <arcpath id="001" x="989" y="123" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send StartExtraction message to every PDFExtract actor to PDFExtract ready to begin" source="Send StartExtraction message to every PDFExtract actor" target="PDFExtract ready to begin">
+            <graphics/>
+            <inscription>
+                <value>Default,10</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="957" y="87" curvePoint="false"/>
+            <arcpath id="001" x="957" y="41" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send StartProcessing to ExtractorManager Actor to ExtractorManager has received message StartProcessing" source="Send StartProcessing to ExtractorManager Actor" target="ExtractorManager has received message StartProcessing">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="612" y="312" curvePoint="false"/>
+            <arcpath id="001" x="612" y="251" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send StartProcessing to ExtractorManager Actor to Master: gettingPDF" source="Send StartProcessing to ExtractorManager Actor" target="Master: gettingPDF">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="616" y="327" curvePoint="false"/>
+            <arcpath id="001" x="732" y="340" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Start from GUI to Controller: computing" source="Start from GUI" target="Controller: computing">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="402" y="342" curvePoint="false"/>
+            <arcpath id="001" x="455" y="220" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Start from GUI to Master has received message Start" source="Start from GUI" target="Master has received message Start">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="407" y="352" curvePoint="false"/>
+            <arcpath id="001" x="582" y="384" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Start from GUI to View: standby" source="Start from GUI" target="View: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="406" y="362" curvePoint="false"/>
+            <arcpath id="001" x="477" y="372" curvePoint="false"/>
+            <arcpath id="002" x="447" y="462" curvePoint="false"/>
+            <arcpath id="003" x="282" y="462" curvePoint="false"/>
+            <arcpath id="004" x="269" y="371" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View: standby to Start from GUI" source="View: standby" target="Start from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="281" y="358" curvePoint="false"/>
+            <arcpath id="001" x="396" y="362" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Words list obtained to Send message RetrieveWords" source="Words list obtained" target="Send message RetrieveWords">
+            <graphics/>
+            <inscription>
+                <value>Default,10</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1148" y="41" curvePoint="false"/>
+            <arcpath id="001" x="1107" y="192" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+    </net>
+</pnml>
