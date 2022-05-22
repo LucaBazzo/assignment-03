@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+    <net id="Net-One" type="P/T net">
+        <token id="Default" enabled="true" red="0" green="0" blue="0"/>
+        <place id="Controller: Initialize">
+            <graphics>
+                <position x="465.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>Controller: Initialize</value>
+                <graphics>
+                    <offset x="84.0" y="-12.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Controller: waitingEvents">
+            <graphics>
+                <position x="585.0" y="435.0"/>
+            </graphics>
+            <name>
+                <value>Controller: waitingEvents</value>
+                <graphics>
+                    <offset x="1.0" y="32.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Controller received Initialize">
+            <graphics>
+                <position x="555.0" y="90.0"/>
+            </graphics>
+            <name>
+                <value>Controller received Initialize</value>
+                <graphics>
+                    <offset x="140.0" y="41.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Node on Cluster">
+            <graphics>
+                <position x="255.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Node on Cluster</value>
+                <graphics>
+                    <offset x="50.0" y="-14.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Receptionist: waitingForEvents">
+            <graphics>
+                <position x="990.0" y="240.0"/>
+            </graphics>
+            <name>
+                <value>Receptionist: waitingForEvents</value>
+                <graphics>
+                    <offset x="196.0" y="36.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Receptionist received InitializeTileList">
+            <graphics>
+                <position x="840.0" y="45.0"/>
+            </graphics>
+            <name>
+                <value>Receptionist received InitializeTileList</value>
+                <graphics>
+                    <offset x="240.0" y="19.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="SelectionManager: waitingEvent">
+            <graphics>
+                <position x="765.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>SelectionManager: waitingEvent</value>
+                <graphics>
+                    <offset x="59.0" y="40.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="SelectionManager: waitingEvents">
+            <graphics>
+                <position x="855.0" y="360.0"/>
+            </graphics>
+            <name>
+                <value>SelectionManager: waitingEvents</value>
+                <graphics>
+                    <offset x="162.0" y="45.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Start">
+            <graphics>
+                <position x="45.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Start</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Tileset received">
+            <graphics>
+                <position x="720.0" y="240.0"/>
+            </graphics>
+            <name>
+                <value>Tileset received</value>
+                <graphics>
+                    <offset x="117.0" y="29.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View: idle">
+            <graphics>
+                <position x="420.0" y="570.0"/>
+            </graphics>
+            <name>
+                <value>View: idle</value>
+                <graphics>
+                    <offset x="4.0" y="18.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View: standby">
+            <graphics>
+                <position x="105.0" y="285.0"/>
+            </graphics>
+            <name>
+                <value>View: standby</value>
+                <graphics>
+                    <offset x="66.0" y="42.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View received DisplayWithTileset">
+            <graphics>
+                <position x="180.0" y="390.0"/>
+            </graphics>
+            <name>
+                <value>View received DisplayWithTileset</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View received Initialize">
+            <graphics>
+                <position x="120.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>View received Initialize</value>
+                <graphics>
+                    <offset x="25.0" y="-9.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Connect to cluster using a valid port">
+            <graphics>
+                <position x="135.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Connect to cluster using a valid port</value>
+                <graphics>
+                    <offset x="116.0" y="45.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Display GUI">
+            <graphics>
+                <position x="270.0" y="435.0"/>
+            </graphics>
+            <name>
+                <value>Display GUI</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Receive tileset from other node">
+            <graphics>
+                <position x="990.0" y="120.0"/>
+            </graphics>
+            <name>
+                <value>Receive tileset from other node</value>
+                <graphics>
+                    <offset x="191.0" y="9.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="send DisplayWithTileset">
+            <graphics>
+                <position x="420.0" y="285.0"/>
+            </graphics>
+            <name>
+                <value>send DisplayWithTileset</value>
+                <graphics>
+                    <offset x="1.0" y="-2.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send Initialize">
+            <graphics>
+                <position x="270.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>Send Initialize</value>
+                <graphics>
+                    <offset x="99.0" y="25.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Spawn Controlller and View and send Initialize">
+            <graphics>
+                <position x="345.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Spawn Controlller and View and send Initialize</value>
+                <graphics>
+                    <offset x="225.0" y="-8.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Spawn Receptionist and SelectionManager, send InitializeTileList">
+            <graphics>
+                <position x="720.0" y="45.0"/>
+            </graphics>
+            <name>
+                <value>Spawn Receptionist and SelectionManager, send InitializeTileList</value>
+                <graphics>
+                    <offset x="244.0" y="-14.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="Connect to cluster with a valid port to Node on Cluster" source="Connect to cluster using a valid port" target="Node on Cluster">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="151" y="42" curvePoint="false"/>
+            <arcpath id="001" x="252" y="42" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Controller: Initialize to send message DisplayWithTileset" source="Controller: Initialize" target="send DisplayWithTileset">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="478" y="86" curvePoint="false"/>
+            <arcpath id="001" x="479" y="89" curvePoint="false"/>
+            <arcpath id="002" x="432" y="282" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Controller: Initialize to Send message Initialize" source="Controller: Initialize" target="Send Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="464" y="80" curvePoint="false"/>
+            <arcpath id="001" x="287" y="187" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Controller has received Initialize to Spawn Receptionist and SelectionManager, send InitializeTileList" source="Controller received Initialize" target="Spawn Receptionist and SelectionManager, send InitializeTileList">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="581" y="97" curvePoint="false"/>
+            <arcpath id="001" x="726" y="62" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Display GUI to View: idle" source="Display GUI" target="View: idle">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="286" y="447" curvePoint="false"/>
+            <arcpath id="001" x="421" y="571" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Node on Cluster to Spawn Controlller and View and send Initialize" source="Node on Cluster" target="Spawn Controlller and View and send Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="281" y="42" curvePoint="false"/>
+            <arcpath id="001" x="352" y="37" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Receive tileset from other node to Receptionist: waitingForEvents" source="Receive tileset from other node" target="Receptionist: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1002" y="147" curvePoint="false"/>
+            <arcpath id="001" x="1002" y="237" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Receive tileset from other node to Tileset received" source="Receive tileset from other node" target="Tileset received">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="996" y="140" curvePoint="false"/>
+            <arcpath id="001" x="745" y="246" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Receptionist has received InitializeTileList to Receive tileset from other node" source="Receptionist received InitializeTileList" target="Receive tileset from other node">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="865" y="63" curvePoint="false"/>
+            <arcpath id="001" x="997" y="126" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="SelectionManager: waitingEvent to Receive tileset from other node" source="SelectionManager: waitingEvent" target="Receive tileset from other node">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="791" y="146" curvePoint="false"/>
+            <arcpath id="001" x="996" y="133" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send message DisplayWithTileset to Controller: waitingEvents" source="send DisplayWithTileset" target="Controller: waitingEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="436" y="303" curvePoint="false"/>
+            <arcpath id="001" x="585" y="436" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send message DisplayWithTileset to SelectionManager: waitingEvents" source="send DisplayWithTileset" target="SelectionManager: waitingEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="437" y="296" curvePoint="false"/>
+            <arcpath id="001" x="852" y="369" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send message DisplayWithTileset to View has received DisplayWithTileset" source="send DisplayWithTileset" target="View received DisplayWithTileset">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="426" y="302" curvePoint="false"/>
+            <arcpath id="001" x="205" y="396" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send message Initialize to Controller has received Initialize" source="Send Initialize" target="Controller received Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="286" y="197" curvePoint="false"/>
+            <arcpath id="001" x="552" y="106" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send message Initialize to View: standby" source="Send Initialize" target="View: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="276" y="197" curvePoint="false"/>
+            <arcpath id="001" x="129" y="288" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn Controlller and View and send Initialize to Controller: Initialize" source="Spawn Controlller and View and send Initialize" target="Controller: Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="361" y="42" curvePoint="false"/>
+            <arcpath id="001" x="462" y="68" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn Controlller and View and send Initialize to View has received Initialize" source="Spawn Controlller and View and send Initialize" target="View received Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="351" y="47" curvePoint="false"/>
+            <arcpath id="001" x="144" y="183" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to Controller: Initialize" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="Controller: Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="727" y="52" curvePoint="false"/>
+            <arcpath id="001" x="584" y="59" curvePoint="false"/>
+            <arcpath id="002" x="491" y="70" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to Receptionist has received InitializeTileList" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="Receptionist received InitializeTileList">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="736" y="57" curvePoint="false"/>
+            <arcpath id="001" x="837" y="57" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to SelectionManager: waitingEvent" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="SelectionManager: waitingEvent">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="732" y="72" curvePoint="false"/>
+            <arcpath id="001" x="769" y="134" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Start to Connect to cluster with a valid port" source="Start" target="Connect to cluster using a valid port">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="71" y="42" curvePoint="false"/>
+            <arcpath id="001" x="141" y="42" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Tileset received to send message DisplayWithTileset" source="Tileset received" target="send DisplayWithTileset">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="717" y="253" curvePoint="false"/>
+            <arcpath id="001" x="437" y="289" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View: standby to send message DisplayWithTileset" source="View: standby" target="send DisplayWithTileset">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="131" y="296" curvePoint="false"/>
+            <arcpath id="001" x="427" y="292" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View has received DisplayWithTileset to Display GUI" source="View received DisplayWithTileset" target="Display GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="205" y="409" curvePoint="false"/>
+            <arcpath id="001" x="276" y="447" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View has received Initialize to Send message Initialize" source="View received Initialize" target="Send Initialize">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="146" y="191" curvePoint="false"/>
+            <arcpath id="001" x="277" y="187" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+    </net>
+</pnml>

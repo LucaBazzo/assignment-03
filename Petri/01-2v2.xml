@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+    <net id="Net-One" type="P/T net">
+        <token id="Default" enabled="true" red="0" green="0" blue="0"/>
+        <place id="Count completed">
+            <graphics>
+                <position x="765.0" y="315.0"/>
+            </graphics>
+            <name>
+                <value>Count completed</value>
+                <graphics>
+                    <offset x="124.0" y="25.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master: computingMostFrequentWords">
+            <graphics>
+                <position x="600.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>Master: computingMostFrequentWords</value>
+                <graphics>
+                    <offset x="94.0" y="-12.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master is ready to begin computation of most frequent words">
+            <graphics>
+                <position x="120.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Master is ready to begin computation of most frequent words</value>
+                <graphics>
+                    <offset x="200.0" y="-8.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Master ready to terminate">
+            <graphics>
+                <position x="975.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>Master ready to terminate</value>
+                <graphics>
+                    <offset x="156.0" y="46.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="PickActor received StartPicking">
+            <graphics>
+                <position x="270.0" y="285.0"/>
+            </graphics>
+            <name>
+                <value>PickActor received StartPicking</value>
+                <graphics>
+                    <offset x="89.0" y="-12.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View: standby">
+            <graphics>
+                <position x="60.0" y="195.0"/>
+            </graphics>
+            <name>
+                <value>View: standby</value>
+                <graphics>
+                    <offset x="34.0" y="-10.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View updated">
+            <graphics>
+                <position x="210.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>View updated</value>
+                <graphics>
+                    <offset x="45.0" y="-14.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="WordsActor ready to begin">
+            <graphics>
+                <position x="645.0" y="225.0"/>
+            </graphics>
+            <name>
+                <value>WordsActor ready to begin</value>
+                <graphics>
+                    <offset x="2.0" y="10.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="WordsBag">
+            <graphics>
+                <position x="435.0" y="255.0"/>
+            </graphics>
+            <name>
+                <value>WordsBag</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="WordsManager received ManageList">
+            <graphics>
+                <position x="540.0" y="120.0"/>
+            </graphics>
+            <name>
+                <value>WordsManager received ManageList</value>
+                <graphics>
+                    <offset x="75.0" y="45.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="WordsManager waiting">
+            <graphics>
+                <position x="900.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>WordsManager waiting</value>
+                <graphics>
+                    <offset x="71.0" y="46.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Count words and update bag">
+            <graphics>
+                <position x="720.0" y="270.0"/>
+            </graphics>
+            <name>
+                <value>Count words and update bag</value>
+                <graphics>
+                    <offset x="173.0" y="1.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="GetBag and update View">
+            <graphics>
+                <position x="450.0" y="345.0"/>
+            </graphics>
+            <name>
+                <value>GetBag and update View</value>
+                <graphics>
+                    <offset x="163.0" y="32.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="send ChangeState">
+            <graphics>
+                <position x="120.0" y="120.0"/>
+            </graphics>
+            <name>
+                <value>send ChangeState</value>
+                <graphics>
+                    <offset x="15.0" y="5.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="send ManageList and StartPicking">
+            <graphics>
+                <position x="345.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>send ManageList and StartPicking</value>
+                <graphics>
+                    <offset x="123.0" y="-15.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send WorkEnded">
+            <graphics>
+                <position x="810.0" y="60.0"/>
+            </graphics>
+            <name>
+                <value>Send WorkEnded</value>
+                <graphics>
+                    <offset x="63.0" y="-10.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Spawn WordsActors and send them CountWords">
+            <graphics>
+                <position x="720.0" y="150.0"/>
+            </graphics>
+            <name>
+                <value>Spawn WordsActors and send them CountWords</value>
+                <graphics>
+                    <offset x="165.0" y="-13.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="Count completed to Send WorkEnded" source="Count completed" target="Send WorkEnded">
+            <graphics/>
+            <inscription>
+                <value>Default,10</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="791" y="325" curvePoint="false"/>
+            <arcpath id="001" x="1048" y="298" curvePoint="false"/>
+            <arcpath id="002" x="1048" y="298" curvePoint="false"/>
+            <arcpath id="003" x="1048" y="163" curvePoint="false"/>
+            <arcpath id="004" x="826" y="75" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Count words and update bag to WordsBag" source="Count words and update bag" target="WordsBag">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="726" y="290" curvePoint="false"/>
+            <arcpath id="001" x="674" y="314" curvePoint="false"/>
+            <arcpath id="002" x="461" y="270" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="GetBag and update View to PickActor has received message StartPicking" source="GetBag and update View" target="PickActor received StartPicking">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="457" y="354" curvePoint="false"/>
+            <arcpath id="001" x="359" y="344" curvePoint="false"/>
+            <arcpath id="002" x="294" y="304" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="GetBag and update View to View: standby" source="GetBag and update View" target="View: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="456" y="366" curvePoint="false"/>
+            <arcpath id="001" x="419" y="389" curvePoint="false"/>
+            <arcpath id="002" x="74" y="389" curvePoint="false"/>
+            <arcpath id="003" x="72" y="221" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="GetBag and update View to WordsBag" source="GetBag and update View" target="WordsBag">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="466" y="357" curvePoint="false"/>
+            <arcpath id="001" x="494" y="359" curvePoint="false"/>
+            <arcpath id="002" x="453" y="280" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Master: computingMostFrequentWords to Send message WorkEnded" source="Master: computingMostFrequentWords" target="Send WorkEnded">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="626" y="72" curvePoint="false"/>
+            <arcpath id="001" x="816" y="72" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Master is ready to begin computation of most frequent words to send message ChangeState" source="Master is ready to begin computation of most frequent words" target="send ChangeState">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="132" y="56" curvePoint="false"/>
+            <arcpath id="001" x="132" y="117" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P5 to T2" source="WordsActor ready to begin" target="Count words and update bag">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="669" y="244" curvePoint="false"/>
+            <arcpath id="001" x="727" y="276" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="PickActor has received message StartPicking to GetBag and update View" source="PickActor received StartPicking" target="GetBag and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="296" y="301" curvePoint="false"/>
+            <arcpath id="001" x="457" y="348" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send ChangeState to View updated" source="send ChangeState" target="View updated">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="136" y="132" curvePoint="false"/>
+            <arcpath id="001" x="209" y="80" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send message ChangeState to View: standby" source="send ChangeState" target="View: standby">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="132" y="147" curvePoint="false"/>
+            <arcpath id="001" x="164" y="209" curvePoint="false"/>
+            <arcpath id="002" x="86" y="207" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send messages ManageList and StartPicking to Master: computingMostFrequentWords" source="send ManageList and StartPicking" target="Master: computingMostFrequentWords">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="362" y="67" curvePoint="false"/>
+            <arcpath id="001" x="597" y="72" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send messages ManageList and StartPicking to PickActor has received message StartPicking" source="send ManageList and StartPicking" target="PickActor received StartPicking">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="357" y="87" curvePoint="false"/>
+            <arcpath id="001" x="287" y="282" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send messages ManageList and StartPicking to WordsBag" source="send ManageList and StartPicking" target="WordsBag">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="357" y="87" curvePoint="false"/>
+            <arcpath id="001" x="440" y="253" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="send messages ManageList and StartPicking to WordsManager has received message ManageList" source="send ManageList and StartPicking" target="WordsManager received ManageList">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="361" y="77" curvePoint="false"/>
+            <arcpath id="001" x="537" y="127" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send message WorkEnded to Master ready to terminate" source="Send WorkEnded" target="Master ready to terminate">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="827" y="63" curvePoint="false"/>
+            <arcpath id="001" x="972" y="71" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn many WordsActor and sends them CountWords to WordsActor ready to begin" source="Spawn WordsActors and send them CountWords" target="WordsActor ready to begin">
+            <graphics/>
+            <inscription>
+                <value>Default,10</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="726" y="167" curvePoint="false"/>
+            <arcpath id="001" x="667" y="226" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Spawn many WordsActor and sends them CountWords to WordsManager wait for every actor to complete" source="Spawn WordsActors and send them CountWords" target="WordsManager waiting">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="736" y="162" curvePoint="false"/>
+            <arcpath id="001" x="897" y="189" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T2 to P6" source="Count words and update bag" target="Count completed">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="736" y="282" curvePoint="false"/>
+            <arcpath id="001" x="766" y="315" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View: standby to GetBag and update View" source="View: standby" target="GetBag and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="77" y="220" curvePoint="false"/>
+            <arcpath id="001" x="133" y="358" curvePoint="false"/>
+            <arcpath id="002" x="456" y="360" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View: standby to send message ChangeState" source="View: standby" target="send ChangeState">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="80" y="194" curvePoint="false"/>
+            <arcpath id="001" x="126" y="132" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View updated to send ManageList and StartPicking" source="View updated" target="send ManageList and StartPicking">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="236" y="72" curvePoint="false"/>
+            <arcpath id="001" x="351" y="72" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="WordsBag to Count words and update bag" source="WordsBag" target="Count words and update bag">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="461" y="267" curvePoint="false"/>
+            <arcpath id="001" x="726" y="283" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="WordsBag to GetBag and update View" source="WordsBag" target="GetBag and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="450" y="281" curvePoint="false"/>
+            <arcpath id="001" x="462" y="342" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="WordsBag to Send WorkEnded" source="WordsBag" target="Send WorkEnded">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="461" y="271" curvePoint="false"/>
+            <arcpath id="001" x="823" y="373" curvePoint="false"/>
+            <arcpath id="002" x="1063" y="328" curvePoint="false"/>
+            <arcpath id="003" x="1063" y="163" curvePoint="false"/>
+            <arcpath id="004" x="827" y="69" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="WordsManager has received message ManageList to Spawn many WordsActor and sends them CountWords" source="WordsManager received ManageList" target="Spawn WordsActors and send them CountWords">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="566" y="134" curvePoint="false"/>
+            <arcpath id="001" x="727" y="157" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="WordsManager wait for every actor to complete to Send message WorkEnded" source="WordsManager waiting" target="Send WorkEnded">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="902" y="180" curvePoint="false"/>
+            <arcpath id="001" x="826" y="81" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+    </net>
+</pnml>

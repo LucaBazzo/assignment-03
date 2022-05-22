@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+    <net id="Net-One" type="P/T net">
+        <token id="Default" enabled="true" red="0" green="0" blue="0"/>
+        <place id="Controller: waitingForEvents">
+            <graphics>
+                <position x="180.0" y="74.0"/>
+            </graphics>
+            <name>
+                <value>Controller: waitingForEvents</value>
+                <graphics>
+                    <offset x="1.0" y="32.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="End">
+            <graphics>
+                <position x="315.0" y="585.0"/>
+            </graphics>
+            <name>
+                <value>End</value>
+                <graphics>
+                    <offset x="60.0" y="4.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="New tileset">
+            <graphics>
+                <position x="735.0" y="284.0"/>
+            </graphics>
+            <name>
+                <value>New tileset</value>
+                <graphics>
+                    <offset x="46.0" y="40.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Receptionist: waitingForEvents">
+            <graphics>
+                <position x="945.0" y="59.0"/>
+            </graphics>
+            <name>
+                <value>Receptionist: waitingForEvents</value>
+                <graphics>
+                    <offset x="80.0" y="-17.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="selectionManager: waitingForEvents">
+            <graphics>
+                <position x="570.0" y="59.0"/>
+            </graphics>
+            <name>
+                <value>selectionManager: waitingForEvents</value>
+                <graphics>
+                    <offset x="109.0" y="-7.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Tile selected">
+            <graphics>
+                <position x="540.0" y="284.0"/>
+            </graphics>
+            <name>
+                <value>Tile selected</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Tileset received from node">
+            <graphics>
+                <position x="1005.0" y="254.0"/>
+            </graphics>
+            <name>
+                <value>Tileset received from node</value>
+                <graphics>
+                    <offset x="176.0" y="21.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View: idle">
+            <graphics>
+                <position x="105.0" y="449.0"/>
+            </graphics>
+            <name>
+                <value>View: idle</value>
+                <graphics>
+                    <offset x="4.0" y="18.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,1</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Select from GUI">
+            <graphics>
+                <position x="375.0" y="314.0"/>
+            </graphics>
+            <name>
+                <value>Select from GUI</value>
+                <graphics>
+                    <offset x="93.0" y="44.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Send tileset to other nodes and update View">
+            <graphics>
+                <position x="1200.0" y="389.0"/>
+            </graphics>
+            <name>
+                <value>Send tileset to other nodes and update View</value>
+                <graphics>
+                    <offset x="229.0" y="40.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Show &quot;Puzzle completed&quot; window">
+            <graphics>
+                <position x="180.0" y="555.0"/>
+            </graphics>
+            <name>
+                <value>Show "Puzzle completed" window</value>
+                <graphics>
+                    <offset x="46.0" y="42.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Swap">
+            <graphics>
+                <position x="645.0" y="239.0"/>
+            </graphics>
+            <name>
+                <value>Swap</value>
+                <graphics>
+                    <offset x="63.0" y="3.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="T4">
+            <graphics>
+                <position x="945.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>T4</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Update View">
+            <graphics>
+                <position x="1035.0" y="389.0"/>
+            </graphics>
+            <name>
+                <value>Update View</value>
+                <graphics>
+                    <offset x="94.0" y="37.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="P0 to T0" source="Controller: waitingForEvents" target="Select from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="201" y="97" curvePoint="false"/>
+            <arcpath id="001" x="382" y="323" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P0 to T2" source="Controller: waitingForEvents" target="Swap">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="206" y="90" curvePoint="false"/>
+            <arcpath id="001" x="652" y="245" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P0 to T3" source="Controller: waitingForEvents" target="Update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="197" y="99" curvePoint="false"/>
+            <arcpath id="001" x="358" y="477" curvePoint="false"/>
+            <arcpath id="002" x="958" y="447" curvePoint="false"/>
+            <arcpath id="003" x="1041" y="411" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P1 to T1" source="New tileset" target="Send tileset to other nodes and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="761" y="299" curvePoint="false"/>
+            <arcpath id="001" x="1207" y="395" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P3 to T0" source="selectionManager: waitingForEvents" target="Select from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="573" y="83" curvePoint="false"/>
+            <arcpath id="001" x="392" y="325" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P3 to T2" source="selectionManager: waitingForEvents" target="Swap">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="588" y="84" curvePoint="false"/>
+            <arcpath id="001" x="657" y="236" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P4 to T2" source="Tile selected" target="Swap">
+            <graphics/>
+            <inscription>
+                <value>Default,2</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="566" y="290" curvePoint="false"/>
+            <arcpath id="001" x="651" y="259" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P5 to T3" source="Tileset received from node" target="Update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1020" y="280" curvePoint="false"/>
+            <arcpath id="001" x="1033" y="342" curvePoint="false"/>
+            <arcpath id="002" x="1047" y="386" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P6 to T0" source="View: idle" target="Select from GUI">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="130" y="454" curvePoint="false"/>
+            <arcpath id="001" x="381" y="329" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P6 to T1" source="View: idle" target="Send tileset to other nodes and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="131" y="463" curvePoint="false"/>
+            <arcpath id="001" x="331" y="500" curvePoint="false"/>
+            <arcpath id="002" x="1034" y="463" curvePoint="false"/>
+            <arcpath id="003" x="1206" y="402" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="P6 to T3" source="View: idle" target="Update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="131" y="459" curvePoint="false"/>
+            <arcpath id="001" x="1042" y="396" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Receptionist: waitingForEvents to Send tileset to other nodes and update View" source="Receptionist: waitingForEvents" target="Send tileset to other nodes and update View">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="970" y="78" curvePoint="false"/>
+            <arcpath id="001" x="1212" y="207" curvePoint="false"/>
+            <arcpath id="002" x="1212" y="386" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Receptionist: waitingForEvents to T4" source="Receptionist: waitingForEvents" target="T4">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="957" y="85" curvePoint="false"/>
+            <arcpath id="001" x="957" y="177" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="selectionManager: waitingForEvents to T4" source="selectionManager: waitingForEvents" target="T4">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="596" y="75" curvePoint="false"/>
+            <arcpath id="001" x="951" y="192" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Send tileset to other nodes and update View to Receptionist: waitingForEvents" source="Send tileset to other nodes and update View" target="Receptionist: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1212" y="386" curvePoint="false"/>
+            <arcpath id="001" x="1257" y="207" curvePoint="false"/>
+            <arcpath id="002" x="970" y="77" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Show &quot;Puzzle completed&quot; window to End" source="Show &quot;Puzzle completed&quot; window" target="End">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="196" y="567" curvePoint="false"/>
+            <arcpath id="001" x="312" y="593" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T0 to P0" source="Select from GUI" target="Controller: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="382" y="317" curvePoint="false"/>
+            <arcpath id="001" x="209" y="103" curvePoint="false"/>
+            <arcpath id="002" x="202" y="96" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T0 to P3" source="Select from GUI" target="selectionManager: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="392" y="318" curvePoint="false"/>
+            <arcpath id="001" x="572" y="82" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T0 to P4" source="Select from GUI" target="Tile selected">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="391" y="332" curvePoint="false"/>
+            <arcpath id="001" x="537" y="299" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T0 to P6" source="Select from GUI" target="View: idle">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="381" y="335" curvePoint="false"/>
+            <arcpath id="001" x="284" y="418" curvePoint="false"/>
+            <arcpath id="002" x="131" y="457" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T1 to P6" source="Send tileset to other nodes and update View" target="View: idle">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1206" y="409" curvePoint="false"/>
+            <arcpath id="001" x="1049" y="478" curvePoint="false"/>
+            <arcpath id="002" x="329" y="523" curvePoint="false"/>
+            <arcpath id="003" x="131" y="465" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T2 to P0" source="Swap" target="Controller: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="651" y="252" curvePoint="false"/>
+            <arcpath id="001" x="644" y="253" curvePoint="false"/>
+            <arcpath id="002" x="206" y="91" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T2 to P1" source="Swap" target="New tileset">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="661" y="251" curvePoint="false"/>
+            <arcpath id="001" x="733" y="289" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T2 to P3" source="Swap" target="selectionManager: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="657" y="236" curvePoint="false"/>
+            <arcpath id="001" x="588" y="84" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T3 to P0" source="Update View" target="Controller: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1041" y="406" curvePoint="false"/>
+            <arcpath id="001" x="958" y="432" curvePoint="false"/>
+            <arcpath id="002" x="388" y="462" curvePoint="false"/>
+            <arcpath id="003" x="198" y="99" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T3 to P3" source="Update View" target="selectionManager: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1042" y="391" curvePoint="false"/>
+            <arcpath id="001" x="794" y="208" curvePoint="false"/>
+            <arcpath id="002" x="594" y="79" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T3 to P6" source="Update View" target="View: idle">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="1041" y="401" curvePoint="false"/>
+            <arcpath id="001" x="131" y="460" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T4 to Receptionist: waitingForEvents" source="T4" target="Receptionist: waitingForEvents">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="962" y="187" curvePoint="false"/>
+            <arcpath id="001" x="1002" y="132" curvePoint="false"/>
+            <arcpath id="002" x="965" y="83" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="T4 to Tileset received from node" source="T4" target="Tileset received from node">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="961" y="197" curvePoint="false"/>
+            <arcpath id="001" x="1007" y="254" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="View: idle to Show &quot;Puzzle completed&quot; window" source="View: idle" target="Show &quot;Puzzle completed&quot; window">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="125" y="473" curvePoint="false"/>
+            <arcpath id="001" x="186" y="567" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+    </net>
+</pnml>
