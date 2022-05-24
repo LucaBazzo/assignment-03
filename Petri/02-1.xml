@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><pnml>
     <net id="Net-One" type="P/T net">
         <token id="Default" enabled="true" red="0" green="0" blue="0"/>
-        <place id="Controller initialized">
+        <place id="Controller: Initialize">
             <graphics>
-                <position x="630.0" y="60.0"/>
+                <position x="465.0" y="60.0"/>
             </graphics>
             <name>
-                <value>Controller initialized</value>
+                <value>Controller: Initialize</value>
                 <graphics>
-                    <offset x="76.0" y="42.0"/>
+                    <offset x="84.0" y="-12.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -21,14 +21,14 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="New tileset">
+        <place id="Controller: waitingEvents">
             <graphics>
-                <position x="630.0" y="345.0"/>
+                <position x="585.0" y="435.0"/>
             </graphics>
             <name>
-                <value>New tileset</value>
+                <value>Controller: waitingEvents</value>
                 <graphics>
-                    <offset x="38.0" y="-10.0"/>
+                    <offset x="1.0" y="32.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -41,14 +41,14 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Peer created">
+        <place id="Controller received Initialize">
             <graphics>
-                <position x="765.0" y="165.0"/>
+                <position x="555.0" y="90.0"/>
             </graphics>
             <name>
-                <value>Peer created</value>
+                <value>Controller received Initialize</value>
                 <graphics>
-                    <offset x="54.0" y="39.0"/>
+                    <offset x="140.0" y="41.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -61,14 +61,14 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Peer waiting">
+        <place id="Node on Cluster">
             <graphics>
-                <position x="660.0" y="240.0"/>
+                <position x="255.0" y="30.0"/>
             </graphics>
             <name>
-                <value>Peer waiting</value>
+                <value>Node on Cluster</value>
                 <graphics>
-                    <offset x="5.0" y="19.0"/>
+                    <offset x="50.0" y="-14.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -81,14 +81,74 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="SelectionManager created">
+        <place id="Receptionist: waitingForEvents">
             <graphics>
-                <position x="900.0" y="60.0"/>
+                <position x="990.0" y="240.0"/>
             </graphics>
             <name>
-                <value>SelectionManager created</value>
+                <value>Receptionist: waitingForEvents</value>
                 <graphics>
-                    <offset x="109.0" y="-22.0"/>
+                    <offset x="196.0" y="36.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Receptionist received InitializeTileList">
+            <graphics>
+                <position x="840.0" y="45.0"/>
+            </graphics>
+            <name>
+                <value>Receptionist received InitializeTileList</value>
+                <graphics>
+                    <offset x="240.0" y="19.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="SelectionManager: waitingEvent">
+            <graphics>
+                <position x="765.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>SelectionManager: waitingEvent</value>
+                <graphics>
+                    <offset x="59.0" y="40.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="SelectionManager: waitingEvents">
+            <graphics>
+                <position x="855.0" y="360.0"/>
+            </graphics>
+            <name>
+                <value>SelectionManager: waitingEvents</value>
+                <graphics>
+                    <offset x="162.0" y="45.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -103,7 +163,7 @@
         </place>
         <place id="Start">
             <graphics>
-                <position x="60.0" y="60.0"/>
+                <position x="45.0" y="30.0"/>
             </graphics>
             <name>
                 <value>Start</value>
@@ -121,54 +181,14 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Tile selected">
+        <place id="Tileset received">
             <graphics>
-                <position x="450.0" y="255.0"/>
+                <position x="720.0" y="240.0"/>
             </graphics>
             <name>
-                <value>Tile selected</value>
+                <value>Tileset received</value>
                 <graphics>
-                    <offset x="46.0" y="-9.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="tileset received">
-            <graphics>
-                <position x="330.0" y="165.0"/>
-            </graphics>
-            <name>
-                <value>tileset received</value>
-                <graphics>
-                    <offset x="55.0" y="43.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="Tileset received from node">
-            <graphics>
-                <position x="960.0" y="405.0"/>
-            </graphics>
-            <name>
-                <value>Tileset received from node</value>
-                <graphics>
-                    <offset x="176.0" y="21.0"/>
+                    <offset x="117.0" y="29.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -183,12 +203,12 @@
         </place>
         <place id="View: idle">
             <graphics>
-                <position x="90.0" y="270.0"/>
+                <position x="420.0" y="570.0"/>
             </graphics>
             <name>
                 <value>View: idle</value>
                 <graphics>
-                    <offset x="7.0" y="11.0"/>
+                    <offset x="4.0" y="18.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -201,14 +221,14 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="View creates the puzzleboard">
+        <place id="View: standby">
             <graphics>
-                <position x="405.0" y="60.0"/>
+                <position x="105.0" y="285.0"/>
             </graphics>
             <name>
-                <value>View creates the puzzleboard</value>
+                <value>View: standby</value>
                 <graphics>
-                    <offset x="85.0" y="42.0"/>
+                    <offset x="66.0" y="42.0"/>
                 </graphics>
             </name>
             <initialMarking>
@@ -221,14 +241,54 @@
                 <value>0</value>
             </capacity>
         </place>
-        <transition id="Create Controlller and View and set Controller as View listener">
+        <place id="View received DisplayWithTileset">
             <graphics>
-                <position x="255.0" y="60.0"/>
+                <position x="180.0" y="390.0"/>
             </graphics>
             <name>
-                <value>Create Controlller and View and set Controller as View listener</value>
+                <value>View received DisplayWithTileset</value>
                 <graphics>
-                    <offset x="186.0" y="-15.0"/>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="View received Initialize">
+            <graphics>
+                <position x="120.0" y="180.0"/>
+            </graphics>
+            <name>
+                <value>View received Initialize</value>
+                <graphics>
+                    <offset x="25.0" y="-9.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <transition id="Connect to cluster using a valid port">
+            <graphics>
+                <position x="135.0" y="30.0"/>
+            </graphics>
+            <name>
+                <value>Connect to cluster using a valid port</value>
+                <graphics>
+                    <offset x="116.0" y="45.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -247,90 +307,12 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Create Peer">
+        <transition id="Display GUI">
             <graphics>
-                <position x="900.0" y="165.0"/>
+                <position x="270.0" y="435.0"/>
             </graphics>
             <name>
-                <value>Create Peer</value>
-                <graphics>
-                    <offset x="90.0" y="11.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Create SelectionManager">
-            <graphics>
-                <position x="750.0" y="60.0"/>
-            </graphics>
-            <name>
-                <value>Create SelectionManager</value>
-                <graphics>
-                    <offset x="96.0" y="-18.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Create the shared object and retrieve tileset from other peer">
-            <graphics>
-                <position x="540.0" y="165.0"/>
-            </graphics>
-            <name>
-                <value>Create the shared object and retrieve tileset from other peer</value>
-                <graphics>
-                    <offset x="176.0" y="-17.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Display tileset">
-            <graphics>
-                <position x="210.0" y="165.0"/>
-            </graphics>
-            <name>
-                <value>Display tileset</value>
+                <value>Display GUI</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -351,14 +333,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Initialize Controller">
+        <transition id="Receive tileset from other node">
             <graphics>
-                <position x="540.0" y="60.0"/>
+                <position x="990.0" y="120.0"/>
             </graphics>
             <name>
-                <value>Initialize Controller</value>
+                <value>Receive tileset from other node</value>
                 <graphics>
-                    <offset x="71.0" y="-9.0"/>
+                    <offset x="191.0" y="9.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -377,14 +359,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Select tile from GUI">
+        <transition id="send DisplayWithTileset">
             <graphics>
-                <position x="300.0" y="255.0"/>
+                <position x="420.0" y="285.0"/>
             </graphics>
             <name>
-                <value>Select tile from GUI</value>
+                <value>send DisplayWithTileset</value>
                 <graphics>
-                    <offset x="81.0" y="38.0"/>
+                    <offset x="1.0" y="-2.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -403,14 +385,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Swap">
+        <transition id="Send Initialize">
             <graphics>
-                <position x="540.0" y="300.0"/>
+                <position x="270.0" y="180.0"/>
             </graphics>
             <name>
-                <value>Swap</value>
+                <value>Send Initialize</value>
                 <graphics>
-                    <offset x="31.0" y="-10.0"/>
+                    <offset x="99.0" y="25.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -429,14 +411,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Tileset updated on the SharedObject">
+        <transition id="Spawn Controlller and View and send Initialize">
             <graphics>
-                <position x="960.0" y="285.0"/>
+                <position x="345.0" y="30.0"/>
             </graphics>
             <name>
-                <value>Tileset updated on the SharedObject</value>
+                <value>Spawn Controlller and View and send Initialize</value>
                 <graphics>
-                    <offset x="212.0" y="21.0"/>
+                    <offset x="225.0" y="-8.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -455,14 +437,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="update SharedObject and update View">
+        <transition id="Spawn Receptionist and SelectionManager, send InitializeTileList">
             <graphics>
-                <position x="735.0" y="345.0"/>
+                <position x="720.0" y="45.0"/>
             </graphics>
             <name>
-                <value>update SharedObject and update View</value>
+                <value>Spawn Receptionist and SelectionManager, send InitializeTileList</value>
                 <graphics>
-                    <offset x="227.0" y="14.0"/>
+                    <offset x="244.0" y="-14.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -481,33 +463,7 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Update View">
-            <graphics>
-                <position x="885.0" y="465.0"/>
-            </graphics>
-            <name>
-                <value>Update View</value>
-                <graphics>
-                    <offset x="91.0" y="17.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <arc id="Controller initialized to Create SelectionManager" source="Controller initialized" target="Create SelectionManager">
+        <arc id="Connect to cluster with a valid port to Node on Cluster" source="Connect to cluster using a valid port" target="Node on Cluster">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -516,11 +472,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="656" y="74" curvePoint="false"/>
-            <arcpath id="001" x="756" y="72" curvePoint="false"/>
+            <arcpath id="000" x="151" y="42" curvePoint="false"/>
+            <arcpath id="001" x="252" y="42" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Create Peer to Peer created" source="Create Peer" target="Peer created">
+        <arc id="Controller: Initialize to send message DisplayWithTileset" source="Controller: Initialize" target="send DisplayWithTileset">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -529,11 +485,12 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="906" y="177" curvePoint="false"/>
-            <arcpath id="001" x="791" y="177" curvePoint="false"/>
+            <arcpath id="000" x="478" y="86" curvePoint="false"/>
+            <arcpath id="001" x="479" y="89" curvePoint="false"/>
+            <arcpath id="002" x="432" y="282" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Create the shared object and retrieve tileset from other peer to Peer waiting" source="Create the shared object and retrieve tileset from other peer" target="Peer waiting">
+        <arc id="Controller: Initialize to Send message Initialize" source="Controller: Initialize" target="Send Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -542,11 +499,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="556" y="182" curvePoint="false"/>
-            <arcpath id="001" x="659" y="244" curvePoint="false"/>
+            <arcpath id="000" x="464" y="80" curvePoint="false"/>
+            <arcpath id="001" x="287" y="187" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Create the shared object and retrieve tileset from other peer to tileset received" source="Create the shared object and retrieve tileset from other peer" target="tileset received">
+        <arc id="Controller has received Initialize to Spawn Receptionist and SelectionManager, send InitializeTileList" source="Controller received Initialize" target="Spawn Receptionist and SelectionManager, send InitializeTileList">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -555,11 +512,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="546" y="177" curvePoint="false"/>
-            <arcpath id="001" x="356" y="177" curvePoint="false"/>
+            <arcpath id="000" x="581" y="97" curvePoint="false"/>
+            <arcpath id="001" x="726" y="62" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Display tileset to View: idle" source="Display tileset" target="View: idle">
+        <arc id="Display GUI to View: idle" source="Display GUI" target="View: idle">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -568,12 +525,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="216" y="177" curvePoint="false"/>
-            <arcpath id="001" x="103" y="178" curvePoint="false"/>
-            <arcpath id="002" x="102" y="267" curvePoint="false"/>
+            <arcpath id="000" x="286" y="447" curvePoint="false"/>
+            <arcpath id="001" x="421" y="571" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Initialize Controller to Controller initialized" source="Initialize Controller" target="Controller initialized">
+        <arc id="Node on Cluster to Spawn Controlller and View and send Initialize" source="Node on Cluster" target="Spawn Controlller and View and send Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -582,11 +538,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="556" y="72" curvePoint="false"/>
-            <arcpath id="001" x="627" y="72" curvePoint="false"/>
+            <arcpath id="000" x="281" y="42" curvePoint="false"/>
+            <arcpath id="001" x="352" y="37" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="New tileset to update SharedObject and update View" source="New tileset" target="update SharedObject and update View">
+        <arc id="Receive tileset from other node to Receptionist: waitingForEvents" source="Receive tileset from other node" target="Receptionist: waitingForEvents">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -595,11 +551,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="656" y="358" curvePoint="false"/>
-            <arcpath id="001" x="742" y="354" curvePoint="false"/>
+            <arcpath id="000" x="1002" y="147" curvePoint="false"/>
+            <arcpath id="001" x="1002" y="237" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Peer created to Create the shared object and retrieve tileset from other peer" source="Peer created" target="Create the shared object and retrieve tileset from other peer">
+        <arc id="Receive tileset from other node to Tileset received" source="Receive tileset from other node" target="Tileset received">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -608,11 +564,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="762" y="177" curvePoint="false"/>
-            <arcpath id="001" x="557" y="172" curvePoint="false"/>
+            <arcpath id="000" x="996" y="140" curvePoint="false"/>
+            <arcpath id="001" x="745" y="246" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Peer waiting to Tileset updated on the SharedObject" source="Peer waiting" target="Tileset updated on the SharedObject">
+        <arc id="Receptionist has received InitializeTileList to Receive tileset from other node" source="Receptionist received InitializeTileList" target="Receive tileset from other node">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -621,11 +577,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="686" y="255" curvePoint="false"/>
-            <arcpath id="001" x="966" y="297" curvePoint="false"/>
+            <arcpath id="000" x="865" y="63" curvePoint="false"/>
+            <arcpath id="001" x="997" y="126" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Peer waiting to update SharedObject and update View" source="Peer waiting" target="update SharedObject and update View">
+        <arc id="SelectionManager: waitingEvent to Receive tileset from other node" source="SelectionManager: waitingEvent" target="Receive tileset from other node">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -634,11 +590,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="679" y="264" curvePoint="false"/>
-            <arcpath id="001" x="742" y="348" curvePoint="false"/>
+            <arcpath id="000" x="791" y="146" curvePoint="false"/>
+            <arcpath id="001" x="996" y="133" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="SelectionManager created to Create Peer" source="SelectionManager created" target="Create Peer">
+        <arc id="send message DisplayWithTileset to Controller: waitingEvents" source="send DisplayWithTileset" target="Controller: waitingEvents">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -647,11 +603,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="912" y="86" curvePoint="false"/>
-            <arcpath id="001" x="912" y="162" curvePoint="false"/>
+            <arcpath id="000" x="436" y="303" curvePoint="false"/>
+            <arcpath id="001" x="585" y="436" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Select tile from GUI to Tile selected" source="Select tile from GUI" target="Tile selected">
+        <arc id="send message DisplayWithTileset to SelectionManager: waitingEvents" source="send DisplayWithTileset" target="SelectionManager: waitingEvents">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -660,11 +616,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="316" y="267" curvePoint="false"/>
-            <arcpath id="001" x="447" y="267" curvePoint="false"/>
+            <arcpath id="000" x="437" y="296" curvePoint="false"/>
+            <arcpath id="001" x="852" y="369" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Select tile from GUI to View: idle" source="Select tile from GUI" target="View: idle">
+        <arc id="send message DisplayWithTileset to View has received DisplayWithTileset" source="send DisplayWithTileset" target="View received DisplayWithTileset">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -673,12 +629,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="306" y="272" curvePoint="false"/>
-            <arcpath id="001" x="224" y="284" curvePoint="false"/>
-            <arcpath id="002" x="116" y="282" curvePoint="false"/>
+            <arcpath id="000" x="426" y="302" curvePoint="false"/>
+            <arcpath id="001" x="205" y="396" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Spawn Controlller and View and send Initialize to View has received Initialize" source="Create Controlller and View and set Controller as View listener" target="View creates the puzzleboard">
+        <arc id="Send message Initialize to Controller has received Initialize" source="Send Initialize" target="Controller received Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -687,11 +642,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="271" y="72" curvePoint="false"/>
-            <arcpath id="001" x="402" y="72" curvePoint="false"/>
+            <arcpath id="000" x="286" y="197" curvePoint="false"/>
+            <arcpath id="001" x="552" y="106" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to SelectionManager: waitingEvent" source="Create SelectionManager" target="SelectionManager created">
+        <arc id="Send message Initialize to View: standby" source="Send Initialize" target="View: standby">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -700,11 +655,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="766" y="72" curvePoint="false"/>
-            <arcpath id="001" x="897" y="72" curvePoint="false"/>
+            <arcpath id="000" x="276" y="197" curvePoint="false"/>
+            <arcpath id="001" x="129" y="288" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Start to Create Controlller and View and send Controller as View listener" source="Start" target="Create Controlller and View and set Controller as View listener">
+        <arc id="Spawn Controlller and View and send Initialize to Controller: Initialize" source="Spawn Controlller and View and send Initialize" target="Controller: Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -713,11 +668,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="86" y="73" curvePoint="false"/>
-            <arcpath id="001" x="261" y="72" curvePoint="false"/>
+            <arcpath id="000" x="361" y="42" curvePoint="false"/>
+            <arcpath id="001" x="462" y="68" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Swap to New tileset" source="Swap" target="New tileset">
+        <arc id="Spawn Controlller and View and send Initialize to View has received Initialize" source="Spawn Controlller and View and send Initialize" target="View received Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -726,24 +681,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="556" y="312" curvePoint="false"/>
-            <arcpath id="001" x="628" y="350" curvePoint="false"/>
+            <arcpath id="000" x="351" y="47" curvePoint="false"/>
+            <arcpath id="001" x="144" y="183" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Tile selected to Swap and updateView" source="Tile selected" target="Swap">
-            <graphics/>
-            <inscription>
-                <value>Default,2</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="474" y="275" curvePoint="false"/>
-            <arcpath id="001" x="546" y="312" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="Tileset received from node to Update View" source="Tileset received from node" target="Update View">
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to Controller: Initialize" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="Controller: Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -752,11 +694,12 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="961" y="427" curvePoint="false"/>
-            <arcpath id="001" x="901" y="477" curvePoint="false"/>
+            <arcpath id="000" x="727" y="52" curvePoint="false"/>
+            <arcpath id="001" x="584" y="59" curvePoint="false"/>
+            <arcpath id="002" x="491" y="70" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="tileset received to Display tileset" source="tileset received" target="Display tileset">
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to Receptionist has received InitializeTileList" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="Receptionist received InitializeTileList">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -765,11 +708,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="327" y="178" curvePoint="false"/>
-            <arcpath id="001" x="226" y="177" curvePoint="false"/>
+            <arcpath id="000" x="736" y="57" curvePoint="false"/>
+            <arcpath id="001" x="837" y="57" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Tileset updated on the SharedObject to Peer waiting" source="Tileset updated on the SharedObject" target="Peer waiting">
+        <arc id="Spawn Receptionist and SelectionManager, send InitializeTileList to SelectionManager: waitingEvent" source="Spawn Receptionist and SelectionManager, send InitializeTileList" target="SelectionManager: waitingEvent">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -778,12 +721,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="972" y="282" curvePoint="false"/>
-            <arcpath id="001" x="973" y="253" curvePoint="false"/>
-            <arcpath id="002" x="686" y="252" curvePoint="false"/>
+            <arcpath id="000" x="732" y="72" curvePoint="false"/>
+            <arcpath id="001" x="769" y="134" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Tileset updated on the SharedObject to Tileset received from node" source="Tileset updated on the SharedObject" target="Tileset received from node">
+        <arc id="Start to Connect to cluster with a valid port" source="Start" target="Connect to cluster using a valid port">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -792,11 +734,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="972" y="312" curvePoint="false"/>
-            <arcpath id="001" x="972" y="402" curvePoint="false"/>
+            <arcpath id="000" x="71" y="42" curvePoint="false"/>
+            <arcpath id="001" x="141" y="42" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="update SharedObject and update View to Peer waiting" source="update SharedObject and update View" target="Peer waiting">
+        <arc id="Tileset received to send message DisplayWithTileset" source="Tileset received" target="send DisplayWithTileset">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -805,12 +747,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="747" y="342" curvePoint="false"/>
-            <arcpath id="001" x="763" y="313" curvePoint="false"/>
-            <arcpath id="002" x="684" y="260" curvePoint="false"/>
+            <arcpath id="000" x="717" y="253" curvePoint="false"/>
+            <arcpath id="001" x="437" y="289" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="update SharedObject and update View to View: idle" source="update SharedObject and update View" target="View: idle">
+        <arc id="View: standby to send message DisplayWithTileset" source="View: standby" target="send DisplayWithTileset">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -819,12 +760,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="741" y="366" curvePoint="false"/>
-            <arcpath id="001" x="673" y="448" curvePoint="false"/>
-            <arcpath id="002" x="116" y="286" curvePoint="false"/>
+            <arcpath id="000" x="131" y="296" curvePoint="false"/>
+            <arcpath id="001" x="427" y="292" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Update View to View: idle" source="Update View" target="View: idle">
+        <arc id="View has received DisplayWithTileset to Display GUI" source="View received DisplayWithTileset" target="Display GUI">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -833,13 +773,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="892" y="472" curvePoint="false"/>
-            <arcpath id="001" x="149" y="464" curvePoint="false"/>
-            <arcpath id="002" x="149" y="464" curvePoint="false"/>
-            <arcpath id="003" x="105" y="296" curvePoint="false"/>
+            <arcpath id="000" x="205" y="409" curvePoint="false"/>
+            <arcpath id="001" x="276" y="447" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="View: idle to Select tile from GUI" source="View: idle" target="Select tile from GUI">
+        <arc id="View has received Initialize to Send message Initialize" source="View received Initialize" target="Send Initialize">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -848,50 +786,8 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="116" y="281" curvePoint="false"/>
-            <arcpath id="001" x="307" y="262" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="View: idle to update SharedObject and update View" source="View: idle" target="update SharedObject and update View">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="116" y="285" curvePoint="false"/>
-            <arcpath id="001" x="673" y="433" curvePoint="false"/>
-            <arcpath id="002" x="741" y="360" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="View: idle to Update View" source="View: idle" target="Update View">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="102" y="297" curvePoint="false"/>
-            <arcpath id="001" x="102" y="492" curvePoint="false"/>
-            <arcpath id="002" x="807" y="492" curvePoint="false"/>
-            <arcpath id="003" x="891" y="482" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="View has received Initialize to Send message Initialize" source="View creates the puzzleboard" target="Initialize Controller">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="431" y="73" curvePoint="false"/>
-            <arcpath id="001" x="546" y="72" curvePoint="false"/>
+            <arcpath id="000" x="146" y="191" curvePoint="false"/>
+            <arcpath id="001" x="277" y="187" curvePoint="false"/>
             <type value="normal"/>
         </arc>
     </net>
